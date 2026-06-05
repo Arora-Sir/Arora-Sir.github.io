@@ -1028,6 +1028,19 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
             if(!newDomain) return;
             newDomain = newDomain.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
             if(newDomain.length < 3) return;
+            
+            const btn = document.getElementById('domain-apply-btn');
+            
+            if (!/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(newDomain)) {
+                btn.innerText = 'Invalid Domain';
+                btn.style.background = '#ef4444';
+                setTimeout(() => {
+                    btn.innerText = 'Apply';
+                    btn.style.background = 'var(--primary-color)';
+                }, 2000);
+                return;
+            }
+
             let newSubdomain = newDomain.split('.')[0] || 'yoursite';
             
             document.querySelectorAll('.dynamic-domain').forEach(el => {
