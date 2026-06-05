@@ -1,0 +1,964 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro-Tool Product Launch Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --text-color: #cbd5e1;
+            --primary-color: #3b82f6;
+            --secondary-color: #8b5cf6;
+            --accent-color: #10b981;
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --code-bg: rgba(15, 23, 42, 0.8);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.7;
+            padding: 3rem 1rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 4rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h1, h2, h3, h4 {
+            color: #ffffff;
+            margin-top: 2.5rem;
+            margin-bottom: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 3rem;
+            margin-top: 0;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #93c5fd;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        a {
+            color: #60a5fa;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        a:hover {
+            color: #93c5fd;
+            border-bottom-color: #93c5fd;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
+        }
+
+        ul, ol {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        ol {
+            padding-left: 0;
+            counter-reset: task-counter;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        li::marker {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        li.task-item {
+            list-style-type: none;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        ol > li.task-item {
+            counter-increment: task-counter;
+        }
+
+        ol > li.task-item::before {
+            content: counter(task-counter) ".";
+            color: var(--secondary-color);
+            font-weight: bold;
+            min-width: 1.2rem;
+            margin-top: 2px;
+        }
+
+        ul > li.task-item {
+            /* Restoring natural ul indentation */
+        }
+
+        li.task-item > ul, li.task-item > ol {
+            width: 100%;
+            margin-top: 0.5rem;
+            margin-left: 2rem;
+        }
+
+        li.task-item > div, li.task-item > p, li.task-item > span.task-text {
+            margin-bottom: 0;
+            flex: 1;
+        }
+        
+        /* Checkbox styling */
+        input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--primary-color);
+            border-radius: 6px;
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background: rgba(15, 23, 42, 0.5);
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        h2 > input[type="checkbox"] {
+            width: 28px;
+            height: 28px;
+            margin-top: 0;
+        }
+
+        input[type="checkbox"]::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em var(--accent-color);
+            transform-origin: center;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+
+        h2 > input[type="checkbox"]::before {
+            width: 16px;
+            height: 16px;
+        }
+
+        input[type="checkbox"]:checked {
+            border-color: var(--accent-color);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+
+        .completed-text {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .reset-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-color);
+            color: #ef4444;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+
+        .reset-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+            opacity: 0;
+            backdrop-filter: blur(4px);
+        }
+
+        pre:hover .copy-button {
+            opacity: 1;
+        }
+
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .copy-button.copied {
+            background: var(--accent-color);
+            color: #fff;
+            border-color: var(--accent-color);
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #e879f9;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+            color: #94a3b8;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 3rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        
+        th, td {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        /* Hover micro-animations */
+        .container > p:hover {
+            color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+        
+        .container > p {
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .container { padding: 2rem; border-radius: 16px; }
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>0 Jobs to ₹4L/Month: The AI Micro-Tool Business Blueprint</h1>
+<p>This guide provides a comprehensive, step-by-step roadmap to building a passive income stream through micro-tool websites. By finding small, low-competition problems and using AI to build fast, SEO-optimized utilities, you can rank on Google and earn revenue via Google AdSense.</p>
+<h2>Strategy Overview</h2>
+<ul>
+<li><strong>Business Model:</strong> Build highly specific micro-tool websites (e.g., an online ruler, percentage calculator) that solve single, low-competition problems using AI.</li>
+<li><strong>Tech Stack:</strong> <a href="https://astro.build/">Astro JS</a> (for superior SEO via Multi-Page Application structure), <a href="https://tailwindcss.com/">Tailwind CSS</a>, and <a href="https://pages.cloudflare.com/">Cloudflare Pages</a> (for fast, free hosting).</li>
+<li><strong>Investment:</strong> Zero coding required, and zero hosting costs. The only investment is a <code>.com</code> domain (~₹1,000/year).</li>
+<li><strong>Traffic:</strong> Organic search traffic from Google (targeting US audiences for higher ad revenue).</li>
+<li><strong>Monetization:</strong> Google AdSense (applied once the site gets 10+ daily users).</li>
+</ul>
+<hr>
+<h2>Step 1: Finding a Niche Problem and Keywords</h2>
+<p>The goal is to find a small problem with low competition that users are actively searching for.</p>
+<ol>
+<li><strong>Find an Idea:</strong> Think of small everyday problems (e.g., needing to measure something without a physical ruler). Search Google for simple micro-tools.</li>
+<li><strong>Analyze the Competition:</strong> Open the top-ranking micro-tool. What is it missing? Does it have a bad UI? Does it fail on mobile? (e.g., if a ruler tool says &quot;Unknown Device&quot; or the scale is on the wrong side, note these flaws down so you can explicitly tell the AI to fix them).</li>
+<li><strong>Keyword Research:</strong> Go to the <a href="https://ahrefs.com/keyword-generator">Ahrefs Free Keyword Generator</a>.<ul>
+<li>Enter your keyword idea (e.g., &quot;online ruler&quot;). Verify the search volume. Even 1,000 monthly US searches is good to start.</li>
+<li>Switch to the <strong>Questions</strong> tab and copy all the common user questions. Save these for your FAQ section later.</li>
+<li>Note down <strong>Supporting Keywords</strong> (e.g., &quot;free online ruler&quot;, &quot;online ruler in cm&quot;). You can also find these using Google Autocomplete (type your keyword and press space).</li>
+</ul>
+</li>
+</ol>
+<h2>Step 2: Choosing the Perfect Domain Name</h2>
+<p>Your domain name is a crucial ranking factor.</p>
+<ol>
+<li>Go to <a href="https://instantdomainsearch.com/">Instant Domain Search</a> to brainstorm.</li>
+<li><strong>Rules for Domains:</strong><ul>
+<li><strong>MUST be a <code>.com</code> domain.</strong></li>
+<li>Must contain your primary keyword (e.g., <code>realonlineruler.com</code> contains <code>online</code> and <code>ruler</code>).</li>
+<li>Avoid hyphens.</li>
+</ul>
+</li>
+<li><strong>Keep it Short:</strong> Avoid overly long domains. If <code>freeruler.com</code> is taken, try adding context like <code>realonlineruler.com</code>.</li>
+<li><strong>When to Buy:</strong> <strong>CRITICAL:</strong> Do NOT buy the domain yet! Build the tool with AI first. Sometimes an idea turns out to be too complex or requires paid APIs. Only buy the domain after the code is fully working on your local computer so you don&#39;t waste ₹1,000.</li>
+<li><strong>Where to buy later:</strong> <a href="https://www.namecheap.com/">Namecheap</a>, <a href="https://www.godaddy.com/">GoDaddy</a>, <a href="https://www.bigrock.in/">BigRock</a> (₹883/year with UPI), or <a href="https://www.hostinger.com/">Hostinger</a>.</li>
+</ol>
+<h2>Step 3: Setting Up the Development Environment</h2>
+<p>Prepare your local machine for the AI agent to build the tool.</p>
+<ol>
+<li>Install <a href="https://git-scm.com/">Git</a> for version control.</li>
+<li>Install <a href="https://code.visualstudio.com/">Visual Studio Code (VS Code)</a> as your code editor.</li>
+<li>Install <a href="https://nodejs.org/">Node.js</a> (required to run Astro JS locally).</li>
+<li>Install an AI Coding Assistant. <a href="https://claude.com/product/claude-code"><strong>Claude Code</strong></a> is highly recommended. If you have API access, run:<pre><code class="language-bash">npm install -g @anthropic-ai/claude-code
+</code></pre>
+*(<strong><em>Why?</em></strong> This command uses the Node Package Manager (npm) to install Claude Code globally (<code>-g</code>) on your system, allowing you to use the <code>claude</code> command from any terminal folder.)*
+Alternatively, use free alternatives like <a href="https://www.cursor.com/"><strong>Cursor AI</strong></a> or <strong>Gemini CLI</strong> / <a href="https://opencode.ai/"><strong>Google OpenCode Minimax</strong></a>.</li>
+<li>Create a new empty folder on your computer named after your domain (e.g., <code>realonlineruler.com</code>).</li>
+<li>Drag this folder into VS Code to open it.</li>
+</ol>
+<h2>Step 4: Initializing the Project</h2>
+<ol>
+<li>Open the terminal in VS Code (Terminal &gt; New Terminal).</li>
+<li>Run the following command to install Astro JS:<pre><code class="language-bash">npm create astro@latest .
+</code></pre>
+<em>(<strong>Why this command?</strong> <code>npm create</code> fetches the latest Astro installation script. The <code>.</code> at the end tells it to install directly into your current empty folder rather than creating a new subfolder. Astro is chosen because it outputs static HTML, which is lightning-fast and highly favored by Google&#39;s search algorithms.)</em></li>
+<li>Press Enter for all defaults. Choose the <strong>&quot;Basic&quot;</strong> template.</li>
+<li>Say <strong>Yes</strong> when asked to initialize a Git repository. <em>(<strong>Purpose:</strong> Git tracks every change you make to your files. If you or the AI break something, Git allows you to instantly revert back to a working version.)</em></li>
+</ol>
+<h2>Step 5: Equipping the AI with Design Skills</h2>
+<p>Give the AI the context it needs to create professional, modern designs.</p>
+<ol>
+<li><p><strong>Vercel Design System:</strong> In a separate terminal, install the Vercel design markdown structure:</p>
+<pre><code class="language-bash">npx shadcn@latest init
+</code></pre>
+<p><em>(<strong>Why this command?</strong> <code>npx</code> runs a package without permanently installing it. <code>shadcn</code> is a popular UI component library. This command pulls down Vercel&#39;s clean, modern design standards into your project so the AI has a beautiful baseline to work from.)</em>
+<em>(Alternatively, search for &quot;Vercel design.md&quot; on Google and download it to your project root as <code>@DESIGN.md</code>)</em></p>
+</li>
+<li><p><strong>Launch Your AI Agent:</strong> In the VS Code terminal, start your CLI:</p>
+<ul>
+<li><strong>For Claude Code:</strong><pre><code class="language-bash">claude
+</code></pre>
+</li>
+<li><strong>For <a href="https://github.com/google/antigravity">Antigravity</a>:</strong><pre><code class="language-bash">antigravity
+</code></pre>
+<em>(Alternatively, if using <a href="https://www.cursor.com/">Cursor AI</a>, just open the Composer/Chat panel).</em></li>
+</ul>
+</li>
+<li><p><strong>Install Skills / Provide Context:</strong></p>
+<ul>
+<li><strong>If using Claude Code:</strong><pre><code class="language-bash">claude mcp add web-design-guidelines
+claude mcp add tailwind-v4-docs
+</code></pre>
+<em>(Source Links: <a href="https://www.skills.sh/vercel-labs/agent-skills/web-design-guidelines">Web Design Guidelines</a> | <a href="https://www.skills.sh/lombiq/tailwind-agent-skills/tailwind-4-docs">Tailwind v4 Docs</a>)</em></li>
+<li><strong>If using Antigravity:</strong>
+Antigravity natively supports advanced skills and plugins. You can just prompt it: <em>&quot;Use your skills for modern web design guidelines and Tailwind CSS v4.&quot;</em></li>
+<li><strong>If using Cursor AI:</strong>
+Use the <code>@Docs</code> feature and search for &quot;Tailwind CSS v4&quot; to give it context.</li>
+</ul>
+<p><em>(<strong>Purpose:</strong> AI models are trained on past data. Adding live context or MCP &quot;skills&quot; ensures the AI writes modern code instead of outdated versions, preventing frustrating bugs.)</em></p>
+</li>
+<li><p><strong>Astro JS MCP Server:</strong> Use the <a href="https://docs.astro.build/en/guides/build-with-ai/#astro-docs-mcp-server">Astro JS MCP Server</a> so the AI knows the latest Astro syntax.</p>
+<ul>
+<li><strong>For Claude Code:</strong> Run this command in your terminal:<pre><code class="language-bash">claude mcp add --transport http &quot;Astro docs&quot; https://mcp.docs.astro.build/mcp
+</code></pre>
+</li>
+<li><strong>For Antigravity:</strong> You can either simply instruct it via prompt: <em>&quot;Fetch context from the Astro Docs MCP server at <a href="https://mcp.docs.astro.build/mcp">https://mcp.docs.astro.build/mcp</a>&quot;</em>, OR add the server configuration directly to your MCP settings file:<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;Astro docs&quot;: {
+      &quot;type&quot;: &quot;http&quot;,
+      &quot;url&quot;: &quot;https://mcp.docs.astro.build/mcp&quot;
+    }
+  }
+}
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<h2>Step 6: Generating the Website Structure</h2>
+<p>Paste the following master prompt into your AI agent (adapt the bracketed text for your tool):</p>
+<pre><code class="language-text">I have initialized a new AstroJS project. Use your available web design skills, plugins, or read modern Tailwind v4 documentation. Also use @DESIGN.md. Keep the website design like Vercel.
+
+Name: [Your Tool Name]
+Domain: [yourdomain.com]
+
+Create a [describe your tool in detail]. My competitor is [URL] — analyze it, identify its weaknesses,
+and build a better version. Use MPA (multi-page application) architecture for best SEO.
+</code></pre>
+<p><strong>Real-World Prompt Example (from RealOnlineRuler.com):</strong></p>
+<blockquote>
+<p><em>Create an online ruler website that will have ruler on the edges, user can select where to place the ruler. we want these 3 calibration methods</em>
+<em>Method 1: Auto-Detect Device</em>
+<em>Method 2: Screen Diagonal</em>
+<em>Method 3: Credit Card Calibration</em></p>
+<p><em>My competitor website is <a href="https://anruler.com/">https://anruler.com/</a> and it have some features which we need and we need to make a website better than it. Give me ideas how to make it better. go on to this website and check what exactly we need to make. Do not copy design or ui from that website.</em></p>
+</blockquote>
+<p><strong>Iterating:</strong></p>
+<ul>
+<li><strong>Start Local Server:</strong> In the terminal, run:<pre><code class="language-bash">npm run dev
+</code></pre>
+<em>(<strong>What this does:</strong> It starts a live preview of your website on your computer. Any changes the AI makes will automatically refresh in your browser so you can test them instantly.)</em></li>
+<li>Open <code>http://localhost:4321</code> in your browser.</li>
+<li><strong>Test Mobile Responsiveness:</strong> Right-click the browser page -&gt; <strong>Inspect</strong> -&gt; click the mobile/device icon. Ensure your layout doesn&#39;t break on phone screens. If elements go off-screen, tell the AI: <em>&quot;The website is not mobile responsive, fix the layout.&quot;</em></li>
+<li><strong>Undoing Mistakes (Git):</strong> If the AI writes bad code and breaks your site, go to the <strong>Source Control</strong> tab in VS Code (the branch icon on the left) and click the <strong>Discard Changes</strong> (undo arrow) button to instantly reverse what the AI just did. Then you can clear your chat and try a new prompt.</li>
+<li><strong>Save Tokens:</strong> Before asking the AI to add a new major feature, always type the following in the AI agent (or start a new chat session) to clear its memory. This prevents context overload and saves API tokens:<pre><code class="language-text">/clear
+</code></pre>
+</li>
+<li><strong>Must-Have Features:</strong> Ask the AI to add a Dark Mode toggle (this is highly expected in modern apps) and ensure the layout is perfectly Mobile Responsive.</li>
+</ul>
+<h2>Step 7: Branding and Analytics</h2>
+<p>Make the site look legitimate and trackable.</p>
+<ol>
+<li><strong>Logo &amp; Favicon:</strong><ul>
+<li>Go to <a href="https://logofa.st/">logofa.st</a> and generate a clean icon (use a simple preset and customize colors). Download it.</li>
+<li>Go to <a href="https://realfavicongenerator.net/">Real Favicon Generator</a>, upload your logo, and download the generated zip file.</li>
+<li>Extract the files and move them into your project&#39;s <code>/public</code> folder.</li>
+<li>Delete the default Astro <code>favicon.svg</code> file.</li>
+<li><strong>Prompt the AI:</strong> <em>&quot;I have added new favicon files to the public folder. Please add the HTML favicon link tags to the global site header.&quot;</em></li>
+</ul>
+</li>
+<li><strong>Color Palette:</strong> Ensure your tool uses modern colors (avoid plain #FF0000 red, use HSL tailored colors).</li>
+<li><strong>Analytics:</strong> Go to <a href="https://analytics.google.com">Google Analytics</a>.<ul>
+<li>Create a new web property and copy your unique tracking script/tag.</li>
+<li><strong>Prompt the AI:</strong> <em>&quot;Add this Google Analytics tracking code to the global site header.&quot;</em></li>
+<li>Once added, deploy the site by running <code>npm run deploy</code> so the tracking goes live.</li>
+</ul>
+</li>
+</ol>
+<h2>Step 8: On-Page SEO Optimization</h2>
+<p>Google needs text to understand what your tool does. Pure tool pages don&#39;t rank.</p>
+<p>Run this prompt in the AI (remember to run <code>/clear</code> first to save tokens):</p>
+<pre><code class="language-text">Do the on-page SEO of this website for:
+Main Keyword: [your keyword]
+Supporting Keywords: [comma-separated list of keywords you found in Ahrefs]
+
+Also add proper OG meta tags for social sharing. Write 600 words of highly optimized, user-friendly text about the tool on the home page for SEO purposes. Make sure the page URL structure is clean.
+</code></pre>
+<h2>Step 9: Adding an SEO-Friendly FAQ Section</h2>
+<p>This captures long-tail search traffic and triggers Google Rich Snippets.</p>
+<p><strong>Prompt the AI:</strong></p>
+<pre><code class="language-text">Add an SEO-friendly FAQ section to the homepage using JSON-LD structured data. Use these exact questions:
+[Paste the list of questions you copied from Ahrefs (https://ahrefs.com/keyword-generator) and Google&#39;s (https://google.com) &quot;People Also Ask&quot;]
+</code></pre>
+<p><strong>Example JSON-LD Format the AI should generate:</strong></p>
+<pre><code class="language-html">&lt;script type=&quot;application/ld+json&quot;&gt;
+  {
+    &quot;@context&quot;: &quot;https://schema.org&quot;,
+    &quot;@type&quot;: &quot;FAQPage&quot;,
+    &quot;mainEntity&quot;: [
+      {
+        &quot;@type&quot;: &quot;Question&quot;,
+        &quot;name&quot;: &quot;Can I use my phone as a ruler?&quot;,
+        &quot;acceptedAnswer&quot;: {
+          &quot;@type&quot;: &quot;Answer&quot;,
+          &quot;text&quot;: &quot;&lt;p&gt;Yes, by using the screen diagonal or credit card calibration methods, you can accurately use your phone screen as a ruler.&lt;/p&gt;&quot;
+        }
+      }
+    ]
+  }
+&lt;/script&gt;
+</code></pre>
+<p><em>(<strong>Why JSON-LD?</strong> JSON-LD is a specific code format that Google understands perfectly. Instead of just displaying text on a screen, JSON-LD explicitly tells Google &quot;This is an FAQ&quot;. This often results in Google showing your questions directly on the search results page, massively increasing your click-through rate.)</em></p>
+<h2>Step 10: AdSense Compliance Pages &amp; Technical SEO</h2>
+<p>Google AdSense will reject your site without standard legal pages.</p>
+<p><strong>Prompt the AI:</strong></p>
+<pre><code class="language-text">Create these pages as separate MPA routes for best SEO:
+- Privacy Policy
+- Terms &amp; Conditions
+- About Us
+- Contact Us
+
+Make these pages clearly visible and linked in the home page footer and header.
+Also, generate a custom 404 error page, a 500 error page, a sitemap.xml, and a robots.txt file that links to the sitemap.
+</code></pre>
+<p><em>(<strong>Purpose:</strong> A <code>sitemap.xml</code> is a literal map of your website for Google&#39;s bots. A <code>robots.txt</code> file tells those bots which pages they are allowed to scan. Together, they ensure your site gets indexed on Google as fast as possible.)</em></p>
+<h2>Step 11: Deploying to Cloudflare Pages</h2>
+<p>Cloudflare Pages provides free, lightning-fast hosting for static sites.</p>
+<ol>
+<li>In your terminal, log in to Cloudflare:<pre><code class="language-bash">npx wrangler login
+</code></pre>
+<em>(<strong>Why this command?</strong> Wrangler is Cloudflare&#39;s official terminal tool. This command connects your local VS Code environment to your Cloudflare account securely via your browser.)</em>
+<em>(Authorize in the browser window that opens)</em></li>
+<li><strong>Prompt the AI:</strong> <em>&quot;Deploy this website to Cloudflare Pages and add a deploy command to <code>package.json</code>.&quot;</em></li>
+<li>The AI will configure it. Once done, you can push future updates simply by running:<pre><code class="language-bash">npm run deploy
+</code></pre>
+<em>(<strong>What this does:</strong> It bundles all your code, shrinks it for maximum speed, and uploads it directly to Cloudflare&#39;s global servers. Within seconds, your updates are live worldwide.)</em>
+Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
+</ol>
+<h2>Step 12: Purchasing and Connecting Your Domain</h2>
+<p>Now that the site is fully built and deployed, buy your <code>.com</code> domain (from <a href="https://www.godaddy.com/">GoDaddy</a>, <a href="https://www.hostinger.com/">Hostinger</a>, <a href="https://www.namecheap.com/">Namecheap</a>, or <a href="https://www.bigrock.in/">BigRock</a>).</p>
+<blockquote>
+<p><strong>💡 Domain Purchasing Tips:</strong></p>
+<ul>
+<li><strong>Double-Check Spelling:</strong> Verify the spelling multiple times. Once paid, you cannot change or refund a domain name!</li>
+<li><strong>1-Year Plan:</strong> Registrars often default to a 3-year plan in your cart. Manually change this to 1-year to save upfront costs.</li>
+<li><strong>Auto-Renewal:</strong> Turn OFF auto-renewal in your registrar account settings. You should only renew next year if the site is generating income.</li>
+</ul>
+</blockquote>
+<ol>
+<li>Log in to <a href="https://dash.cloudflare.com/login">Cloudflare</a> &gt; Go to <strong>Websites</strong> &gt; <strong>Add a Site</strong> &gt; Enter your new <code>.com</code> domain and select the Free plan.</li>
+<li><strong>Configure DNS Records:</strong><ul>
+<li>Delete any default presets you see (click the <strong>Actions</strong> button and select <strong>Delete</strong>).</li>
+<li>Click the <strong>Add record</strong> button to add a placeholder record:<ul>
+<li><strong>Type:</strong> <code>A</code></li>
+<li><strong>Name:</strong> <code>@</code></li>
+<li><strong>IPv4 address:</strong> <code>8.8.8.8</code></li>
+</ul>
+</li>
+<li>Press <strong>Save</strong>, then click <strong>Continue to activation</strong>.</li>
+</ul>
+</li>
+<li><strong>Update Name Servers:</strong><ul>
+<li>Cloudflare will provide you with 2 nameservers.</li>
+<li>Go to your domain registrar (e.g., BigRock, Namecheap). <em>Tip: Search Google for &quot;How to change Name Servers on [Your Registrar]&quot; if you are unsure.</em></li>
+<li>Replace the existing nameservers with the 2 you received from Cloudflare.</li>
+<li>Wait for propagation. It generally takes 10-30 minutes (max 24-48 hours). Cloudflare will now manage your DNS configuration.</li>
+</ul>
+</li>
+<li><strong>Link to your Project:</strong> In Cloudflare, go to <strong>Workers &amp; Pages</strong> &gt; Select your project &gt; <strong>Settings</strong> &gt; <strong>Custom Domains</strong> &gt; Add your <code>.com</code> domain and activate it (add the <code>www</code> version too).</li>
+</ol>
+<h3>CRITICAL: Fix Duplicate Content SEO Penalty</h3>
+<p>Your site is now accessible at both <code>yourdomain.com</code> and <code>yoursite.pages.dev</code>. Google penalizes this duplicate content. <em>(Note: If you decided to use Cloudflare Workers instead of Pages, you must explicitly disable the <code>.workers.dev</code> domain routing in your Cloudflare dashboard after connecting your <code>.com</code> domain).</em></p>
+<ol>
+<li>Create a file named <code>_headers</code> inside your project&#39;s <code>/public</code> folder.</li>
+<li>Add this exact text (replace with your actual <code>.pages.dev</code> URL):<pre><code class="language-text">https://yoursite.pages.dev/*
+  X-Robots-Tag: noindex
+</code></pre>
+</li>
+<li>Run the deployment command. This tells Google bots to ignore the free subdomain and only index your <code>.com</code> domain:<pre><code class="language-bash">npm run deploy
+</code></pre>
+</li>
+<li><strong>Verify the Fix:</strong><ul>
+<li>Open your <code>.pages.dev</code> URL in Google Chrome.</li>
+<li>Press <strong>F12</strong> to open Developer Tools, then navigate to the <strong>Network</strong> tab.</li>
+<li>Refresh the page and click on your website&#39;s main request (usually the first item).</li>
+<li>Look under the <strong>Headers</strong> section. You should see <code>X-Robots-Tag: noindex</code> (and often other security headers like <code>x-content-type-options: nosniff</code>). This confirms that the duplicate content issue is successfully fixed and Google will ignore this subdomain!</li>
+</ul>
+</li>
+</ol>
+<h2>Step 13: Search Engine Submission</h2>
+<p>Force search engines to crawl your new site.</p>
+<ol>
+<li>Go to <a href="https://search.google.com/search-console/about"><strong>Google Search Console</strong></a> and add your domain property (e.g., <code>realonlineruler.com</code> — enter it exactly like that, without <code>https://</code> or <code>www</code>).<ul>
+<li>Press <strong>Continue</strong> and copy the provided TXT record.</li>
+<li>Go to your Cloudflare Dashboard &gt; Click your domain name &gt; <strong>DNS</strong> &gt; <strong>Records</strong>.</li>
+<li>Click <strong>Add record</strong>, set the Type to <code>TXT</code>, type <code>@</code> in the Name field, and paste the copied TXT record into the Content field. Save it.</li>
+<li>Go back to Google Search Console, wait 10-15 seconds, and click <strong>Verify</strong>.</li>
+</ul>
+</li>
+<li><strong>Submit Your Sitemap:</strong> Go to the <strong>Sitemaps</strong> section.<ul>
+<li><em>How to find your sitemap URL:</em> Open your browser and go to your website&#39;s robots file (e.g., <code>https://realonlineruler.com/robots.txt</code>).</li>
+<li>Look at the very bottom of the text file and copy the sitemap URL (it will usually look like <code>https://realonlineruler.com/sitemap-index.xml</code>).</li>
+<li>Paste that exact URL into the &quot;Add a new sitemap&quot; field in Google Search Console and click <strong>Submit</strong>.</li>
+<li><em>(<strong>Note:</strong> Google Search Console often initially shows the status as &quot;Couldn&#39;t fetch&quot;. Simply refresh the page, and the status should update to &quot;Success&quot;.)</em></li>
+</ul>
+</li>
+<li><strong>Request Indexing:</strong> Use the <strong>URL Inspection</strong> tool.<ul>
+<li>Click the search bar at the top, type your full domain (including <code>https://</code>, e.g., <code>https://realonlineruler.com</code>), and press Enter.</li>
+<li>Once the page loads, click the <strong>Request Indexing</strong> button. This explicitly signals Google that your new site is ready to be crawled.</li>
+</ul>
+</li>
+<li><strong>Submit to Bing Webmaster Tools:</strong> Go to <a href="https://www.bing.com/webmasters/about">bing.com/webmasters/about</a>.<ul>
+<li>Click <strong>Get Started</strong> and sign in with your Google account.</li>
+<li>Click <strong>Import from Google Search Console</strong>, then click <strong>Import</strong> and wait for it to finish.</li>
+<li>Go to <strong>Home</strong> &gt; <strong>URL Submission</strong> &gt; <strong>Submit URLs</strong>.</li>
+<li>Paste your complete domain URL (e.g., <code>https://realonlineruler.com</code>) and click submit. <em>(Why? Bing powers DuckDuckGo, Yahoo, and many AI search engines—it&#39;s highly worth the 5 minutes).</em></li>
+</ul>
+</li>
+<li><strong>Promotion:</strong> Share your tool on relevant Reddit communities, Quora answers, and social media to get initial human traffic, which signals value to Google.</li>
+</ol>
+<p><strong>Congratulations! Your website is now fully live and indexed.</strong></p>
+<blockquote>
+<p><strong>⏳ Timeline Expectations:</strong></p>
+<ul>
+<li><strong>Performance Data:</strong> It will take about <strong>2 days</strong> before Google Search Console starts showing any traffic data for your page.</li>
+<li><strong>Site Icon:</strong> It will take roughly <strong>1 week</strong> for your website&#39;s favicon to appear next to your site in Google search results.</li>
+</ul>
+</blockquote>
+<h2>Step 14: Verify Google Analytics is Working</h2>
+<p>Back in <strong>Step 7</strong>, you added the Google Analytics tracking code to your website. Now that your site is fully live on the internet, you must verify the installation to track your users.</p>
+<ol>
+<li>Go back to <a href="https://analytics.google.com">Google Analytics</a>.</li>
+<li>On your installation/data stream screen, click the <strong>Test Installation</strong> button.</li>
+<li>Since your site is now live and the code was deployed, Google will successfully detect the tag.</li>
+<li>Click <strong>Confirm</strong> &gt; <strong>Next</strong> &gt; <strong>Continue to Home</strong> &gt; <strong>Save</strong>.</li>
+<li>You will now see your main dashboard. Click on <strong>Real-time</strong> to see active users currently on your site, what countries they are visiting from, and other live data.</li>
+</ol>
+<h2>Step 15: Google AdSense Monetization</h2>
+<p>Do not apply for AdSense on day one. You need to <strong>wait at least 1 month</strong> before applying so your site has time to age and build trust. You MUST also ensure your Google Analytics shows you are getting a minimum of <strong>10+ consistent organic users per day</strong> (check this in Analytics under <code>Real-time</code> → <code>Users</code>). Applying too early with zero traffic will result in an instant rejection.</p>
+<ol>
+<li>Go to <a href="https://adsense.google.com/start/">Google AdSense</a> and log in.</li>
+<li>Go to <strong>Sites</strong> &gt; <strong>Add new site</strong> and enter your domain name (without <code>https://</code> or <code>www</code>, e.g., <code>realonlineruler.com</code>).</li>
+<li><strong>Add the Script:</strong> Copy the provided AdSense code snippet.<ul>
+<li><strong>Prompt the AI:</strong> <em>&quot;Add this AdSense verification script to the global site header: [paste snippet]&quot;</em></li>
+<li>Run the deployment command: <code>npm run deploy</code>. Wait 10 seconds.</li>
+</ul>
+</li>
+<li><strong>Verify:</strong> Go back to AdSense, tick the box saying <strong>&quot;I&#39;ve placed the code&quot;</strong>, and click <strong>Verify</strong>.</li>
+<li>Click <strong>Next</strong> &gt; <strong>Request Review</strong>.</li>
+<li><strong>Consent Message:</strong> It will ask you to create a GDPR consent message for your website. Click on the first option provided by Google, then click <strong>Submit</strong>.</li>
+<li><strong>Fixing the ads.txt Error:</strong> Your application is now submitted and will say <strong>&quot;Getting Ready&quot;</strong>. However, you will likely see a warning saying <code>ads.txt</code> is <strong>Not Found</strong>.<ul>
+<li>To fix this, click on <strong>Verify Site Ownership</strong>.</li>
+<li>Click on the <code>ads.txt</code> option and copy the publisher ID code it gives you.</li>
+<li><strong>Prompt the AI:</strong> <em>&quot;Create an <code>ads.txt</code> file in the <code>public</code> directory with this content: [paste your AdSense publisher ID text]&quot;</em></li>
+<li>Run the deployment command again: <code>npm run deploy</code>.</li>
+<li>Wait a minute and refresh AdSense. <em>(You can verify it works by visiting <code>yourdomain.com/ads.txt</code> in your browser).</em></li>
+</ul>
+</li>
+<li><strong>Wait for Approval:</strong> You will receive an email regarding your approval.<ul>
+<li>_(<strong>Note:</strong> Expect to be rejected your first few times! This is completely normal. If rejected, copy the exact issues they flag, paste them into your AI agent to fix, run <code>npm run deploy</code>, and reapply. You have to be persistent).*</li>
+</ul>
+</li>
+<li><strong>Turn on Ads:</strong> Once approved (which might take a month of site aging), go to <strong>Ads</strong> &gt; <strong>Auto Ads</strong> &gt; <strong>Edit</strong>. Turn it ON, click <strong>Apply to Site</strong>, and <strong>Save</strong>.<ul>
+<li>Your ads will now be automatically placed, and your earnings will update daily!</li>
+</ul>
+</li>
+</ol>
+<h2>Checklist Summary</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Research keyword and check competition.</li>
+<li><input disabled="" type="checkbox"> Initialize Astro project &amp; AI tools.</li>
+<li><input disabled="" type="checkbox"> AI prompt to generate core tool.</li>
+<li><input disabled="" type="checkbox"> Add branding (Logo/Favicon).</li>
+<li><input disabled="" type="checkbox"> AI prompt for On-Page SEO (600 words).</li>
+<li><input disabled="" type="checkbox"> AI prompt for FAQ JSON-LD.</li>
+<li><input disabled="" type="checkbox"> AI prompt for Legal Pages, 404, sitemap.</li>
+<li><input disabled="" type="checkbox"> Deploy to Cloudflare Pages.</li>
+<li><input disabled="" type="checkbox"> Buy <code>.com</code> domain and map in Cloudflare.</li>
+<li><input disabled="" type="checkbox"> Add <code>_headers</code> to block <code>.pages.dev</code> indexing.</li>
+<li><input disabled="" type="checkbox"> Submit to Google Search Console.</li>
+<li><input disabled="" type="checkbox"> Wait for traffic, apply for AdSense.</li>
+</ul>
+<hr>
+<blockquote>
+<p><strong>Credits:</strong></p>
+<ul>
+<li><strong>Source Material:</strong> Extracted from <a href="https://compilefuture.com/blog/how-to-earn-using-ai/">Compile Future: How to Earn Using AI</a></li>
+<li><strong>Guide Created By:</strong> <a href="https://www.linkedin.com/in/arora-sir/">Mohit Arora (LinkedIn)</a> | <a href="https://github.com/Arora-Sir">GitHub</a></li>
+</ul>
+</blockquote>
+
+    </div>
+    <script>
+        document.querySelectorAll('pre').forEach((block) => {
+            const button = document.createElement('button');
+            button.className = 'copy-button';
+            button.innerText = 'Copy';
+            
+            button.addEventListener('click', () => {
+                const code = block.querySelector('code');
+                const text = code ? code.innerText : block.innerText;
+                
+                navigator.clipboard.writeText(text).then(() => {
+                    button.innerText = 'Copied!';
+                    button.classList.add('copied');
+                    setTimeout(() => {
+                        button.innerText = 'Copy';
+                        button.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            });
+            
+            block.appendChild(button);
+        });
+
+        // Checklist Sync Logic
+        const h2Elements = document.querySelectorAll('h2');
+        
+        h2Elements.forEach((h2) => {
+            // Add Master Checkbox to h2
+            const masterCheck = document.createElement('input');
+            masterCheck.type = 'checkbox';
+            h2.prepend(masterCheck);
+            
+            // Wrap the rest of the h2 content in a span for text-decoration
+            const titleSpan = document.createElement('span');
+            while(h2.childNodes.length > 1) {
+                titleSpan.appendChild(h2.childNodes[1]);
+            }
+            h2.appendChild(titleSpan);
+
+            // Find all list items belonging to this h2
+            let nextEl = h2.nextElementSibling;
+            let subCheckboxes = [];
+            let liElements = [];
+            let sectionElements = [];
+
+            while (nextEl && nextEl.tagName !== 'H2') {
+                let isActionableList = false;
+                if (nextEl.tagName === 'UL' || nextEl.tagName === 'OL') {
+                    const tempLis = nextEl.querySelectorAll('li');
+                    for (let i = 0; i < tempLis.length; i++) {
+                        const tempLi = tempLis[i];
+                        const nativeCheck = tempLi.querySelector('input[type="checkbox"]');
+                        const isOrdered = tempLi.parentElement.tagName === 'OL';
+                        if (isOrdered || nativeCheck) {
+                            isActionableList = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (nextEl.tagName !== 'HR') {
+                    if (nextEl.tagName !== 'UL' && nextEl.tagName !== 'OL') {
+                        sectionElements.push(nextEl);
+                    } else if (!isActionableList) {
+                        sectionElements.push(nextEl);
+                    }
+                }
+
+                if (nextEl.tagName === 'UL' || nextEl.tagName === 'OL') {
+                    const lis = nextEl.querySelectorAll('li');
+                    lis.forEach(li => {
+                        // Remove native markdown checkboxes (e.g. from - [ ]) to prevent duplicates
+                        const nativeCheck = li.querySelector('input[type="checkbox"]');
+                        const isOrdered = li.parentElement.tagName === 'OL';
+
+                        // Only convert to an interactive checkbox if it's an actionable numbered step
+                        // OR if it was explicitly created as a markdown checkbox (- [ ])
+                        if (!isOrdered && !nativeCheck) {
+                            return; // skip standard explanatory bullet points
+                        }
+
+                        li.classList.add('task-item');
+
+                        if (nativeCheck) {
+                            nativeCheck.remove();
+                        }
+
+                        const subCheck = document.createElement('input');
+                        subCheck.type = 'checkbox';
+                        li.prepend(subCheck);
+                        
+                        // Wrap text for styling
+                        const liTextSpan = document.createElement('span');
+                        liTextSpan.className = 'task-text';
+                        while(li.childNodes.length > 1) {
+                            const node = li.childNodes[1];
+                            if(node.tagName === 'UL' || node.tagName === 'OL') {
+                                break;
+                            }
+                            liTextSpan.appendChild(node);
+                        }
+                        li.insertBefore(liTextSpan, li.childNodes[1]);
+                        
+                        subCheckboxes.push(subCheck);
+                        liElements.push({ checkbox: subCheck, textSpan: liTextSpan });
+
+                        // Sub-checkbox click logic
+                        subCheck.addEventListener('change', (e) => {
+                            if (e.target.checked) {
+                                liTextSpan.classList.add('completed-text');
+                            } else {
+                                liTextSpan.classList.remove('completed-text');
+                            }
+                            
+                            // Top-down sync for immediate nested lists
+                            const nestedLists = li.querySelectorAll(':scope > ul, :scope > ol');
+                            nestedLists.forEach(list => {
+                                const nestedChecks = list.querySelectorAll(':scope > li.task-item > input[type="checkbox"]');
+                                if (nestedChecks.length === 0) {
+                                    if (e.target.checked) {
+                                        list.classList.add('completed-text');
+                                    } else {
+                                        list.classList.remove('completed-text');
+                                    }
+                                } else {
+                                    nestedChecks.forEach(nc => {
+                                        if(nc.checked !== e.target.checked) {
+                                            nc.checked = e.target.checked;
+                                            nc.dispatchEvent(new Event('change'));
+                                        }
+                                    });
+                                }
+                            });
+
+                            // Bottom-up sync for parent lists
+                            const parentList = li.parentElement;
+                            if (parentList && parentList.parentElement.tagName === 'LI') {
+                                const parentLi = parentList.parentElement;
+                                const parentCheck = parentLi.querySelector(':scope > input[type="checkbox"]');
+                                const siblings = parentList.querySelectorAll(':scope > li > input[type="checkbox"]');
+                                if (parentCheck) {
+                                    const allSiblingsChecked = Array.from(siblings).every(c => c.checked);
+                                    if (parentCheck.checked !== allSiblingsChecked) {
+                                        parentCheck.checked = allSiblingsChecked;
+                                        parentCheck.dispatchEvent(new Event('change'));
+                                    }
+                                }
+                            }
+
+                            // Auto-check master if all are checked
+                            masterCheck.checked = subCheckboxes.every(cb => cb.checked);
+                            if (masterCheck.checked) {
+                                titleSpan.classList.add('completed-text');
+                                sectionElements.forEach(el => el.classList.add('completed-text'));
+                            } else {
+                                titleSpan.classList.remove('completed-text');
+                                sectionElements.forEach(el => el.classList.remove('completed-text'));
+                            }
+                        });
+                    });
+                }
+                nextEl = nextEl.nextElementSibling;
+            }
+
+            // Master Checkbox click logic
+            masterCheck.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                
+                if (isChecked) {
+                    titleSpan.classList.add('completed-text');
+                    sectionElements.forEach(el => el.classList.add('completed-text'));
+                } else {
+                    titleSpan.classList.remove('completed-text');
+                    sectionElements.forEach(el => el.classList.remove('completed-text'));
+                }
+
+                liElements.forEach(item => {
+                    if (item.checkbox.checked !== isChecked) {
+                        item.checkbox.checked = isChecked;
+                        item.checkbox.dispatchEvent(new Event('change'));
+                    }
+                });
+            });
+        });
+
+        // Global Reset Button
+        const resetBtn = document.createElement('button');
+        resetBtn.id = 'reset-btn';
+        resetBtn.className = 'reset-btn';
+        resetBtn.innerText = 'Untick All';
+        document.body.appendChild(resetBtn);
+
+        resetBtn.addEventListener('click', () => {
+            const allChecks = document.querySelectorAll('input[type="checkbox"]');
+            allChecks.forEach(cb => {
+                if(cb.checked) {
+                    cb.checked = false;
+                    cb.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+
+        // LocalStorage Save/Load Logic
+        const allChecks = document.querySelectorAll('input[type="checkbox"]');
+        
+        // 1. Assign unique IDs based on text content (more robust than index)
+        allChecks.forEach((cb, index) => {
+            const parentText = cb.parentElement.innerText.replace(/[^a-zA-Z0-9]/g, '').slice(0, 30);
+            cb.dataset.saveId = 'chk_' + index + '_' + parentText;
+            
+            // Save state on any change
+            cb.addEventListener('change', () => {
+                localStorage.setItem(cb.dataset.saveId, cb.checked);
+            });
+        });
+
+        // 2. Load states from LocalStorage on page load
+        // We do this after all event listeners are registered so dispatching 'change' triggers UI updates
+        allChecks.forEach(cb => {
+            const savedState = localStorage.getItem(cb.dataset.saveId);
+            if (savedState === 'true' && !cb.checked) {
+                cb.checked = true;
+                cb.dispatchEvent(new Event('change'));
+            } else if (savedState === 'false' && cb.checked) {
+                cb.checked = false;
+                cb.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
+</body>
+</html>
