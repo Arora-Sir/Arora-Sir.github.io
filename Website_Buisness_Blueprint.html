@@ -347,10 +347,25 @@
         }
 
         @media (max-width: 768px) {
-            body { padding: 1rem; }
-            .container { padding: 2rem; border-radius: 16px; }
-            h1 { font-size: 2.5rem; }
-            h2 { font-size: 1.8rem; }
+            body { padding: 0.5rem; }
+            .container { padding: 1.5rem; border-radius: 16px; }
+            h1 { font-size: 2rem; margin-bottom: 1.5rem; }
+            h2 { font-size: 1.5rem; align-items: flex-start; }
+            h2 > input[type="checkbox"] { margin-top: 4px; flex-shrink: 0; }
+            h3 { font-size: 1.2rem; }
+            p, ul, ol, li { font-size: 1rem; }
+            pre { padding: 1rem; font-size: 0.85rem; overflow-x: auto; }
+            blockquote { padding: 1rem; margin: 1.5rem 0; }
+            .reset-btn { bottom: 1rem; right: 1rem; padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+            li.task-item { gap: 8px; }
+            li.task-item > ul, li.task-item > ol { margin-left: 1.2rem; }
+        }
+        
+        @media (max-width: 480px) {
+            body { padding: 0; }
+            .container { padding: 1.25rem; border-radius: 0; border-left: none; border-right: none; }
+            h1 { font-size: 1.6rem; padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+            h2 { font-size: 1.3rem; }
         }
     </style>
 </head>
@@ -727,6 +742,10 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
 <li><strong>Guide Created By:</strong> <a href="https://www.linkedin.com/in/arora-sir/">Mohit Arora (LinkedIn)</a> | <a href="https://github.com/Arora-Sir">GitHub</a></li>
 </ul>
 </blockquote>
+
+<div style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 1rem;">
+    <img src="https://hits.sh/arora-sir.github.io/Website_Buisness_Blueprint.html.svg?style=for-the-badge&label=Total%20Views&color=3b82f6" alt="Website Views"/>
+</div>
 
     </div>
     <script>
