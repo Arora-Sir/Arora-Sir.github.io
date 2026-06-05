@@ -394,6 +394,15 @@
             h1 { font-size: 1.6rem; padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
             h2 { font-size: 1.3rem; }
         }
+    
+        .domain-input-card { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--primary-color); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .domain-input-card label { display: block; margin-bottom: 0.5rem; color: #fff; font-size: 1.05rem; }
+        .domain-input-wrapper { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .domain-input-card input { flex: 1; min-width: 200px; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.8); color: #fff; font-size: 1rem; font-family: 'Inter', sans-serif; outline: none; transition: all 0.2s; }
+        .domain-input-card input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); }
+        .domain-input-card button { background: var(--primary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 1rem; }
+        .domain-input-card button:hover { background: #2563eb; transform: translateY(-1px); }
+        .dynamic-domain, .dynamic-subdomain { transition: color 0.3s ease; }
     </style>
 </head>
 <body>
@@ -422,16 +431,23 @@
 </li>
 </ol>
 <h2>Step 2: Choosing the Perfect Domain Name</h2>
+<div class="domain-input-card">
+    <label for="domain-input"><strong>🛠️ Interactive Guide:</strong> Enter your planned domain name to update all examples below:</label>
+    <div class="domain-input-wrapper">
+        <input type="text" id="domain-input" placeholder="e.g. mycooltool.com" />
+        <button id="domain-apply-btn">Apply</button>
+    </div>
+</div>
 <p>Your domain name is a crucial ranking factor.</p>
 <ol>
 <li>Go to <a href="https://instantdomainsearch.com/">Instant Domain Search</a> to brainstorm.</li>
 <li><strong>Rules for Domains:</strong><ul>
 <li><strong>MUST be a <code>.com</code> domain.</strong></li>
-<li>Must contain your primary keyword (e.g., <code>realonlineruler.com</code> contains <code>online</code> and <code>ruler</code>).</li>
+<li>Must contain your primary keyword (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code> contains <code>online</code> and <code>ruler</code>).</li>
 <li>Avoid hyphens.</li>
 </ul>
 </li>
-<li><strong>Keep it Short:</strong> Avoid overly long domains. If <code>freeruler.com</code> is taken, try adding context like <code>realonlineruler.com</code>.</li>
+<li><strong>Keep it Short:</strong> Avoid overly long domains. If <code>freeruler.com</code> is taken, try adding context like <code><span class="dynamic-domain">realonlineruler.com</span></code>.</li>
 <li><strong>When to Buy:</strong> <strong>CRITICAL:</strong> Do NOT buy the domain yet! Build the tool with AI first. Sometimes an idea turns out to be too complex or requires paid APIs. Only buy the domain after the code is fully working on your local computer so you don&#39;t waste ₹1,000.</li>
 <li><strong>Where to buy later:</strong> <a href="https://www.namecheap.com/">Namecheap</a>, <a href="https://www.godaddy.com/">GoDaddy</a>, <a href="https://www.bigrock.in/">BigRock</a> (₹883/year with UPI), or <a href="https://www.hostinger.com/">Hostinger</a>.</li>
 </ol>
@@ -445,7 +461,7 @@
 </code></pre>
 *(<strong><em>Why?</em></strong> This command uses the Node Package Manager (npm) to install Claude Code globally (<code>-g</code>) on your system, allowing you to use the <code>claude</code> command from any terminal folder.)*
 Alternatively, use free alternatives like <a href="https://www.cursor.com/"><strong>Cursor AI</strong></a> or <strong>Gemini CLI</strong> / <a href="https://opencode.ai/"><strong>Google OpenCode Minimax</strong></a>.</li>
-<li>Create a new empty folder on your computer named after your domain (e.g., <code>realonlineruler.com</code>).</li>
+<li>Create a new empty folder on your computer named after your domain (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>).</li>
 <li>Drag this folder into VS Code to open it.</li>
 </ol>
 <h2>Step 4: Initializing the Project</h2>
@@ -512,12 +528,12 @@ Use the <code>@Docs</code> feature and search for &quot;Tailwind CSS v4&quot; to
 <pre><code class="language-text">I have initialized a new AstroJS project. Use your available web design skills, plugins, or read modern Tailwind v4 documentation. Also use @DESIGN.md. Keep the website design like Vercel.
 
 Name: [Your Tool Name]
-Domain: [yourdomain.com]
+Domain: [<span class="dynamic-domain">yourdomain.com</span>]
 
 Create a [describe your tool in detail]. My competitor is [URL] — analyze it, identify its weaknesses,
 and build a better version. Use MPA (multi-page application) architecture for best SEO.
 </code></pre>
-<p><strong>Real-World Prompt Example (from RealOnlineRuler.com):</strong></p>
+<p><strong>Real-World Prompt Example (from <span class="dynamic-domain" style="text-transform: capitalize;">realonlineruler.com</span>):</strong></p>
 <blockquote>
 <p><em>Create an online ruler website that will have ruler on the edges, user can select where to place the ruler. we want these 3 calibration methods</em>
 <em>Method 1: Auto-Detect Device</em>
@@ -650,10 +666,10 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
 <li><strong>Link to your Project:</strong> In Cloudflare, go to <strong>Workers &amp; Pages</strong> &gt; Select your project &gt; <strong>Settings</strong> &gt; <strong>Custom Domains</strong> &gt; Add your <code>.com</code> domain and activate it (add the <code>www</code> version too).</li>
 </ol>
 <h3>CRITICAL: Fix Duplicate Content SEO Penalty</h3>
-<p>Your site is now accessible at both <code>yourdomain.com</code> and <code>yoursite.pages.dev</code>. Google penalizes this duplicate content. <em>(Note: If you decided to use Cloudflare Workers instead of Pages, you must explicitly disable the <code>.workers.dev</code> domain routing in your Cloudflare dashboard after connecting your <code>.com</code> domain).</em></p>
+<p>Your site is now accessible at both <code><span class="dynamic-domain">yourdomain.com</span></code> and <code><span class="dynamic-subdomain">yoursite</span>.pages.dev</code>. Google penalizes this duplicate content. <em>(Note: If you decided to use Cloudflare Workers instead of Pages, you must explicitly disable the <code>.workers.dev</code> domain routing in your Cloudflare dashboard after connecting your <code>.com</code> domain).</em></p>
 <ol>
 <li>Create a file named <code>_headers</code> inside your project&#39;s <code>/public</code> folder.</li>
-<li>Add this exact text (replace with your actual <code>.pages.dev</code> URL):<pre><code class="language-text">https://yoursite.pages.dev/*
+<li>Add this exact text (replace with your actual <code>.pages.dev</code> URL):<pre><code class="language-text">https://<span class="dynamic-subdomain">yoursite</span>.pages.dev/*
   X-Robots-Tag: noindex
 </code></pre>
 </li>
@@ -671,7 +687,7 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
 <h2>Step 13: Search Engine Submission</h2>
 <p>Force search engines to crawl your new site.</p>
 <ol>
-<li>Go to <a href="https://search.google.com/search-console/about"><strong>Google Search Console</strong></a> and add your domain property (e.g., <code>realonlineruler.com</code> — enter it exactly like that, without <code>https://</code> or <code>www</code>).<ul>
+<li>Go to <a href="https://search.google.com/search-console/about"><strong>Google Search Console</strong></a> and add your domain property (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code> — enter it exactly like that, without <code>https://</code> or <code>www</code>).<ul>
 <li>Press <strong>Continue</strong> and copy the provided TXT record.</li>
 <li>Go to your Cloudflare Dashboard &gt; Click your domain name &gt; <strong>DNS</strong> &gt; <strong>Records</strong>.</li>
 <li>Click <strong>Add record</strong>, set the Type to <code>TXT</code>, type <code>@</code> in the Name field, and paste the copied TXT record into the Content field. Save it.</li>
@@ -679,14 +695,14 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
 </ul>
 </li>
 <li><strong>Submit Your Sitemap:</strong> Go to the <strong>Sitemaps</strong> section.<ul>
-<li><em>How to find your sitemap URL:</em> Open your browser and go to your website&#39;s robots file (e.g., <code>https://realonlineruler.com/robots.txt</code>).</li>
-<li>Look at the very bottom of the text file and copy the sitemap URL (it will usually look like <code>https://realonlineruler.com/sitemap-index.xml</code>).</li>
+<li><em>How to find your sitemap URL:</em> Open your browser and go to your website&#39;s robots file (e.g., <code>https://<span class="dynamic-domain">realonlineruler.com</span>/robots.txt</code>).</li>
+<li>Look at the very bottom of the text file and copy the sitemap URL (it will usually look like <code>https://<span class="dynamic-domain">realonlineruler.com</span>/sitemap-index.xml</code>).</li>
 <li>Paste that exact URL into the &quot;Add a new sitemap&quot; field in Google Search Console and click <strong>Submit</strong>.</li>
 <li><em>(<strong>Note:</strong> Google Search Console often initially shows the status as &quot;Couldn&#39;t fetch&quot;. Simply refresh the page, and the status should update to &quot;Success&quot;.)</em></li>
 </ul>
 </li>
 <li><strong>Request Indexing:</strong> Use the <strong>URL Inspection</strong> tool.<ul>
-<li>Click the search bar at the top, type your full domain (including <code>https://</code>, e.g., <code>https://realonlineruler.com</code>), and press Enter.</li>
+<li>Click the search bar at the top, type your full domain (including <code>https://</code>, e.g., <code>https://<span class="dynamic-domain">realonlineruler.com</span></code>), and press Enter.</li>
 <li>Once the page loads, click the <strong>Request Indexing</strong> button. This explicitly signals Google that your new site is ready to be crawled.</li>
 </ul>
 </li>
@@ -694,7 +710,7 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
 <li>Click <strong>Get Started</strong> and sign in with your Google account.</li>
 <li>Click <strong>Import from Google Search Console</strong>, then click <strong>Import</strong> and wait for it to finish.</li>
 <li>Go to <strong>Home</strong> &gt; <strong>URL Submission</strong> &gt; <strong>Submit URLs</strong>.</li>
-<li>Paste your complete domain URL (e.g., <code>https://realonlineruler.com</code>) and click submit. <em>(Why? Bing powers DuckDuckGo, Yahoo, and many AI search engines—it&#39;s highly worth the 5 minutes).</em></li>
+<li>Paste your complete domain URL (e.g., <code>https://<span class="dynamic-domain">realonlineruler.com</span></code>) and click submit. <em>(Why? Bing powers DuckDuckGo, Yahoo, and many AI search engines—it&#39;s highly worth the 5 minutes).</em></li>
 </ul>
 </li>
 <li><strong>Promotion:</strong> Share your tool on relevant Reddit communities, Quora answers, and social media to get initial human traffic, which signals value to Google.</li>
@@ -720,7 +736,7 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
 <p>Do not apply for AdSense on day one. You need to <strong>wait at least 1 month</strong> before applying so your site has time to age and build trust. You MUST also ensure your Google Analytics shows you are getting a minimum of <strong>10+ consistent organic users per day</strong> (check this in Analytics under <code>Real-time</code> → <code>Users</code>). Applying too early with zero traffic will result in an instant rejection.</p>
 <ol>
 <li>Go to <a href="https://adsense.google.com/start/">Google AdSense</a> and log in.</li>
-<li>Go to <strong>Sites</strong> &gt; <strong>Add new site</strong> and enter your domain name (without <code>https://</code> or <code>www</code>, e.g., <code>realonlineruler.com</code>).</li>
+<li>Go to <strong>Sites</strong> &gt; <strong>Add new site</strong> and enter your domain name (without <code>https://</code> or <code>www</code>, e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>).</li>
 <li><strong>Add the Script:</strong> Copy the provided AdSense code snippet.<ul>
 <li><strong>Prompt the AI:</strong> <em>&quot;Add this AdSense verification script to the global site header: [paste snippet]&quot;</em></li>
 <li>Run the deployment command: <code>npm run deploy</code>. Wait 10 seconds.</li>
@@ -734,7 +750,7 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
 <li>Click on the <code>ads.txt</code> option and copy the publisher ID code it gives you.</li>
 <li><strong>Prompt the AI:</strong> <em>&quot;Create an <code>ads.txt</code> file in the <code>public</code> directory with this content: [paste your AdSense publisher ID text]&quot;</em></li>
 <li>Run the deployment command again: <code>npm run deploy</code>.</li>
-<li>Wait a minute and refresh AdSense. <em>(You can verify it works by visiting <code>yourdomain.com/ads.txt</code> in your browser).</em></li>
+<li>Wait a minute and refresh AdSense. <em>(You can verify it works by visiting <code><span class="dynamic-domain">yourdomain.com</span>/ads.txt</code> in your browser).</em></li>
 </ul>
 </li>
 <li><strong>Wait for Approval:</strong> You will receive an email regarding your approval.<ul>
@@ -1003,6 +1019,39 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
             } else if (savedState === 'false' && cb.checked) {
                 cb.checked = false;
                 cb.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('domain-apply-btn').addEventListener('click', () => {
+            let newDomain = document.getElementById('domain-input').value.trim().toLowerCase();
+            if(!newDomain) return;
+            newDomain = newDomain.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
+            if(newDomain.length < 3) return;
+            let newSubdomain = newDomain.split('.')[0] || 'yoursite';
+            
+            document.querySelectorAll('.dynamic-domain').forEach(el => {
+                el.innerText = newDomain;
+                el.style.color = 'var(--accent-color)';
+                setTimeout(() => { el.style.color = ''; }, 1000);
+            });
+            document.querySelectorAll('.dynamic-subdomain').forEach(el => {
+                el.innerText = newSubdomain;
+                el.style.color = 'var(--accent-color)';
+                setTimeout(() => { el.style.color = ''; }, 1000);
+            });
+            
+            const btn = document.getElementById('domain-apply-btn');
+            btn.innerText = 'Updated!';
+            btn.style.background = 'var(--accent-color)';
+            setTimeout(() => {
+                btn.innerText = 'Apply';
+                btn.style.background = 'var(--primary-color)';
+            }, 2000);
+        });
+        document.getElementById('domain-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                document.getElementById('domain-apply-btn').click();
             }
         });
     </script>
