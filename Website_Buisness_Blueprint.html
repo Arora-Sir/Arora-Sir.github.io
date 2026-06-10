@@ -462,7 +462,15 @@
 *(<strong><em>Why?</em></strong> This command uses the Node Package Manager (npm) to install Claude Code globally (<code>-g</code>) on your system, allowing you to use the <code>claude</code> command from any terminal folder.)*
 Alternatively, use free alternatives like <a href="https://www.cursor.com/"><strong>Cursor AI</strong></a> or <strong>Gemini CLI</strong> / <a href="https://opencode.ai/"><strong>Google OpenCode Minimax</strong></a>.</li>
 <li>Create a new empty folder on your computer named after your domain (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>).</li>
-<li>Drag this folder into VS Code to open it.</li>
+    <li>Drag this folder into VS Code to open it.</li>
+    <li><strong>Create a GitHub Repository:</strong>
+    <ul>
+        <li>Go to <a href="https://github.com">github.com</a> and sign in (create a free account if needed).</li>
+        <li>Click the <strong>+</strong> icon (top-right) → <strong>New repository</strong>.</li>
+        <li>Name it after your domain (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>), set it to <strong>Public</strong>, and <strong>do not</strong> initialize with a README, .gitignore, or license.</li>
+        <li>Click <strong>Create repository</strong>. Keep this browser tab open — you will need the remote URL in the next step.</li>
+    </ul>
+    </li>
 </ol>
 <h2>Step 4: Initializing the Project</h2>
 <ol>
@@ -471,7 +479,17 @@ Alternatively, use free alternatives like <a href="https://www.cursor.com/"><str
 </code></pre>
 <em>(<strong>Why this command?</strong> <code>npm create</code> fetches the latest Astro installation script. The <code>.</code> at the end tells it to install directly into your current empty folder rather than creating a new subfolder. Astro is chosen because it outputs static HTML, which is lightning-fast and highly favored by Google&#39;s search algorithms.)</em></li>
 <li>Press Enter for all defaults. Choose the <strong>&quot;Basic&quot;</strong> template.</li>
-<li>Say <strong>Yes</strong> when asked to initialize a Git repository. <em>(<strong>Purpose:</strong> Git tracks every change you make to your files. If you or the AI break something, Git allows you to instantly revert back to a working version.)</em></li>
+    <li>Say <strong>Yes</strong> when asked to initialize a Git repository. <em>(<strong>Purpose:</strong> Git tracks every change you make to your files. If you or the AI break something, Git allows you to instantly revert back to a working version.)</em></li>
+    <li><strong>Push to GitHub:</strong>
+    <ul>
+        <li>Link your local project to the GitHub repository you created in Step 3:<pre><code class="language-bash">git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+</code></pre>
+        <em>(Replace <code>YOUR_USERNAME</code> and <code>YOUR_REPO_NAME</code> with your actual GitHub username and repository name.)</em></li>
+        <li>Push your initial code:<pre><code class="language-bash">git push -u origin main
+</code></pre>
+        <em>(<strong>What this does:</strong> <code>git remote add</code> connects your local folder to the GitHub repository. <code>git push -u origin main</code> uploads your code and sets the upstream, so future pushes can be just <code>git push</code>.)</em></li>
+    </ul>
+    </li>
 </ol>
 <h2>Step 5: Equipping the AI with Design Skills</h2>
 <p>Give the AI the context it needs to create professional, modern designs.</p>
@@ -568,8 +586,8 @@ and build a better version. Use MPA (multi-page application) architecture for be
 <li><strong>Color Palette:</strong> Ensure your tool uses modern colors (avoid plain #FF0000 red, use HSL tailored colors).</li>
 <li><strong>Analytics:</strong> Go to <a href="https://analytics.google.com">Google Analytics</a>.<ul>
 <li>Create a new web property and copy your unique tracking script/tag.</li>
-<li><strong>Prompt the AI:</strong> <em>&quot;Add this Google Analytics tracking code to the global site header.&quot;</em></li>
-<li>Once added, deploy the site by running <code>npm run deploy</code> so the tracking goes live.</li>
+        <li><strong>Prompt the AI:</strong> <em>&quot;Add this Google Analytics tracking code to the global site header.&quot;</em></li>
+<li>Once added, push to GitHub to deploy: <code>git add . && git commit -m &quot;Add Google Analytics&quot; && git push</code> so the tracking goes live.</li>
 </ul>
 </li>
 </ol>
@@ -621,17 +639,35 @@ Also, generate a custom 404 error page, a 500 error page, a sitemap.xml, and a r
 </code></pre>
 <p><em>(<strong>Purpose:</strong> A <code>sitemap.xml</code> is a literal map of your website for Google&#39;s bots. A <code>robots.txt</code> file tells those bots which pages they are allowed to scan. Together, they ensure your site gets indexed on Google as fast as possible.)</em></p>
 <h2>Step 11: Deploying to Cloudflare Pages</h2>
-<p>Cloudflare Pages provides free, lightning-fast hosting for static sites.</p>
+<p>Cloudflare Pages provides free, lightning-fast hosting for static sites. The best approach is to connect your GitHub repository so every push deploys automatically.</p>
+<blockquote>
+<p><strong>⚠️ CRITICAL: Select "Pages" not "Worker"</strong><br>
+When you click <strong>Create application</strong>, Cloudflare's default tab is <strong>Worker</strong> (not Pages). You <strong>must</strong> manually switch to the <strong>Pages</strong> tab before proceeding. Creating a Worker instead of Pages will not work for a static website — this is an extremely common mistake that can waste a lot of your time.</p>
+</blockquote>
 <ol>
-<li>In your terminal, log in to Cloudflare:<pre><code class="language-bash">npx wrangler login
+<li><strong>Connect GitHub to Cloudflare Pages:</strong>
+<ul>
+<li>Go to <a href="https://dash.cloudflare.com">Cloudflare Dashboard</a> and log in (create a free account if you don't have one).</li>
+<li>In the left sidebar, go to <strong>Workers &amp; Pages</strong> → <strong>Overview</strong>.</li>
+<li>Click <strong>Create application</strong> → immediately switch to the <strong>Pages</strong> tab (the default is Worker) → click <strong>Connect to Git</strong>.</li>
+<li>If prompted, authorize Cloudflare to access your GitHub account (you can grant access to all repos or just this one).</li>
+<li>Select your repository (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>) and click <strong>Begin setup</strong>.</li>
+</ul>
+</li>
+<li><strong>Configure Build Settings:</strong>
+<ul>
+<li><strong>Project name:</strong> Auto-filled from your repo name (you can change it).</li>
+<li><strong>Production branch:</strong> <code>main</code>.</li>
+<li><strong>Build command:</strong> <code>npm run build</code>.</li>
+<li><strong>Build output directory:</strong> <code>dist</code>.</li>
+<li>Leave environment variables empty for now.</li>
+<li>Click <strong>Save and Deploy</strong>.</li>
+</ul>
+</li>
+<li>Cloudflare will clone your repository, run <code>npm run build</code>, and deploy the output to a free <code>*.pages.dev</code> subdomain. This takes about 1–2 minutes.</li>
+<li><strong>Auto-Deploy on Future Pushes:</strong> From now on, every time you push changes to GitHub:<pre><code class="language-bash">git add . && git commit -m &quot;your update message&quot; && git push
 </code></pre>
-<em>(<strong>Why this command?</strong> Wrangler is Cloudflare&#39;s official terminal tool. This command connects your local VS Code environment to your Cloudflare account securely via your browser.)</em>
-<em>(Authorize in the browser window that opens)</em></li>
-<li><strong>Prompt the AI:</strong> <em>&quot;Deploy this website to Cloudflare Pages and add a deploy command to <code>package.json</code>.&quot;</em></li>
-<li>The AI will configure it. Once done, you can push future updates simply by running:<pre><code class="language-bash">npm run deploy
-</code></pre>
-<em>(<strong>What this does:</strong> It bundles all your code, shrinks it for maximum speed, and uploads it directly to Cloudflare&#39;s global servers. Within seconds, your updates are live worldwide.)</em>
-Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
+Cloudflare automatically detects the push, rebuilds your site, and deploys the update — no manual deploy commands needed.</li>
 </ol>
 <h2>Step 12: Purchasing and Connecting Your Domain</h2>
 <p>Now that the site is fully built and deployed, buy your <code>.com</code> domain (from <a href="https://www.godaddy.com/">GoDaddy</a>, <a href="https://www.hostinger.com/">Hostinger</a>, <a href="https://www.namecheap.com/">Namecheap</a>, or <a href="https://www.bigrock.in/">BigRock</a>).</p>
@@ -673,7 +709,7 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
   X-Robots-Tag: noindex
 </code></pre>
 </li>
-<li>Run the deployment command. This tells Google bots to ignore the free subdomain and only index your <code>.com</code> domain:<pre><code class="language-bash">npm run deploy
+<li>Push the changes to GitHub. This tells Google bots to ignore the free subdomain and only index your <code>.com</code> domain:<pre><code class="language-bash">git add . && git commit -m &quot;Add _headers to block pages.dev indexing&quot; && git push
 </code></pre>
 </li>
 <li><strong>Verify the Fix:</strong><ul>
@@ -739,7 +775,7 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
 <li>Go to <strong>Sites</strong> &gt; <strong>Add new site</strong> and enter your domain name (without <code>https://</code> or <code>www</code>, e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>).</li>
 <li><strong>Add the Script:</strong> Copy the provided AdSense code snippet.<ul>
 <li><strong>Prompt the AI:</strong> <em>&quot;Add this AdSense verification script to the global site header: [paste snippet]&quot;</em></li>
-<li>Run the deployment command: <code>npm run deploy</code>. Wait 10 seconds.</li>
+<li>Push to GitHub: <code>git add . && git commit -m &quot;Add AdSense script&quot; && git push</code>. Wait 10 seconds.</li>
 </ul>
 </li>
 <li><strong>Verify:</strong> Go back to AdSense, tick the box saying <strong>&quot;I&#39;ve placed the code&quot;</strong>, and click <strong>Verify</strong>.</li>
@@ -749,12 +785,12 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
 <li>To fix this, click on <strong>Verify Site Ownership</strong>.</li>
 <li>Click on the <code>ads.txt</code> option and copy the publisher ID code it gives you.</li>
 <li><strong>Prompt the AI:</strong> <em>&quot;Create an <code>ads.txt</code> file in the <code>public</code> directory with this content: [paste your AdSense publisher ID text]&quot;</em></li>
-<li>Run the deployment command again: <code>npm run deploy</code>.</li>
+<li>Push again: <code>git add . && git commit -m &quot;Add ads.txt&quot; && git push</code>.</li>
 <li>Wait a minute and refresh AdSense. <em>(You can verify it works by visiting <code><span class="dynamic-domain">yourdomain.com</span>/ads.txt</code> in your browser).</em></li>
 </ul>
 </li>
 <li><strong>Wait for Approval:</strong> You will receive an email regarding your approval.<ul>
-<li>_(<strong>Note:</strong> Expect to be rejected your first few times! This is completely normal. If rejected, copy the exact issues they flag, paste them into your AI agent to fix, run <code>npm run deploy</code>, and reapply. You have to be persistent).*</li>
+<li>_(<strong>Note:</strong> Expect to be rejected your first few times! This is completely normal. If rejected, copy the exact issues they flag, paste them into your AI agent to fix, run <code>git add . && git commit -m &quot;Fix AdSense issues&quot; && git push</code>, and reapply. You have to be persistent).*</li>
 </ul>
 </li>
 <li><strong>Turn on Ads:</strong> Once approved (which might take a month of site aging), go to <strong>Ads</strong> &gt; <strong>Auto Ads</strong> &gt; <strong>Edit</strong>. Turn it ON, click <strong>Apply to Site</strong>, and <strong>Save</strong>.<ul>
@@ -771,7 +807,8 @@ Your site is now live on a free <code>*.pages.dev</code> subdomain.</li>
 <li><input disabled="" type="checkbox"> AI prompt for On-Page SEO (600 words).</li>
 <li><input disabled="" type="checkbox"> AI prompt for FAQ JSON-LD.</li>
 <li><input disabled="" type="checkbox"> AI prompt for Legal Pages, 404, sitemap.</li>
-<li><input disabled="" type="checkbox"> Deploy to Cloudflare Pages.</li>
+<li><input disabled="" type="checkbox"> Push project to GitHub.</li>
+<li><input disabled="" type="checkbox"> Connect GitHub repo to Cloudflare Pages for auto-deploy.</li>
 <li><input disabled="" type="checkbox"> Buy <code>.com</code> domain and map in Cloudflare.</li>
 <li><input disabled="" type="checkbox"> Add <code>_headers</code> to block <code>.pages.dev</code> indexing.</li>
 <li><input disabled="" type="checkbox"> Submit to Google Search Console.</li>
