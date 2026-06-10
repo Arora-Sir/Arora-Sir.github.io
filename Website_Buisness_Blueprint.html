@@ -403,6 +403,56 @@
         .domain-input-card button { background: var(--primary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 1rem; }
         .domain-input-card button:hover { background: #2563eb; transform: translateY(-1px); }
         .dynamic-domain, .dynamic-subdomain { transition: color 0.3s ease; }
+
+        .step-card {
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+        .step-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .step-card h2 {
+            margin: 0;
+            padding: 1.25rem 1.75rem;
+            cursor: pointer;
+            user-select: none;
+            background: rgba(255, 255, 255, 0.02);
+            transition: background 0.2s ease;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.6rem;
+        }
+        .step-card h2:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .step-card .step-content {
+            padding: 1.75rem;
+            transition: max-height 0.5s ease, opacity 0.35s ease, padding 0.35s ease;
+            max-height: 10000px;
+            opacity: 1;
+            overflow: hidden;
+        }
+        .step-card.collapsed .step-content {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            opacity: 0;
+        }
+        .step-card.collapsed h2 {
+            border-bottom-color: transparent;
+        }
+        .step-card .collapse-icon {
+            float: right;
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+            opacity: 0.5;
+        }
+        .step-card.collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
     </style>
 </head>
 <body>
@@ -1276,6 +1326,61 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
             if (e.key === 'Enter') {
                 document.getElementById('domain-apply-btn').click();
             }
+        });
+    </script>
+    <script>
+        // Step Card Collapse Functionality
+        document.querySelectorAll('h2').forEach(h2 => {
+            const text = h2.textContent.replace(/[\s✔✕☐☑✅❌]/g, '').trim();
+            if (!/^Step\s+\d+/i.test(text)) return;
+
+            const siblings = [];
+            let el = h2.nextElementSibling;
+            while (el && el.tagName !== 'H2') {
+                siblings.push(el);
+                el = el.nextElementSibling;
+            }
+
+            const card = document.createElement('div');
+            card.className = 'step-card';
+
+            const icon = document.createElement('span');
+            icon.className = 'collapse-icon';
+            icon.textContent = '▼';
+            icon.setAttribute('aria-hidden', 'true');
+            h2.appendChild(icon);
+
+            const content = document.createElement('div');
+            content.className = 'step-content';
+            siblings.forEach(s => content.appendChild(s));
+
+            h2.parentNode.insertBefore(card, h2);
+            card.appendChild(h2);
+            card.appendChild(content);
+
+            h2.addEventListener('click', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'A') return;
+                card.classList.toggle('collapsed');
+            });
+
+            const masterCheck = h2.querySelector('input[type="checkbox"]');
+            if (masterCheck) {
+                const onMasterChange = () => {
+                    if (masterCheck.checked) {
+                        card.classList.add('collapsed');
+                    }
+                };
+                masterCheck.addEventListener('change', onMasterChange);
+            }
+
+            const subChecks = card.querySelectorAll('li.task-item > input[type="checkbox"]');
+            subChecks.forEach(cb => {
+                cb.addEventListener('change', () => {
+                    if (!cb.checked) {
+                        card.classList.remove('collapsed');
+                    }
+                });
+            });
         });
     </script>
 </body>
