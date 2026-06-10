@@ -449,7 +449,7 @@
 </li>
 <li><strong>Keep it Short:</strong> Avoid overly long domains. If <code>freeruler.com</code> is taken, try adding context like <code>realonlineruler.com</code>.</li>
 <li><strong>When to Buy:</strong> <strong>CRITICAL:</strong> Do NOT buy the domain yet! Build the tool with AI first. Sometimes an idea turns out to be too complex or requires paid APIs. Only buy the domain after the code is fully working on your local computer so you don&#39;t waste ₹1,000.</li>
-<li><strong>Where to buy later:</strong> <a href="https://www.namecheap.com/">Namecheap</a>, <a href="https://www.godaddy.com/">GoDaddy</a>, <a href="https://www.bigrock.in/">BigRock</a>, or <a href="https://www.hostinger.com/">Hostinger</a>.</li>
+<li><strong>Where to buy later:</strong> <a href="https://www.spaceship.com/">Spaceship</a> (recommended — sister company of Namecheap with modern UI, low entry &amp; renewal rates, and free WHOIS privacy), <a href="https://www.namecheap.com/">Namecheap</a> (established veteran, but renewal prices spike after year one), or traditional registrars like <a href="https://www.godaddy.com/">GoDaddy</a>, <a href="https://www.bigrock.in/">BigRock</a>, or <a href="https://www.hostinger.com/">Hostinger</a>. Use promo code <strong>SPSR86</strong> on Spaceship for deep discounts on first-year <code>.me</code> domains.</li>
 </ol>
 <h2>Step 3: Setting Up the Development Environment</h2>
 <p>Prepare your local machine for the AI agent to build the tool.</p>
@@ -643,13 +643,22 @@ Also, generate a custom 404 error page, a 500 error page, a sitemap.xml, and a r
 <blockquote>
 <p><strong>⚠️ CRITICAL: Select "Pages" not "Worker"</strong><br>
 When you click <strong>Create application</strong>, Cloudflare's default tab is <strong>Worker</strong> (not Pages). You <strong>must</strong> manually switch to the <strong>Pages</strong> tab before proceeding. Creating a Worker instead of Pages will not work for a static website — this is an extremely common mistake that can waste a lot of your time.</p>
+<p><strong>💡 Workers vs. Pages — Which one for your site?</strong><br>
+Cloudflare <strong>Pages</strong> is for hosting complete websites — HTML, CSS, JS, and static assets. It connects directly to your GitHub repo and auto-deploys. This is what you want for your Astro micro-tool site.<br>
+<strong>Workers</strong> is for writing small serverless functions (APIs, redirects, backend logic) that run on Cloudflare's edge. It is <strong>not</strong> for hosting a full website.<br>
+<strong>Rule of thumb:</strong> If you have a Git repo with HTML files → use <strong>Pages</strong>. If you are writing a single JavaScript function to handle API requests → use <strong>Worker</strong>.</p>
 </blockquote>
 <ol>
 <li><strong>Connect GitHub to Cloudflare Pages:</strong>
 <ul>
 <li>Go to <a href="https://dash.cloudflare.com">Cloudflare Dashboard</a> and log in (create a free account if you don't have one).</li>
-<li>In the left sidebar, go to <strong>Workers &amp; Pages</strong> → <strong>Overview</strong>.</li>
-<li>Click <strong>Create application</strong> → immediately switch to the <strong>Pages</strong> tab (the default is Worker) → click <strong>Connect to Git</strong>.</li>
+<li><strong>Two ways to get started:</strong>
+<ul>
+<li><em>Via homepage (+Add button):</em> On your Cloudflare home screen, click the <strong>+Add</strong> button (usually top-right) and select <strong>Pages</strong> from the dropdown — this directly opens the Pages creation flow.</li>
+<li><em>Via sidebar menu:</em> In the left sidebar, go to <strong>Workers &amp; Pages</strong> → <strong>Overview</strong> → click <strong>Create application</strong> → immediately switch to the <strong>Pages</strong> tab (the default is Worker).</li>
+</ul>
+</li>
+<li>Click <strong>Connect to Git</strong>.</li>
 <li>If prompted, authorize Cloudflare to access your GitHub account (you can grant access to all repos or just this one).</li>
 <li>Select your repository (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>) and click <strong>Begin setup</strong>.</li>
 </ul>
@@ -670,7 +679,7 @@ When you click <strong>Create application</strong>, Cloudflare's default tab is 
 Cloudflare automatically detects the push, rebuilds your site, and deploys the update — no manual deploy commands needed.</li>
 </ol>
 <h2>Step 12: Purchasing and Connecting Your Domain</h2>
-<p>Now that the site is fully built and deployed, buy your <code>.com</code> domain (from <a href="https://www.godaddy.com/">GoDaddy</a>, <a href="https://www.hostinger.com/">Hostinger</a>, <a href="https://www.namecheap.com/">Namecheap</a>, or <a href="https://www.bigrock.in/">BigRock</a>).</p>
+<p>Now that the site is fully built and deployed, buy your <code>.com</code> domain. <a href="https://www.spaceship.com/">Spaceship</a> is the best overall choice — it&#39;s a modern platform (sister company of Namecheap) offering low prices on both registration and renewals, a clean dashboard without upsells, and free WHOIS privacy. Alternatives include <a href="https://www.namecheap.com/">Namecheap</a> (reliable but high renewal costs), <a href="https://www.godaddy.com/">GoDaddy</a>, <a href="https://www.bigrock.in/">BigRock</a>, or <a href="https://www.hostinger.com/">Hostinger</a>.</p>
 <blockquote>
 <p><strong>💡 Domain Purchasing Tips:</strong></p>
 <ul>
@@ -694,7 +703,7 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
 </li>
 <li><strong>Update Name Servers:</strong><ul>
 <li>Cloudflare will provide you with 2 nameservers.</li>
-<li>Go to your domain registrar (e.g., BigRock, Namecheap). <em>Tip: Search Google for &quot;How to change Name Servers on [Your Registrar]&quot; if you are unsure.</em></li>
+<li>Go to your domain registrar (e.g., Spaceship, BigRock, Namecheap). <em>Tip: Search Google for &quot;How to change Name Servers on [Your Registrar]&quot; if you are unsure.</em></li>
 <li>Replace the existing nameservers with the 2 you received from Cloudflare.</li>
 <li>Wait for propagation. It generally takes 10-30 minutes (max 24-48 hours). Cloudflare will now manage your DNS configuration.</li>
 </ul>
