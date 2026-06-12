@@ -467,17 +467,29 @@
 <li><strong>Traffic:</strong> Organic search traffic from Google (targeting US audiences for higher ad revenue).</li>
 <li><strong>Monetization:</strong> Google AdSense (applied once the site gets 10+ daily users).</li>
 </ul>
+
+<div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-color); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+  <p style="margin: 0; font-size: 1rem;">
+    <strong style="color: #fff;">Real-World Example:</strong> The author's portfolio at 
+    <a href="https://mohit-arora.me/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color);">mohit-arora.me</a> 
+    was built following this exact process: React + TypeScript, Cloudflare Pages, multi-theme design with CSS variables, 
+    auto-deploy from GitHub, JSON-LD structured data for SEO, custom 404/500 error pages, Sentry error monitoring, 
+    PWA with service worker caching, and a custom SPA router with scroll restoration. 
+    Every technique in this guide is battle-tested on a live production site.
+  </p>
+</div>
+
 <hr>
 <h2>Step 1: Finding a Niche Problem and Keywords</h2>
 <p>The goal is to find a small problem with low competition that users are actively searching for.</p>
 <ol>
 <li><strong>Find an Idea:</strong> Think of small everyday problems (e.g., needing to measure something without a physical ruler). Search Google for simple micro-tools.</li>
 <li><strong>Analyze the Competition:</strong> Open the top-ranking micro-tool. What is it missing? Does it have a bad UI? Does it fail on mobile? (e.g., if a ruler tool says &quot;Unknown Device&quot; or the scale is on the wrong side, note these flaws down so you can explicitly tell the AI to fix them).</li>
-<li><strong>Keyword Research:</strong> Go to the <a href="https://ahrefs.com/keyword-generator">Ahrefs Free Keyword Generator</a>.<ul>
+<li><strong>Keyword Research:</strong> Go to the <a href="https://ahrefs.com/keyword-generator">Ahrefs Free Keyword Generator</a>.<ol>
 <li>Enter your keyword idea (e.g., &quot;online ruler&quot;). Verify the search volume. Even 1,000 monthly US searches is good to start.</li>
 <li>Switch to the <strong>Questions</strong> tab and copy all the common user questions. Save these for your FAQ section later.</li>
 <li>Note down <strong>Supporting Keywords</strong> (e.g., &quot;free online ruler&quot;, &quot;online ruler in cm&quot;). You can also find these using Google Autocomplete (type your keyword and press space).</li>
-</ul>
+</ol>
 </li>
 </ol>
 <h2>Step 2: Choosing the Perfect Domain Name</h2>
@@ -493,11 +505,11 @@
 <li>Go to <a href="https://instantdomainsearch.com/">Instant Domain Search</a> to brainstorm.</li>
 <li><strong>Rules for Domains:</strong><ul>
 <li><strong>MUST be a <code>.com</code> domain.</strong></li>
-<li>Must contain your primary keyword (e.g., <code>realonlineruler.com</code> contains <code>online</code> and <code>ruler</code>).</li>
+<li>Must contain your primary keyword (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code> contains <code>online</code> and <code>ruler</code>).</li>
 <li>Avoid hyphens.</li>
 </ul>
 </li>
-<li><strong>Keep it Short:</strong> Avoid overly long domains. If <code>freeruler.com</code> is taken, try adding context like <code>realonlineruler.com</code>.</li>
+<li><strong>Keep it Short:</strong> Avoid overly long domains. If <code>freeruler.com</code> is taken, try adding context like <code><span class="dynamic-domain">realonlineruler.com</span></code>.</li>
 <li><strong>When to Buy:</strong> <strong>CRITICAL:</strong> Do NOT buy the domain yet! Build the tool with AI first. Sometimes an idea turns out to be too complex or requires paid APIs. Only buy the domain after the code is fully working on your local computer so you don&#39;t waste ₹1,000.</li>
 <li><strong>Where to buy later:</strong> <a href="https://www.spaceship.com/">Spaceship</a> (recommended - sister company of Namecheap with modern UI, low entry &amp; renewal rates, and free WHOIS privacy), <a href="https://www.namecheap.com/">Namecheap</a> (established veteran, but renewal prices spike after year one), or traditional registrars like <a href="https://www.godaddy.com/">GoDaddy</a>, <a href="https://www.bigrock.in/">BigRock</a>, or <a href="https://www.hostinger.com/">Hostinger</a>. Use promo code <strong>SPSR86</strong> on Spaceship for deep discounts on first-year <code>.me</code> domains.</li>
 </ol>
@@ -514,12 +526,12 @@ Alternatively, use free alternatives like <a href="https://www.cursor.com/"><str
 <li>Create a new empty folder on your computer named after your domain (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>).</li>
     <li>Drag this folder into VS Code to open it.</li>
     <li><strong>Create a GitHub Repository:</strong>
-    <ul>
-        <li>Go to <a href="https://github.com">github.com</a> and sign in (create a free account if needed).</li>
-        <li>Click the <strong>+</strong> icon (top-right) → <strong>New repository</strong>.</li>
-        <li>Name it after your domain (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>), set it to <strong>Public</strong>, and <strong>do not</strong> initialize with a README, .gitignore, or license.</li>
-        <li>Click <strong>Create repository</strong>. Keep this browser tab open - you will need the remote URL in the next step.</li>
-    </ul>
+    <ol>
+<li>Go to <a href="https://github.com">github.com</a> and sign in (create a free account if needed).</li>
+<li>Click the <strong>+</strong> icon (top-right) → <strong>New repository</strong>. <strong>💡 What is happening:</strong> A "repository" is like a project folder in the cloud. GitHub stores your code and lets Cloudflare auto-deploy it.</li>
+<li>Name it after your domain (e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>), set it to <strong>Public</strong>, and <strong>do not</strong> initialize with a README, .gitignore, or license. <strong>💡 Why Public?</strong> GitHub offers free private repos, but Cloudflare Pages can only connect to public repos on the free plan. Your code is already public on the internet via your website anyway.</li>
+<li>Click <strong>Create repository</strong>. Keep this browser tab open - you will need the remote URL in the next step.</li>
+    </ol>
     </li>
 </ol>
 <h2>Step 4: Initializing the Project</h2>
@@ -527,30 +539,45 @@ Alternatively, use free alternatives like <a href="https://www.cursor.com/"><str
 <li>Open the terminal in VS Code (Terminal &gt; New Terminal).</li>
 <li>Run the following command to install Astro JS:<pre><code class="language-bash">npm create astro@latest .
 </code></pre>
-<em>(<strong>Why this command?</strong> <code>npm create</code> fetches the latest Astro installation script. The <code>.</code> at the end tells it to install directly into your current empty folder rather than creating a new subfolder. Astro is chosen because it outputs static HTML, which is lightning-fast and highly favored by Google&#39;s search algorithms.)</em></li>
+<em>(<strong>Why this command?</strong> <code>npm create</code> fetches the latest Astro installation script. The <code>.</code> at the end tells it to install directly into your current empty folder rather than creating a new subfolder. Astro is chosen because it outputs static HTML, which is lightning-fast and highly favored by Google&#39;s search algorithms. <strong>💡 What you will see:</strong> The terminal will show a progress bar downloading packages, then ask you a few questions. This is normal - it should take 20-60 seconds depending on your internet speed.)</em></li>
 <li>Press Enter for all defaults. Choose the <strong>&quot;Basic&quot;</strong> template.</li>
     <li>Say <strong>Yes</strong> when asked to initialize a Git repository. <em>(<strong>Purpose:</strong> Git tracks every change you make to your files. If you or the AI break something, Git allows you to instantly revert back to a working version.)</em></li>
+    <li><strong>Enable TypeScript Strict Mode:</strong> Astro just created a <code>tsconfig.json</code> file. Open it in VS Code (you will see it in the file explorer on the left). Inside the <code>compilerOptions</code> section, add these four settings. Your file will look like this:<pre><code class="language-json">{
+  "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  }
+}</code></pre>
+    <em>(<strong>Why strict mode?</strong> TypeScript catches entire categories of bugs at compile time: null references, missing returns, unused variables that indicate dead code. Without <code>strict: true</code>, TypeScript allows many unsafe patterns that silently become runtime errors. Setting this up early means the AI generates cleaner code from the start.)</em></li>
     <li><strong>Push to GitHub:</strong>
-    <ul>
-        <li>Link your local project to the GitHub repository you created in Step 3:<pre><code class="language-bash">git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+    <ol>
+<li>Link your local project to the GitHub repository you created in Step 3:<pre><code class="language-bash">git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 </code></pre>
-        <em>(Replace <code>YOUR_USERNAME</code> and <code>YOUR_REPO_NAME</code> with your actual GitHub username and repository name.)</em></li>
+<em>(Replace <code>YOUR_USERNAME</code> and <code>YOUR_REPO_NAME</code> with your actual GitHub username and repository name. <strong>💡 Where to find these:</strong> Your GitHub username is in the top-right corner of GitHub. Your repo name is what you named it in Step 3. The full URL is shown on your repo page in the "Quick setup" section - just copy it from there.)</em></li>
         <li>Push your initial code:<pre><code class="language-bash">git push -u origin main
 </code></pre>
         <em>(<strong>What this does:</strong> <code>git remote add</code> connects your local folder to the GitHub repository. <code>git push -u origin main</code> uploads your code and sets the upstream, so future pushes can be just <code>git push</code>.)</em></li>
-    </ul>
+    </ol>
     </li>
 </ol>
 <h2>Step 5: Equipping the AI with Design Skills</h2>
 <p>Give the AI the context it needs to create professional, modern designs.</p>
 <ol>
-<li><p><strong>Vercel Design System:</strong> In a separate terminal, install the Vercel design markdown structure:</p>
-<pre><code class="language-bash">npx shadcn@latest init
-</code></pre>
-<p><em>(<strong>Why this command?</strong> <code>npx</code> runs a package without permanently installing it. <code>shadcn</code> is a popular UI component library. This command pulls down Vercel&#39;s clean, modern design standards into your project so the AI has a beautiful baseline to work from.)</em>
-<em>(Alternatively, search for &quot;Vercel design.md&quot; on Google and download it to your project root as <code>@DESIGN.md</code>)</em></p>
+<li>
+<p><strong>Create a Design Reference File:</strong> This tells the AI what "good design" looks like. Create a new file in VS Code named <code>@DESIGN.md</code> in your project root folder (right-click in the VS Code file explorer on the left and select <strong>New File</strong>). Paste this into it:</p>
+<pre><code class="language-text">Design Requirements:
+- Clean, modern, professional look inspired by Vercel
+- Dark theme with accent colors (blue/purple gradient)
+- Mobile responsive - works on phones and tablets
+- Fast loading, minimal JavaScript
+- Accessible with proper contrast ratios
+- Rounded corners, subtle shadows, smooth transitions</code></pre>
+<p><em>(<strong>Why?</strong> The AI needs written design guidelines because it cannot see. Without these instructions, the AI might generate ugly default styles. The <code>@</code> prefix makes the file easy to reference in your prompts.)</em></p>
 </li>
-<li><p><strong>Launch Your AI Agent:</strong> In the VS Code terminal, start your CLI:</p>
+<li>
+<p><strong>Launch Your AI Agent:</strong> In the VS Code terminal, start your CLI:</p>
 <ul>
 <li><strong>For Claude Code:</strong><pre><code class="language-bash">claude
 </code></pre>
@@ -560,29 +587,29 @@ Alternatively, use free alternatives like <a href="https://www.cursor.com/"><str
 <em>(Alternatively, if using <a href="https://www.cursor.com/">Cursor AI</a>, just open the Composer/Chat panel).</em></li>
 </ul>
 </li>
-<li><p><strong>Install Skills / Provide Context:</strong></p>
+<li>
+<p><strong>Install Skills / Provide Context:</strong></p>
 <ul>
 <li><strong>If using Claude Code:</strong><pre><code class="language-bash">claude mcp add web-design-guidelines
 claude mcp add tailwind-v4-docs
 </code></pre>
 <em>(Source Links: <a href="https://www.skills.sh/vercel-labs/agent-skills/web-design-guidelines">Web Design Guidelines</a> | <a href="https://www.skills.sh/lombiq/tailwind-agent-skills/tailwind-4-docs">Tailwind v4 Docs</a>)</em></li>
-<li><strong>If using Antigravity:</strong>
-Antigravity natively supports advanced skills and plugins. You can just prompt it: <em>&quot;Use your skills for modern web design guidelines and Tailwind CSS v4.&quot;</em></li>
-<li><strong>If using Cursor AI:</strong>
-Use the <code>@Docs</code> feature and search for &quot;Tailwind CSS v4&quot; to give it context.</li>
+<li><strong>If using Antigravity:</strong> Antigravity natively supports advanced skills and plugins. You can just prompt it: <em>"Use your skills for modern web design guidelines and Tailwind CSS v4."</em></li>
+<li><strong>If using Cursor AI:</strong> Use the <code>@Docs</code> feature and search for "Tailwind CSS v4" to give it context.</li>
 </ul>
-<p><em>(<strong>Purpose:</strong> AI models are trained on past data. Adding live context or MCP &quot;skills&quot; ensures the AI writes modern code instead of outdated versions, preventing frustrating bugs.)</em></p>
+<p><em>(<strong>Purpose:</strong> AI models are trained on past data. Adding live context or MCP "skills" ensures the AI writes modern code instead of outdated versions, preventing frustrating bugs.)</em></p>
 </li>
-<li><p><strong>Astro JS MCP Server:</strong> Use the <a href="https://docs.astro.build/en/guides/build-with-ai/#astro-docs-mcp-server">Astro JS MCP Server</a> so the AI knows the latest Astro syntax.</p>
+<li>
+<p><strong>Astro JS MCP Server:</strong> Use the <a href="https://docs.astro.build/en/guides/build-with-ai/#astro-docs-mcp-server">Astro JS MCP Server</a> so the AI knows the latest Astro syntax.</p>
 <ul>
-<li><strong>For Claude Code:</strong> Run this command in your terminal:<pre><code class="language-bash">claude mcp add --transport http &quot;Astro docs&quot; https://mcp.docs.astro.build/mcp
+<li><strong>For Claude Code:</strong> Run this command in your terminal:<pre><code class="language-bash">claude mcp add --transport http "Astro docs" https://mcp.docs.astro.build/mcp
 </code></pre>
 </li>
-<li><strong>For Antigravity:</strong> You can either simply instruct it via prompt: <em>&quot;Fetch context from the Astro Docs MCP server at <a href="https://mcp.docs.astro.build/mcp">https://mcp.docs.astro.build/mcp</a>&quot;</em>, OR add the server configuration directly to your MCP settings file:<pre><code class="language-json">{
-  &quot;mcpServers&quot;: {
-    &quot;Astro docs&quot;: {
-      &quot;type&quot;: &quot;http&quot;,
-      &quot;url&quot;: &quot;https://mcp.docs.astro.build/mcp&quot;
+<li><strong>For Antigravity:</strong> You can either simply instruct it via prompt: <em>"Fetch context from the Astro Docs MCP server at <a href="https://mcp.docs.astro.build/mcp">https://mcp.docs.astro.build/mcp</a>"</em>, OR add the server configuration directly to your MCP settings file:<pre><code class="language-json">{
+  "mcpServers": {
+    "Astro docs": {
+      "type": "http",
+      "url": "https://mcp.docs.astro.build/mcp"
     }
   }
 }
@@ -610,7 +637,7 @@ and build a better version. Use MPA (multi-page application) architecture for be
 <p><em>My competitor website is <a href="https://anruler.com/">https://anruler.com/</a> and it have some features which we need and we need to make a website better than it. Give me ideas how to make it better. go on to this website and check what exactly we need to make. Do not copy design or ui from that website.</em></p>
 </blockquote>
 <p><strong>Iterating:</strong></p>
-<ul>
+<ol>
 <li><strong>Start Local Server:</strong> In the terminal, run:<pre><code class="language-bash">npm run dev
 </code></pre>
 <em>(<strong>What this does:</strong> It starts a live preview of your website on your computer. Any changes the AI makes will automatically refresh in your browser so you can test them instantly.)</em></li>
@@ -620,36 +647,131 @@ and build a better version. Use MPA (multi-page application) architecture for be
 <li><strong>Save Tokens:</strong> Before asking the AI to add a new major feature, always type the following in the AI agent (or start a new chat session) to clear its memory. This prevents context overload and saves API tokens:<pre><code class="language-text">/clear
 </code></pre>
 </li>
-<li><strong>Must-Have Features:</strong> Ask the AI to add a Dark Mode toggle and ensure the layout is perfectly Mobile Responsive. <em>(<strong>Why Dark Mode?</strong> Dark mode reduces eye strain in low-light environments, saves battery on OLED screens, and is now a standard user expectation — sites without it feel dated. Implementing it also teaches you CSS custom property theming, which makes future design changes much easier.)</em></li>
-</ul>
+<li><strong>Must-Have Features:</strong> Ask the AI to add a Dark Mode toggle and ensure the layout is perfectly Mobile Responsive. <em>(<strong>Why Dark Mode?</strong> Dark mode reduces eye strain in low-light environments, saves battery on OLED screens, and is now a standard user expectation: sites without it feel dated. Implementing it also teaches you CSS custom property theming, which makes future design changes much easier.)</em><pre><code class="language-text">Add a Dark Mode toggle and ensure the layout is perfectly Mobile Responsive.</code></pre></li>
+</ol>
+
+<h3>Accessibility Basics</h3>
+<p>Making your site accessible is not just about compliance; it improves SEO, broadens your audience, and is often required for AdSense approval. Ensure the AI includes these fundamentals:</p>
+<ol>
+<li><strong>Semantic HTML:</strong> Use proper heading hierarchy (<code>h1</code> → <code>h2</code> → <code>h3</code>), <code>&lt;nav&gt;</code> for navigation, <code>&lt;main&gt;</code> for primary content, and <code>&lt;footer&gt;</code> for footer content. Screen readers rely on this structure.</li>
+<li><strong>ARIA Attributes:</strong> Add <code>aria-label</code> to icon-only buttons, <code>aria-expanded</code> to toggle/menu buttons, and <code>role</code> attributes where semantic HTML is insufficient.</li>
+<li><strong>Focus Management:</strong> Ensure all interactive elements are keyboard-focusable (using <code>tabindex</code> where needed) and visible focus indicators are present (<code>:focus-visible</code> styles).</li>
+<li><strong>Alt Text:</strong> Every <code>&lt;img&gt;</code> needs descriptive <code>alt</code> text. Inform the AI: &quot;Add descriptive alt text to all images based on their content.&quot;</li>
+<li><strong>External Links:</strong> All links that open in a new tab must have <code>rel=&quot;noopener noreferrer&quot;</code> for security and <code>aria-label</code> indicating they open externally.</li>
+</ol>
+<p><strong>Prompt the AI:</strong></p>
+<pre><code class="language-text">Make the website fully accessible: add proper ARIA labels, semantic HTML structure, keyboard navigation support, alt text on images, and rel="noopener noreferrer" on all external links.</code></pre>
+
+<h3>Multi-Theme System (Advanced)</h3>
+<div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+  <p style="margin: 0; font-size: 1rem; color: #fde68a;">
+    <strong style="color: #fff;">🟡 OPTIONAL - SKIP THIS for now.</strong> Your site works fine with a simple dark/light mode. This advanced multi-theme system (dark, light, matrix, cyberpunk) is something you can add after your site is live. Do not get stuck here.
+  </p>
+</div>
+<p>Beyond basic dark/light mode, you can build a full multi-theme system that lets users choose their preferred look (dark, light, matrix, cyberpunk, etc.). This sets your micro-tool apart from competitors and creates a memorable user experience.</p>
+<ol>
+<li><strong>CSS Custom Properties:</strong> Define all colors as CSS variables in <code>:root</code>, then override them per theme:<pre><code class="language-css">:root {
+  --bg-color: #040914;
+  --text-primary: #f8fafc;
+  --accent-color: #00f0ff;
+  --accent-rgb: 0, 240, 255;
+}
+
+[data-theme="matrix"] {
+  --bg-color: #000000;
+  --text-primary: #00ff41;
+  --accent-color: #00ff41;
+  --accent-rgb: 0, 255, 65;
+}
+
+[data-theme="light"] {
+  --bg-color: #ffffff;
+  --text-primary: #0f172a;
+  --accent-color: #0284c7;
+  --accent-rgb: 2, 132, 199;
+}</code></pre>
+</li>
+<li><strong>The RGB Trap:</strong> Every CSS variable that uses <code>rgba()</code> (like <code>rgba(var(--accent-rgb), 0.4)</code>) must be redefined in <strong>every</strong> theme block. A missing variable silently falls back to the default theme, which looks broken. Always verify all theme blocks have the complete set of variables.</li>
+<li><strong>Dark Reader Prevention:</strong> Browser extensions like Dark Reader will override your carefully designed themes. Add this meta tag to your <code>&lt;head&gt;</code> to prevent it:<pre><code class="language-html">&lt;meta name=&quot;darkreader-lock&quot; /&gt;</code></pre>
+</li>
+<li><strong>localStorage Persistence:</strong> Save the user's theme choice and restore it before the first paint to prevent Flash of Unstyled Content (FOUC):<pre><code class="language-html">&lt;script&gt;
+  (function() {
+    var t = localStorage.getItem('site_theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  })();
+&lt;/script&gt;</code></pre>
+</li>
+<li><strong>Theme Toggle UI:</strong> Add a button in your navbar that cycles through themes or toggles dark/light. Save the selection to localStorage on each change.</li>
+</ol>
+
+<h3>Performance Optimization via Code Splitting</h3>
+<div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+  <p style="margin: 0; font-size: 1rem; color: #fde68a;">
+    <strong style="color: #fff;">⚠️ For React, Vue, or Svelte SPAs only.</strong> Astro generates static HTML pages by default - there is hardly any JavaScript to split. If you are using Astro (as this guide recommends), you can <strong>skip this entire section</strong>. This is only relevant if you chose a JavaScript framework like React.
+  </p>
+</div>
+<p>For sites built with frameworks (React, Vue, Svelte), loading all JavaScript upfront slows down the initial page load. Split your code so only essential code loads first:</p>
+<ol>
+<li><strong>Lazy-Load Non-Critical Sections:</strong> Use <code>React.lazy()</code> or dynamic <code>import()</code> for sections below the fold (e.g., testimonials, blog, FAQ). This shrinks the initial bundle by 30-50%.</li>
+<li><strong>Priority-Based Loading:</strong> Load the section the user navigated to (via URL hash) immediately. Load remaining sections in priority order with staggered delays to avoid network congestion:<pre><code class="language-javascript">// Priority order: lower number = loads sooner
+const priorityMap = {
+  projects: 1,
+  education: 2,
+  recommendations: 3,
+  resume: 4,
+};</code></pre>
+</li>
+<li><strong>Manual Chunking:</strong> Split vendor libraries into separate files so they cache independently:<pre><code class="language-javascript">// vite.config.ts
+rollupOptions: {
+  output: {
+    manualChunks(id) {
+      if (id.includes('react-dom')) return 'vendor-react';
+      if (id.includes('framer-motion')) return 'vendor-motion';
+      if (id.includes('react-icons')) return 'vendor-icons';
+    }
+  }
+}</code></pre>
+</li>
+<li><strong>IntersectionObserver Strategy:</strong> Trigger section loading when the user scrolls near it, using the browser's IntersectionObserver API. This defers all non-visible code until needed.</li>
+<li><strong>Measure the Impact:</strong> Open Chrome DevTools → <strong>Network</strong> tab → check <strong>DOMContentLoaded</strong> and <strong>Load</strong> timings before and after implementing code splitting. The difference is often 2-3x faster initial load.</li>
+</ol>
+<p><strong>Prompt the AI:</strong></p>
+<pre><code class="language-text">Split the website into lazy-loaded sections. The hero, about, and experience sections should load immediately. Projects, education, recommendations, and resume should use dynamic imports.</code></pre>
+
 <h2>Step 7: Branding and Analytics</h2>
 <p>Make the site look legitimate and trackable.</p>
 <ol>
-<li><strong>Logo &amp; Favicon:</strong><ul>
+<li><strong>Logo &amp; Favicon:</strong><ol>
 <li>Go to <a href="https://logofa.st/">logofa.st</a> and generate a clean icon (use a simple preset and customize colors). Download it.</li>
 <li>Go to <a href="https://realfavicongenerator.net/">Real Favicon Generator</a>, upload your logo, and download the generated zip file.</li>
 <li>Extract the files and move them into your project&#39;s <code>/public</code> folder.</li>
 <li>Delete the default Astro <code>favicon.svg</code> file.</li>
-<li><strong>Prompt the AI:</strong> <em>&quot;I have added new favicon files to the public folder. Please add the HTML favicon link tags to the global site header.&quot;</em></li>
-</ul>
+<li><strong>Prompt the AI:</strong>
+<pre><code class="language-text">I have added new favicon files to the public folder. Please add the HTML favicon link tags to the global site header.</code></pre>
+</li>
+</ol>
 </li>
 <li><strong>Color Palette:</strong> Ensure your tool uses modern colors (avoid plain #FF0000 red, use HSL tailored colors).</li>
-<li><strong>Analytics:</strong> Go to <a href="https://analytics.google.com">Google Analytics</a>.<ul>
+<li><strong>Analytics:</strong> Go to <a href="https://analytics.google.com">Google Analytics</a>.<ol>
 <li>Create a new web property and copy your unique tracking script/tag.</li>
-        <li><strong>Prompt the AI:</strong> <em>&quot;Add this Google Analytics tracking code to the global site header.&quot;</em></li>
+<li><strong>Prompt the AI:</strong>
+<pre><code class="language-text">Add this Google Analytics tracking code to the global site header.</code></pre>
+</li>
 <li>Once added, push to GitHub to deploy: <code>git add . && git commit -m &quot;Add Google Analytics&quot; && git push</code> so the tracking goes live.</li>
-</ul>
+</ol>
+<p><em>(<strong>⚠️ Important:</strong> Cloudflare Pages automatically injects basic edge analytics. If you add Google Analytics too, you might see different numbers and could double-count visits. See <strong>Common Pitfall #5</strong> below for details. For now, adding Google Analytics is fine -- just do not add two GA snippets.)</em></p>
 </li>
 </ol>
 <h2>Step 8: On-Page SEO Optimization</h2>
 <p>Google needs text to understand what your tool does. Pure tool pages don&#39;t rank.</p>
-<p>Run this prompt in the AI (remember to run <code>/clear</code> first to save tokens):</p>
-<pre><code class="language-text">Do the on-page SEO of this website for:
+<ol>
+<li><strong>Run this SEO prompt in the AI</strong> (remember to run <code>/clear</code> first to save tokens):<pre><code class="language-text">Do the on-page SEO of this website for:
 Main Keyword: [your keyword]
 Supporting Keywords: [comma-separated list of keywords you found in Ahrefs]
 
 Also add proper OG meta tags for social sharing. Write 600 words of highly optimized, user-friendly text about the tool on the home page for SEO purposes. Make sure the page URL structure is clean.
-</code></pre>
+</code></pre></li>
+</ol>
 <h2>Step 9: Adding an SEO-Friendly FAQ Section</h2>
 <p>This captures long-tail search traffic and triggers Google Rich Snippets.</p>
 <p><strong>Prompt the AI:</strong></p>
@@ -674,7 +796,7 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
   }
 &lt;/script&gt;
 </code></pre>
-<p><em>(<strong>Why JSON-LD Structured Data?</strong> JSON-LD is a machine-readable code format that Google understands perfectly. Instead of just displaying text on a screen, JSON-LD explicitly tells Google "this page has an FAQ section" using schema.org vocabulary. This often results in Google showing your questions directly in search results as rich snippets — expanding them inline so users see answers without clicking. Beyond FAQs, you can also use JSON-LD for breadcrumbs, reviews, how-to guides, and articles to boost your site's search visibility.)</em></p>
+<p><em>(<strong>Why JSON-LD Structured Data?</strong> JSON-LD is a machine-readable code format that Google understands perfectly. Instead of just displaying text on a screen, JSON-LD explicitly tells Google "this page has an FAQ section" using schema.org vocabulary. This often results in Google showing your questions directly in search results as rich snippets, expanding them inline so users see answers without clicking. Beyond FAQs, you can also use JSON-LD for breadcrumbs, reviews, how-to guides, and articles to boost your site's search visibility.)</em></p>
 <h2>Step 10: Essential Pages for Compliance, Trust &amp; SEO</h2>
 <p>Google AdSense will reject your site without standard legal pages. Beyond AdSense, these pages serve critical purposes for every website. Below is what each file does, why it matters, and how to create them.</p>
 
@@ -692,13 +814,13 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
   </tr>
   <tr>
     <td><strong>Terms &amp; Conditions</strong></td>
-    <td>Rules users agree to by using your site — copyright terms, liability disclaimers, acceptable use policy.</td>
+    <td>Rules users agree to by using your site: copyright terms, liability disclaimers, acceptable use policy.</td>
     <td>Protects you legally. Required by AdSense. Without it, users could misuse your tool or claim damages.</td>
   </tr>
   <tr>
     <td><strong>About Us</strong></td>
     <td>A page describing who built the site and why.</td>
-    <td>Builds user trust. Google uses E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) as a ranking signal — an About page proves these.</td>
+    <td>Builds user trust. Google uses E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) as a ranking signal: an About page proves these.</td>
   </tr>
   <tr>
     <td><strong>Contact Us</strong></td>
@@ -727,7 +849,7 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
   <tr>
     <td><strong>404 Error Page</strong></td>
     <td>The page shown when a user visits a URL that doesn''t exist.</td>
-    <td>Retains users who hit broken links — without it they see a browser error page and leave immediately. A good 404 page guides users back to useful content.</td>
+    <td>Retains users who hit broken links; without it they see a browser error page and leave immediately. A good 404 page guides users back to useful content.</td>
   </tr>
   <tr>
     <td><strong>500 Error Page</strong></td>
@@ -752,7 +874,7 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
   <tr>
     <td><strong>OG Meta Tags</strong> (Open Graph)</td>
     <td>HTML meta tags that control how your page appears when shared on social media (Twitter, WhatsApp, LinkedIn).</td>
-    <td>Without OG tags, social shares show a generic title and no image — killing click-through rates. Essential for any site that gets shared.</td>
+    <td>Without OG tags, social shares show a generic title and no image, killing click-through rates. Essential for any site that gets shared.</td>
   </tr>
   <tr>
     <td><strong>ads.txt</strong></td>
@@ -771,8 +893,8 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
   </tr>
 </table>
 
-<p><strong>Prompt the AI to generate all of these:</strong></p>
-<pre><code class="language-text">Create these pages as separate MPA routes for best SEO:
+<ol>
+<li><strong>Run this prompt in the AI to generate all pages and files:</strong><pre><code class="language-text">Create these pages as separate MPA routes for best SEO:
 - Privacy Policy (with GDPR/CCPA compliance language)
 - Terms &amp; Conditions
 - About Us
@@ -782,7 +904,30 @@ Make these pages clearly visible and linked in the home page footer and header.
 Also, generate a custom 404 error page, a 500 error page, a sitemap.xml, and a robots.txt file that links to the sitemap.
 
 Add proper OG meta tags to the global site header and generate a favicon package in the /public folder.
-</code></pre>
+</code></pre></li>
+<li><strong>Verify each file was created correctly in your <code>/public</code> and <code>/src/pages</code> folders:</strong>
+<ol>
+<li>Privacy Policy page (GDPR/CCPA compliant)</li>
+<li>Terms &amp; Conditions page</li>
+<li>About Us page</li>
+<li>Contact Us page with working form or email link</li>
+<li>Custom 404 error page that guides users back to useful content</li>
+<li>Custom 500 error page for server errors</li>
+<li>sitemap.xml listing every page with metadata</li>
+<li>robots.txt referencing the sitemap URL</li>
+<li>OG meta tags in global site header for social sharing</li>
+<li>Favicon package in /public folder</li>
+<li>ads.txt file for AdSense authorization</li>
+</ol>
+<p><strong>Only if you used React, Vue, or Svelte (not Astro):</strong></p>
+<ol>
+<li>_redirects file for SPA routing</li>
+<li>_headers file with security headers configuration</li>
+</ol>
+<p><em>(<strong>Why?</strong> Astro generates static HTML files, so there is no SPA refresh issue. You still need <code>_headers</code> for security, but it is covered in Step 11 below.)</em></p>
+</ol>
+</li>
+</ol>
 <h2>Step 11: Deploying to Cloudflare Pages</h2>
 <p>Cloudflare Pages provides free, lightning-fast hosting for static sites. The best approach is to connect your GitHub repository so every push deploys automatically.</p>
 <blockquote>
@@ -825,22 +970,103 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
 </ol>
 
 <h3>SPA Routing (For React, Vue, Svelte Sites)</h3>
-<p>If you built a single-page application (SPA) instead of a multi-page static site, navigating directly to a URL like <code>yoursite.com/about</code> or refreshing the page will return a 404 — because the server has no real <code>about.html</code> file. The SPA handles routing in the browser, not the server.</p>
+<div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+  <p style="margin: 0; font-size: 1rem; color: #6ee7b7;">
+    <strong style="color: #fff;">✅ Astro MPA users: SKIP THIS.</strong> Astro generates real HTML files for every page (<code>/privacy/index.html</code>, <code>/about/index.html</code>, etc.). There is no 404-on-refresh issue. You do NOT need <code>_redirects</code>.
+  </p>
+</div>
+<p>If you built a single-page application (SPA) instead of a multi-page static site, navigating directly to a URL like <code><span class="dynamic-domain">yoursite.com</span>/about</code> or refreshing the page will return a 404, because the server has no real <code>about.html</code> file. The SPA handles routing in the browser, not the server.</p>
 <p><strong>The fix:</strong> Create a file called <code>_redirects</code> in your <code>/public</code> folder with this exact content:</p>
 <pre><code class="language-text">/* /index.html 200
 </code></pre>
 <p><strong>What this does:</strong> It tells Cloudflare Pages to serve <code>index.html</code> for every unknown URL path. Your JavaScript app reads the URL and displays the correct page. The <code>200</code> status tells search engines it is a successful response (not a redirect), which is critical for SEO.</p>
 <p><strong>404 safety net:</strong> Even with SPA fallback, always create a <code>public/404.html</code> file. It only shows in rare edge cases (e.g., a bot hitting a truly invalid path), but it is far better than a raw browser error.</p>
 
+<h3>Security Headers and HTTP Configuration</h3>
+<p>Beyond redirects, every production site should set proper security and caching headers. Create a file called <code>_headers</code> in your <code>/public</code> folder:</p>
+<pre><code class="language-text">/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+# Block the free .pages.dev subdomain from search engines
+https://*.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
+</code></pre>
+<p><strong>What these do:</strong> Asset files (JS/CSS) get long-term caching for fast repeat visits. The main page gets zero cache so users always see the latest version. Security headers prevent clickjacking (<code>X-Frame-Options</code>), enforce HTTPS (<code>Strict-Transport-Security</code>), and restrict browser features (<code>Permissions-Policy</code>). The <code>X-Robots-Tag</code> rule blocks the free <code>.pages.dev</code> subdomain from being indexed, preventing duplicate content SEO penalties.</p>
+
+<h3>Service Workers and PWA (Progressive Web App)</h3>
+<div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+  <p style="margin: 0; font-size: 1rem; color: #fde68a;">
+    <strong style="color: #fff;">🟡 OPTIONAL - SKIP FOR NOW.</strong> PWA lets users install your site on their phone like an app. It is not required for Google ranking or AdSense. Come back to this after your site is earning money.
+  </p>
+</div>
+<p>Make your site installable on users' home screens and work offline. This gives your micro-tool a native app experience without the App Store.</p>
+<ol>
+<li><strong>Install a PWA plugin:</strong> If using Vite, run <code>npm install vite-plugin-pwa</code>. For Next.js, use <code>next-pwa</code>.</li>
+<li><strong>Create a manifest:</strong> The plugin auto-generates a <code>manifest.json</code> with your app name, icons, theme colors, and display mode (<code>standalone</code> hides the browser chrome).</li>
+<li><strong>Configure runtime caching:</strong> Cache API responses so the tool works even without internet:<pre><code class="language-javascript">runtimeCaching: [
+  {
+    urlPattern: /^https:\/\/api\.example\.com\/.*/i,
+    handler: 'NetworkFirst',
+    options: {
+      cacheName: 'api-cache',
+      expiration: { maxEntries: 50, maxAgeSeconds: 3600 },
+    },
+  },
+]</code></pre>
+</li>
+<li><strong>Test offline mode:</strong> In Chrome DevTools → <strong>Application</strong> → <strong>Service Workers</strong>, check <strong>Offline</strong> and refresh. Your tool should still load core functionality.</li>
+</ol>
+<p><strong>Why PWA matters:</strong> Google rewards fast, installable experiences. A PWA-enabled micro-tool loads instantly for returning visitors. Users can add it to their home screen like a native app, increasing engagement and repeat usage, both positive signals for SEO.</p>
+
 <h3>Branch Controls &amp; Preview Deployments</h3>
+<div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+  <p style="margin: 0; font-size: 1rem; color: #fde68a;">
+    <strong style="color: #fff;">🟡 SKIP THIS for your first site.</strong> You only need the <code>main</code> branch. Cloudflare Pages will auto-deploy everything you push to <code>main</code>. Branch previews are useful for teams, not for a single-person micro-tool project. Come back here later.
+  </p>
+</div>
 <p>Cloudflare Pages can deploy different branches to different environments. This lets you test changes before they go live:</p>
 <table>
   <tr><th>Branch</th><th>Deploys To</th><th>When to Use</th></tr>
-  <tr><td><code>main</code></td><td>Your production domain (<code>yourdomain.com</code>)</td><td>Only fully tested, ready-to-ship code</td></tr>
+  <tr><td><code>main</code></td><td>Your production domain (<code><span class="dynamic-domain">yourdomain.com</span></code>)</td><td>Only fully tested, ready-to-ship code</td></tr>
   <tr><td><code>dev</code></td><td>A preview URL (<code>project-name.pages.dev</code>)</td><td>Daily work-in-progress; test before merging to main</td></tr>
   <tr><td>Feature branches</td><td>No deployment (skip preview)</td><td>Experimental or single-feature work</td></tr>
 </table>
 <p><strong>How to set up:</strong> In Cloudflare Dashboard → your project → <strong>Settings</strong> → <strong>Builds &amp; Deployments</strong> → <strong>Branch Controls</strong>. Remove the wildcard <code>*</code> branch rule, then explicitly add only <code>dev</code> and <code>main</code>. This prevents every random branch from triggering a preview, saving build minutes.</p>
+
+<h3>GitHub Actions CI/CD Pipeline</h3>
+<div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+  <p style="margin: 0; font-size: 1rem; color: #fca5a5;">
+    <strong style="color: #fff;">⏭️ SKIP THIS for your first website.</strong> Cloudflare Pages already auto-deploys every time you push to GitHub (you set this up in Step 11). You do NOT need a separate CI/CD pipeline. Come back here once your site is live and you want extra pre-deploy checks.
+  </p>
+</div>
+<p>Cloudflare Pages auto-deploys on every push, but what if your code has TypeScript errors or failing tests? Set up a GitHub Actions pipeline to catch problems <strong>before</strong> deployment:</p>
+<ol>
+<li><strong>Create the workflow file:</strong> In your repo, create <code>.github/workflows/ci.yml</code> with this config:<pre><code class="language-yaml">name: CI
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run lint 2&gt;/dev/null || true
+      - run: npm run build</code></pre></li>
+<li><strong>Push and verify:</strong> Commit and push the file. Go to your GitHub repo → <strong>Actions</strong> tab and confirm the workflow runs successfully.</li>
+<li><strong>Add pre-commit hooks (optional):</strong> Run <code>npx husky-init && npm install</code> to set up Git hooks that run lint and tests before every commit, catching issues even earlier.</li>
+<li><strong>Save build minutes:</strong> Add <code>[skip ci]</code> to commit messages for documentation-only changes (this is already covered in Common Pitfalls #8).</li>
+</ol>
+<p><em>(<strong>Why CI/CD matters:</strong> Cloudflare Pages only shows you build failures <em>after</em> a deploy attempt. GitHub Actions catches failures in the PR stage, before anything goes live. This is especially important when AI generates code that might have subtle TypeScript errors or broken imports.)</em></p>
 
 <h2>Step 12: Purchasing and Connecting Your Domain</h2>
 <p>Now that the site is fully built and deployed, buy your <code>.com</code> domain. <a href="https://www.spaceship.com/">Spaceship</a> is the best overall choice - it&#39;s a modern platform (sister company of Namecheap) offering low prices on both registration and renewals, a clean dashboard without upsells, and free WHOIS privacy. Alternatives include <a href="https://www.namecheap.com/">Namecheap</a> (reliable but high renewal costs), <a href="https://www.godaddy.com/">GoDaddy</a>, <a href="https://www.bigrock.in/">BigRock</a>, or <a href="https://www.hostinger.com/">Hostinger</a>.</p>
@@ -881,7 +1107,7 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
   <li>Go to <a href="https://dnschecker.org">dnschecker.org</a> or <a href="https://whatsmydns.net">whatsmydns.net</a>.</li>
   <li>Enter your domain name and select <strong>NS</strong> (nameserver) record type.</li>
   <li>If all locations show your two Cloudflare nameservers, propagation is complete. If some locations still show your old registrar''s nameservers, wait longer and check again.</li>
-  <li><strong>Tip:</strong> Run <code>nslookup -type=ns yourdomain.com</code> (or <code>Resolve-DnsName -Name yourdomain.com -Type NS</code> in PowerShell) for a quick local check.</li>
+  <li><strong>Tip:</strong> Run <code>nslookup -type=ns <span class="dynamic-domain">yourdomain.com</span></code> (or <code>Resolve-DnsName -Name <span class="dynamic-domain">yourdomain.com</span> -Type NS</code> in PowerShell) for a quick local check.</li>
 </ol>
 
 <h3>CRITICAL: Fix Duplicate Content SEO Penalty</h3>
@@ -951,13 +1177,60 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
 <li>Click <strong>Confirm</strong> &gt; <strong>Next</strong> &gt; <strong>Continue to Home</strong> &gt; <strong>Save</strong>.</li>
 <li>You will now see your main dashboard. Click on <strong>Real-time</strong> to see active users currently on your site, what countries they are visiting from, and other live data.</li>
 </ol>
-<h2>Step 15: Google AdSense Monetization</h2>
+<h2>Step 15: Error Monitoring and Crash Reporting</h2>
+<div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
+  <p style="margin: 0; font-size: 1rem; color: #fde68a;">
+    <strong style="color: #fff;">🟡 OPTIONAL - SKIP FOR NOW.</strong> For a simple micro-tool, you probably do not need Sentry error monitoring. Your users will email you if something breaks. Come back and set this up after your site is getting traffic.
+  </p>
+</div>
+<p>Your website will have bugs, especially if AI generated most of the code. Catch them before users report them. Error monitoring tools capture JavaScript exceptions, network failures, and unexpected state so you can fix issues proactively.</p>
+<ol>
+<li><strong>Choose a Monitoring Service:</strong> <a href="https://sentry.io/">Sentry</a> (free tier includes 5k events/month) is the industry standard. Create a free account and a new project for JavaScript.</li>
+<li><strong>Install the SDK:</strong><pre><code class="language-bash">npm install @sentry/react
+</code></pre>
+</li>
+<li><strong>Initialize in your app entry point:</strong><pre><code class="language-javascript">import * as Sentry from '@sentry/react'
+
+Sentry.init({
+  dsn: 'YOUR_DSN_HERE',
+  tracesSampleRate: 1.0,
+})
+
+// Optional: mask potentially sensitive URLs from breadcrumbs
+Sentry.addGlobalEventProcessor((event) => {
+  if (event.request?.url) {
+    event.request.url = event.request.url.replace(/token=.*/, 'token=REDACTED');
+  }
+  return event;
+});</code></pre>
+</li>
+<li><strong>Add Error Boundaries:</strong> Wrap individual page sections so one crash doesn't break the entire site:<pre><code class="language-jsx">import { ErrorBoundary } from '@sentry/react'
+
+&lt;ErrorBoundary fallback={&lt;div&gt;This section failed to load&lt;/div&gt;}&gt;
+  &lt;Projects /&gt;
+&lt;/ErrorBoundary&gt;</code></pre>
+</li>
+<li><strong>Global Unhandled Rejection Handler:</strong> Catch async errors that Sentry's automatic integration might miss:<pre><code class="language-javascript">window.addEventListener('unhandledrejection', (event) => {
+  Sentry.captureException(event.reason, {
+    tags: { type: 'unhandledrejection' },
+  });
+});</code></pre>
+</li>
+<li><strong>Test Your Setup:</strong> Trigger a test error to verify Sentry captures it:<pre><code class="language-javascript">Sentry.captureException(new Error('Test error - remove before deploy'));</code></pre>
+<p>Check your Sentry dashboard within 30 seconds. If the error appears, monitoring is working. Remove the test line after verification.</p>
+</li>
+</ol>
+<p><strong>Pro tip:</strong> Set up email alerts in Sentry so you know the moment a user hits a bug. This turns a potential bad review into a fix deployed within minutes.</p>
+
+<h2>Step 16: Google AdSense Monetization</h2>
 <p>Do not apply for AdSense on day one. You need to <strong>wait at least 1 month</strong> before applying so your site has time to age and build trust. You MUST also ensure your Google Analytics shows you are getting a minimum of <strong>10+ consistent organic users per day</strong> (check this in Analytics under <code>Real-time</code> → <code>Users</code>). Applying too early with zero traffic will result in an instant rejection.</p>
 <ol>
 <li>Go to <a href="https://adsense.google.com/start/">Google AdSense</a> and log in.</li>
 <li>Go to <strong>Sites</strong> &gt; <strong>Add new site</strong> and enter your domain name (without <code>https://</code> or <code>www</code>, e.g., <code><span class="dynamic-domain">realonlineruler.com</span></code>).</li>
 <li><strong>Add the Script:</strong> Copy the provided AdSense code snippet.<ul>
-<li><strong>Prompt the AI:</strong> <em>&quot;Add this AdSense verification script to the global site header: [paste snippet]&quot;</em></li>
+<li><strong>Prompt the AI:</strong>
+<pre><code class="language-text">Add this AdSense verification script to the global site header: [paste snippet]</code></pre>
+</li>
 <li>Push to GitHub: <code>git add . && git commit -m &quot;Add AdSense script&quot; && git push</code>. Wait 10 seconds.</li>
 </ul>
 </li>
@@ -967,7 +1240,9 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
 <li><strong>Fixing the ads.txt Error:</strong> Your application is now submitted and will say <strong>&quot;Getting Ready&quot;</strong>. However, you will likely see a warning saying <code>ads.txt</code> is <strong>Not Found</strong>.<ul>
 <li>To fix this, click on <strong>Verify Site Ownership</strong>.</li>
 <li>Click on the <code>ads.txt</code> option and copy the publisher ID code it gives you.</li>
-<li><strong>Prompt the AI:</strong> <em>&quot;Create an <code>ads.txt</code> file in the <code>public</code> directory with this content: [paste your AdSense publisher ID text]&quot;</em></li>
+<li><strong>Prompt the AI:</strong>
+<pre><code class="language-text">Create an ads.txt file in the public directory with this content: [paste your AdSense publisher ID text]</code></pre>
+</li>
 <li>Push again: <code>git add . && git commit -m &quot;Add ads.txt&quot; && git push</code>.</li>
 <li>Wait a minute and refresh AdSense. <em>(You can verify it works by visiting <code><span class="dynamic-domain">yourdomain.com</span>/ads.txt</code> in your browser).</em></li>
 </ul>
@@ -984,38 +1259,54 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
 
 <h2>Common Pitfalls &amp; Lessons Learned</h2>
 <p>Based on real-world experience building and deploying websites, here are the most common mistakes and how to avoid them:</p>
-
+<ol>
+<li>
 <h3>1. Buying the Domain Before Building the Site</h3>
 <p><strong>The Mistake:</strong> Purchasing a domain before you have a working prototype, then discovering your idea requires paid APIs, complex logic, or does not work as expected.</p>
-<p><strong>The Fix:</strong> Build the full tool with AI first, test it locally at <code>localhost:4321</code>, and <strong>only then</strong> buy the domain. Domains cost real money — do not waste it on an idea you have not validated.</p>
-
+<p><strong>The Fix:</strong> Build the full tool with AI first, test it locally at <code>localhost:4321</code>, and <strong>only then</strong> buy the domain. Domains cost real money; do not waste it on an idea you have not validated.</p>
+</li>
+<li>
 <h3>2. Cloudflare Workers vs Pages Confusion</h3>
-<p><strong>The Mistake:</strong> Clicking "Create application" in Cloudflare and unknowingly creating a Worker instead of a Pages project. Workers cannot serve static websites — they are for serverless functions.</p>
+<p><strong>The Mistake:</strong> Clicking "Create application" in Cloudflare and unknowingly creating a Worker instead of a Pages project. Workers cannot serve static websites; they are for serverless functions.</p>
 <p><strong>The Fix:</strong> When clicking "Create application", immediately switch from the default <strong>Worker</strong> tab to the <strong>Pages</strong> tab. Pages is for full websites; Workers is for API endpoints. Always double-check which tab you are on.</p>
-
-<h3>3. CSS Theme Variables — The RGB Trap</h3>
+</li>
+<li>
+<h3>3. CSS Theme Variables: The RGB Trap</h3>
 <p><strong>The Mistake:</strong> Defining CSS custom properties like <code>--accent-rgb: 59, 130, 246</code> only in <code>:root</code> (the default theme) but forgetting to redefine them in alternate theme blocks like <code>[data-theme="dark"]</code>. This causes colors to silently break when users switch themes because the RGB fallback uses the wrong values.</p>
-<p><strong>The Fix:</strong> When implementing dark mode or multiple themes, <strong>every</strong> CSS variable (including the RGB variants used with <code>rgba()</code>) must be explicitly set in each theme''s CSS block. A missing variable silently falls back to the default — which looks broken.</p>
-
+<p><strong>The Fix:</strong> When implementing dark mode or multiple themes, <strong>every</strong> CSS variable (including the RGB variants used with <code>rgba()</code>) must be explicitly set in each theme''s CSS block. A missing variable silently falls back to the default, which looks broken.</p>
+</li>
+<li>
 <h3>4. SPA Refresh Returns 404</h3>
-<p><strong>The Mistake:</strong> Building a React, Vue, or Svelte site and deploying it without a <code>_redirects</code> file. Refreshing on <code>yoursite.com/about</code> makes the server look for a real <code>/about</code> file, which does not exist — so it returns 404.</p>
+<p><strong>The Mistake:</strong> Building a React, Vue, or Svelte site and deploying it without a <code>_redirects</code> file. Refreshing on <code><span class="dynamic-domain">yoursite.com</span>/about</code> makes the server look for a real <code>/about</code> file, which does not exist, so it returns 404.</p>
 <p><strong>The Fix:</strong> Add a <code>_redirects</code> file with <code>/* /index.html 200</code> to your <code>/public</code> folder. This tells the server to serve the SPA entry point for all unknown paths, letting JavaScript handle routing.</p>
-
+<p><strong>Note for Astro users:</strong> This pitfall does NOT apply to you. Astro generates real HTML files for every page, so there is no 404-on-refresh issue. You can skip this.</p>
+</li>
+<li>
 <h3>5. Duplicate Analytics Tracking</h3>
 <p><strong>The Mistake:</strong> Adding a Google Analytics or Cloudflare Web Analytics JS snippet to your HTML while Cloudflare Pages is already injecting its own edge analytics. This causes every page visit to be counted twice.</p>
-<p><strong>The Fix:</strong> Cloudflare Pages automatically injects basic edge analytics. Your manual JS snippet can coexist if you need more detailed tracking — but be aware the numbers will differ. Never add <strong>two</strong> JS snippets from the same analytics provider.</p>
-
+<p><strong>The Fix:</strong> Cloudflare Pages automatically injects basic edge analytics. Your manual JS snippet can coexist if you need more detailed tracking, but be aware the numbers will differ. Never add <strong>two</strong> JS snippets from the same analytics provider.</p>
+</li>
+<li>
 <h3>6. AI Context Overload</h3>
 <p><strong>The Mistake:</strong> Continuing a long AI conversation for hours without clearing context. The AI''s context window fills up, it starts making mistakes, forgets earlier instructions, and each prompt becomes slower and more expensive.</p>
 <p><strong>The Fix:</strong> Run <code>/clear</code> before asking for each major new feature. Commit your working code to Git first so you can always revert if the AI breaks something in the new session.</p>
-
+</li>
+<li>
 <h3>7. Not Committing Before AI Changes</h3>
 <p><strong>The Mistake:</strong> Letting the AI modify your code for an hour without committing to Git. If the AI makes a catastrophic change, you cannot easily revert.</p>
-<p><strong>The Fix:</strong> Run <code>git add . && git commit -m "checkpoint before [feature]"</code> before every major AI prompt. Git is your undo button — use it generously.</p>
-
+<p><strong>The Fix:</strong> Run <code>git add . && git commit -m &quot;checkpoint before [feature]&quot;</code> before every major AI prompt. Git is your undo button; use it generously.</p>
+</li>
+<li>
 <h3>8. CI/CD Running on Every Commit</h3>
-<p><strong>The Mistake:</strong> Pushing documentation changes, README updates, or comment-only commits and triggering a full Cloudflare Pages build + deploy — wasting time and build minutes.</p>
-<p><strong>The Fix:</strong> Include <code>[skip ci]</code> in your commit message, e.g. <code>git commit -m "Update README [skip ci]"</code>. This tells Cloudflare Pages to skip the build for changes that do not affect the actual website code.</p>
+<p><strong>The Mistake:</strong> Pushing documentation changes, README updates, or comment-only commits and triggering a full Cloudflare Pages build + deploy, wasting time and build minutes.</p>
+<p><strong>The Fix:</strong> Include <code>[skip ci]</code> in your commit message, e.g. <code>git commit -m &quot;Update README [skip ci]&quot;</code>. This tells Cloudflare Pages to skip the build for changes that do not affect the actual website code.</p>
+</li>
+<li>
+<h3>9. Samsung Internet Overrides Dark Mode</h3>
+<p><strong>The Mistake:</strong> Samsung Internet has its own built-in dark mode that forcefully overrides your site's carefully designed themes. It inverts colors, breaks contrast ratios, and makes your site look terrible, and users on Samsung devices (a huge Android market share) will see a broken version of your site.</p>
+<p><strong>The Fix:</strong> Add <code>&lt;meta name=&quot;darkreader-lock&quot; /&gt;</code> to your <code>&lt;head&gt;</code> to prevent Samsung Internet's dark mode from applying. Also add <code>&lt;meta name=&quot;color-scheme&quot; content=&quot;light dark&quot; /&gt;</code> so the browser knows your site supports both. For stubborn cases, users may need to open <code>internet://flags</code> in Samsung Internet and disable "Force dark mode".</p>
+</li>
+</ol>
 
 <h2>Checklist Summary</h2>
 <ul>
@@ -1033,16 +1324,26 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
 <li><input disabled="" type="checkbox"> Submit to Google Search Console.</li>
 <li><input disabled="" type="checkbox"> Wait for traffic, apply for AdSense.</li>
 <li><input disabled="" type="checkbox"> Add <code>_redirects</code> for SPA routing (if using React/Vue/Svelte).</li>
-<li><input disabled="" type="checkbox"> Configure branch controls (dev → preview, main → production).</li>
+<li><input disabled="" type="checkbox"> Configure branch controls (SKIP for first site - main branch deploys automatically).</li>
 <li><input disabled="" type="checkbox"> Add OG meta tags for social sharing previews.</li>
+<li><input disabled="" type="checkbox"> Set up error monitoring (Sentry) with ErrorBoundary wrappers (OPTIONAL - skip for first site).</li>
+<li><input disabled="" type="checkbox"> Add _headers file with security and cache configuration.</li>
+<li><input disabled="" type="checkbox"> Configure PWA service worker and manifest for offline support (OPTIONAL - skip for first site).</li>
+<li><input disabled="" type="checkbox"> Implement code splitting and lazy loading for performance (OPTIONAL - only if using React/Vue/Svelte SPA).</li>
+<li><input disabled="" type="checkbox"> Build multi-theme system with CSS variables (OPTIONAL - basic dark/light mode is enough).</li>
 <li><input disabled="" type="checkbox"> Verify DNS propagation after nameserver change.</li>
+<li><input disabled="" type="checkbox"> Set up GitHub Actions CI/CD pipeline (SKIP - Cloudflare Pages auto-deploys on push; you don't need this).</li>
+<li><input disabled="" type="checkbox"> Enable TypeScript strict mode in tsconfig.json.</li>
+<li><input disabled="" type="checkbox"> Implement accessibility basics (ARIA, semantic HTML, keyboard nav, alt text).</li>
+<li><input disabled="" type="checkbox"> Add Samsung Internet dark mode prevention meta tag.</li>
 </ul>
 <hr>
 <blockquote>
 <p><strong>Credits:</strong></p>
 <ul>
 <li><strong>Original Concept:</strong> Extracted from <a href="https://compilefuture.com/blog/how-to-earn-using-ai/">Compile Future: How to Earn Using AI</a></li>
-<li><strong>Enhanced &amp; Expanded By:</strong> <a href="https://www.linkedin.com/in/arora-sir/">Mohit Arora</a> - Added GitHub to Cloudflare Pages CI/CD automation, Spaceship domain recommendations with promo codes, Workers vs Pages architecture guide, Cloudflare +Add button navigation, interactive domain input widget, checklist persistence with localStorage, copy-to-clipboard code blocks, dark theme glassmorphism UI, and comprehensive step-by-step refinements throughout.</li>
+<li><strong>Enhanced &amp; Expanded By:</strong> <a href="https://www.linkedin.com/in/arora-sir/">Mohit Arora</a> - Added GitHub to Cloudflare Pages CI/CD automation, Spaceship domain recommendations with promo codes, Workers vs Pages architecture guide, Cloudflare +Add button navigation, interactive domain input widget, checklist persistence with localStorage, copy-to-clipboard code blocks, dark theme glassmorphism UI, SPA security headers, PWA service worker setup, multi-theme CSS architecture, error monitoring with Sentry, code-splitting performance patterns, GitHub Actions CI/CD pipeline, TypeScript strict mode setup, accessibility basics guide, Samsung Internet dark mode fix, and comprehensive step-by-step refinements throughout.</li>
+<li><strong>Portfolio:</strong> <a href="https://mohit-arora.me/">mohit-arora.me</a> - Live production site built using this guide</li>
 <li><strong>GitHub:</strong> <a href="https://github.com/Arora-Sir">github.com/Arora-Sir</a></li>
 </ul>
 </blockquote>
