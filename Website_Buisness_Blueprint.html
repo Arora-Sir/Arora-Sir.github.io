@@ -453,11 +453,393 @@
         .step-card.collapsed .collapse-icon {
             transform: rotate(-90deg);
         }
+
+        /* ---- Table of Contents ---- */
+        .toc-container {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem 2rem;
+            margin-bottom: 2.5rem;
+            backdrop-filter: blur(8px);
+        }
+        .toc-container .toc-title {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 6px;
+        }
+        .toc-item {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.45rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+        .toc-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: none;
+            text-shadow: none;
+        }
+        .toc-item .toc-step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .toc-item.active {
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+        }
+        .toc-item.active .toc-step-num {
+            background: var(--primary-color);
+            color: #fff;
+        }
+        .toc-item.completed .toc-step-num {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-color);
+        }
+        .toc-toggle-btn {
+            display: none;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            backdrop-filter: blur(8px);
+            transition: all 0.2s;
+            margin-bottom: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+        .toc-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        /* ---- Reading Progress Bar ---- */
+        #reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            z-index: 9999;
+            transition: width 0.1s linear;
+        }
+
+        /* ---- Back to Top ---- */
+        .back-to-top {
+            position: fixed;
+            bottom: 5rem;
+            right: 2rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .back-to-top:hover {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        /* ---- Step Number Badges ---- */
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: -2px;
+        }
+        .step-badge.done {
+            background: var(--accent-color);
+        }
+
+        /* ---- Standardized Callout Boxes ---- */
+        .callout {
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+        .callout p {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .callout p + p {
+            margin-top: 0.75rem;
+        }
+        .callout strong {
+            color: inherit;
+        }
+        .callout-tip {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #6ee7b7;
+        }
+        .callout-tip strong { color: #fff; }
+        .callout-warning {
+            background: rgba(234, 179, 8, 0.12);
+            border: 1px solid rgba(234, 179, 8, 0.4);
+            color: #fde68a;
+        }
+        .callout-warning strong { color: #fff; }
+        .callout-danger {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+        .callout-danger strong { color: #fff; }
+        .callout-info {
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
+        }
+        .callout-info strong { color: #fff; }
+
+        /* ---- Enhanced Tables ---- */
+        th, td {
+            padding: 0.9rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: rgba(59, 130, 246, 0.15);
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 1.5rem;
+        }
+        .table-responsive table {
+            margin-bottom: 0;
+        }
+
+        /* ---- Code Block Language Label ---- */
+        .code-lang-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            padding: 0.2rem 0.7rem;
+            border-radius: 12px 0 12px 0;
+            font-size: 0.7rem;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* ---- Per-Section Progress Indicator ---- */
+        .section-progress {
+            font-size: 0.8rem;
+            color: var(--text-color);
+            opacity: 0.6;
+            font-weight: 400;
+            margin-left: auto;
+            white-space: nowrap;
+            letter-spacing: 0;
+        }
+
+        /* ---- Checklist Summary Enhancement ---- */
+        .checklist-summary {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 6px;
+        }
+        .checklist-summary li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.4rem 0.6rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+            margin: 0;
+        }
+        .checklist-summary li:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .checklist-summary li.done {
+            opacity: 0.6;
+        }
+
+        /* ---- Smooth Scroll ---- */
+        html {
+            scroll-behavior: smooth;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ---- Focus Improvements ---- */
+        :focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+        .step-card h2:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: -2px;
+            border-radius: 4px;
+        }
+        .toc-item:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* ---- Mobile Responsiveness ---- */
+        @media (max-width: 768px) {
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+            .toc-toggle-btn {
+                display: block;
+            }
+            .toc-container.collapsed .toc-grid {
+                display: none;
+            }
+            .toc-container {
+                padding: 1rem 1.25rem;
+            }
+            .back-to-top {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            .checklist-summary {
+                grid-template-columns: 1fr;
+            }
+            .section-progress {
+                font-size: 0.7rem;
+            }
+            .callout {
+                padding: 1rem 1.25rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .step-badge {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+                border-radius: 8px;
+            }
+            .step-card h2 {
+                padding: 1rem 1.25rem;
+                font-size: 1.1rem;
+                gap: 8px;
+            }
+        }
+
+        /* ---- Print Styles ---- */
+        @media print {
+            #reading-progress, .back-to-top, .reset-btn, .copy-button, .collapse-icon,
+            .toc-container, input[type="checkbox"] { display: none !important; }
+            body { background: #fff; color: #000; padding: 0; }
+            .container { box-shadow: none; border: none; backdrop-filter: none; background: #fff; padding: 1rem; animation: none; }
+            h1, h2, h3, h4, th, .callout strong { color: #000 !important; }
+            h1 { -webkit-text-fill-color: #000; background: none; }
+            a { color: #000 !important; text-shadow: none !important; }
+            pre { background: #f5f5f5 !important; color: #000 !important; border: 1px solid #ddd; break-inside: avoid; }
+            pre code { color: #000 !important; }
+            .step-card { break-inside: avoid; border: 1px solid #ddd; }
+            .step-card .step-content { max-height: none !important; opacity: 1 !important; padding: 1.75rem !important; }
+            .step-card.collapsed .step-content { max-height: none !important; padding: 1.75rem !important; opacity: 1 !important; }
+            .step-card.collapsed h2 { border-bottom: 1px solid #ddd !important; }
+            code { color: #d63384 !important; background: #f5f5f5 !important; }
+            .callout-tip { background: #e8f5e9; border-color: #4caf50; color: #333; }
+            .callout-warning { background: #fff8e1; border-color: #ffc107; color: #333; }
+            .callout-danger { background: #ffebee; border-color: #f44336; color: #333; }
+            .callout-info { background: #e3f2fd; border-color: #2196f3; color: #333; }
+            blockquote { border-left-color: #333 !important; background: #f9f9f9 !important; color: #333 !important; }
+            .completed-text { opacity: 0.7; }
+        }
     </style>
 </head>
 <body>
+    <div id="reading-progress"></div>
     <div class="container">
         <h1>Website Launch Blueprint - From Zero to AdSense</h1>
+
+        <div class="toc-container" id="toc-container">
+            <div class="toc-title">&#x1F9E0; On This Page</div>
+            <button class="toc-toggle-btn" id="toc-toggle" aria-expanded="true">Toggle Table of Contents</button>
+            <div class="toc-grid" id="toc-grid"></div>
+        </div>
+
 <p>This guide provides a comprehensive, step-by-step roadmap to building a passive income stream through micro-tool websites. By finding small, low-competition problems and using AI to build fast, SEO-optimized utilities, you can rank on Google and earn revenue via Google AdSense.</p>
 <h2>Strategy Overview</h2>
 <ul>
@@ -468,9 +850,9 @@
 <li><strong>Monetization:</strong> Google AdSense (applied once the site gets 10+ daily users).</li>
 </ul>
 
-<div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-color); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-  <p style="margin: 0; font-size: 1rem;">
-    <strong style="color: #fff;">Real-World Example:</strong> The author's portfolio at 
+<div class="callout callout-tip">
+  <p>
+    <strong>Real-World Example:</strong> The author's portfolio at 
     <a href="https://mohit-arora.me/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color);">mohit-arora.me</a> 
     was built following this exact process: React + TypeScript, Cloudflare Pages, multi-theme design with CSS variables, 
     auto-deploy from GitHub, JSON-LD structured data for SEO, custom 404/500 error pages, Sentry error monitoring, 
@@ -663,9 +1045,9 @@ and build a better version. Use MPA (multi-page application) architecture for be
 <pre><code class="language-text">Make the website fully accessible: add proper ARIA labels, semantic HTML structure, keyboard navigation support, alt text on images, and rel="noopener noreferrer" on all external links.</code></pre>
 
 <h3>Multi-Theme System (Advanced)</h3>
-<div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
-  <p style="margin: 0; font-size: 1rem; color: #fde68a;">
-    <strong style="color: #fff;">🟡 OPTIONAL - SKIP THIS for now.</strong> Your site works fine with a simple dark/light mode. This advanced multi-theme system (dark, light, matrix, cyberpunk) is something you can add after your site is live. Do not get stuck here.
+<div class="callout callout-warning">
+  <p>
+    <strong>&#x1F7E1; OPTIONAL - SKIP THIS for now.</strong> Your site works fine with a simple dark/light mode. This advanced multi-theme system (dark, light, matrix, cyberpunk) is something you can add after your site is live. Do not get stuck here.
   </p>
 </div>
 <p>Beyond basic dark/light mode, you can build a full multi-theme system that lets users choose their preferred look (dark, light, matrix, cyberpunk, etc.). This sets your micro-tool apart from competitors and creates a memorable user experience.</p>
@@ -705,9 +1087,9 @@ and build a better version. Use MPA (multi-page application) architecture for be
 </ol>
 
 <h3>Performance Optimization via Code Splitting</h3>
-<div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
-  <p style="margin: 0; font-size: 1rem; color: #fde68a;">
-    <strong style="color: #fff;">⚠️ For React, Vue, or Svelte SPAs only.</strong> Astro generates static HTML pages by default - there is hardly any JavaScript to split. If you are using Astro (as this guide recommends), you can <strong>skip this entire section</strong>. This is only relevant if you chose a JavaScript framework like React.
+<div class="callout callout-warning">
+  <p>
+    <strong>&#x26A0;&#xFE0F; For React, Vue, or Svelte SPAs only.</strong> Astro generates static HTML pages by default - there is hardly any JavaScript to split. If you are using Astro (as this guide recommends), you can <strong>skip this entire section</strong>. This is only relevant if you chose a JavaScript framework like React.
   </p>
 </div>
 <p>For sites built with frameworks (React, Vue, Svelte), loading all JavaScript upfront slows down the initial page load. Split your code so only essential code loads first:</p>
@@ -801,7 +1183,7 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
 <p>Google AdSense will reject your site without standard legal pages. Beyond AdSense, these pages serve critical purposes for every website. Below is what each file does, why it matters, and how to create them.</p>
 
 <h3>Legal &amp; Trust Pages</h3>
-<table>
+<div class="table-responsive"><table>
   <tr>
     <th>Page</th>
     <th>What It Is</th>
@@ -827,10 +1209,10 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
     <td>A way for users and legal authorities to reach you (email, form, or address).</td>
     <td>Legitimacy signal. Required by GDPR (must have a contact point). Users need to report issues or bugs.</td>
   </tr>
-</table>
+</table></div>
 
 <h3>Technical SEO Files</h3>
-<table>
+<div class="table-responsive"><table>
   <tr>
     <th>File</th>
     <th>What It Is</th>
@@ -856,11 +1238,11 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
     <td>The page shown when the server encounters an internal error.</td>
     <td>Professional polish. When things break (and they will), a branded 500 page is far better than a raw error message.</td>
   </tr>
-</table>
+</table></div>
 
 <h3>Additional Essential Files</h3>
 <p>Beyond the pages above, these files are critical for every production website:</p>
-<table>
+<div class="table-responsive"><table>
   <tr>
     <th>File</th>
     <th>What It Is</th>
@@ -891,7 +1273,7 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
     <td>A configuration file that sets HTTP security and indexing headers on specific paths.</td>
     <td>Used to block the free <code>.pages.dev</code> subdomain from being indexed (prevents duplicate content SEO penalty), and to set security headers like <code>X-Content-Type-Options</code>.</td>
   </tr>
-</table>
+</table></div>
 
 <ol>
 <li><strong>Run this prompt in the AI to generate all pages and files:</strong><pre><code class="language-text">Create these pages as separate MPA routes for best SEO:
@@ -970,9 +1352,9 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
 </ol>
 
 <h3>SPA Routing (For React, Vue, Svelte Sites)</h3>
-<div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
-  <p style="margin: 0; font-size: 1rem; color: #6ee7b7;">
-    <strong style="color: #fff;">✅ Astro MPA users: SKIP THIS.</strong> Astro generates real HTML files for every page (<code>/privacy/index.html</code>, <code>/about/index.html</code>, etc.). There is no 404-on-refresh issue. You do NOT need <code>_redirects</code>.
+<div class="callout callout-tip">
+  <p>
+    <strong>&#x2705; Astro MPA users: SKIP THIS.</strong> Astro generates real HTML files for every page (<code>/privacy/index.html</code>, <code>/about/index.html</code>, etc.). There is no 404-on-refresh issue. You do NOT need <code>_redirects</code>.
   </p>
 </div>
 <p>If you built a single-page application (SPA) instead of a multi-page static site, navigating directly to a URL like <code><span class="dynamic-domain">yoursite.com</span>/about</code> or refreshing the page will return a 404, because the server has no real <code>about.html</code> file. The SPA handles routing in the browser, not the server.</p>
@@ -1002,9 +1384,9 @@ https://*.pages.dev/*
 <p><strong>What these do:</strong> Asset files (JS/CSS) get long-term caching for fast repeat visits. The main page gets zero cache so users always see the latest version. Security headers prevent clickjacking (<code>X-Frame-Options</code>), enforce HTTPS (<code>Strict-Transport-Security</code>), and restrict browser features (<code>Permissions-Policy</code>). The <code>X-Robots-Tag</code> rule blocks the free <code>.pages.dev</code> subdomain from being indexed, preventing duplicate content SEO penalties.</p>
 
 <h3>Service Workers and PWA (Progressive Web App)</h3>
-<div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
-  <p style="margin: 0; font-size: 1rem; color: #fde68a;">
-    <strong style="color: #fff;">🟡 OPTIONAL - SKIP FOR NOW.</strong> PWA lets users install your site on their phone like an app. It is not required for Google ranking or AdSense. Come back to this after your site is earning money.
+<div class="callout callout-warning">
+  <p>
+    <strong>&#x1F7E1; OPTIONAL - SKIP FOR NOW.</strong> PWA lets users install your site on their phone like an app. It is not required for Google ranking or AdSense. Come back to this after your site is earning money.
   </p>
 </div>
 <p>Make your site installable on users' home screens and work offline. This gives your micro-tool a native app experience without the App Store.</p>
@@ -1027,24 +1409,24 @@ https://*.pages.dev/*
 <p><strong>Why PWA matters:</strong> Google rewards fast, installable experiences. A PWA-enabled micro-tool loads instantly for returning visitors. Users can add it to their home screen like a native app, increasing engagement and repeat usage, both positive signals for SEO.</p>
 
 <h3>Branch Controls &amp; Preview Deployments</h3>
-<div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
-  <p style="margin: 0; font-size: 1rem; color: #fde68a;">
-    <strong style="color: #fff;">🟡 SKIP THIS for your first site.</strong> You only need the <code>main</code> branch. Cloudflare Pages will auto-deploy everything you push to <code>main</code>. Branch previews are useful for teams, not for a single-person micro-tool project. Come back here later.
+<div class="callout callout-warning">
+  <p>
+    <strong>&#x1F7E1; SKIP THIS for your first site.</strong> You only need the <code>main</code> branch. Cloudflare Pages will auto-deploy everything you push to <code>main</code>. Branch previews are useful for teams, not for a single-person micro-tool project. Come back here later.
   </p>
 </div>
 <p>Cloudflare Pages can deploy different branches to different environments. This lets you test changes before they go live:</p>
-<table>
+<div class="table-responsive"><table>
   <tr><th>Branch</th><th>Deploys To</th><th>When to Use</th></tr>
   <tr><td><code>main</code></td><td>Your production domain (<code><span class="dynamic-domain">yourdomain.com</span></code>)</td><td>Only fully tested, ready-to-ship code</td></tr>
   <tr><td><code>dev</code></td><td>A preview URL (<code>project-name.pages.dev</code>)</td><td>Daily work-in-progress; test before merging to main</td></tr>
   <tr><td>Feature branches</td><td>No deployment (skip preview)</td><td>Experimental or single-feature work</td></tr>
-</table>
+</table></div>
 <p><strong>How to set up:</strong> In Cloudflare Dashboard → your project → <strong>Settings</strong> → <strong>Builds &amp; Deployments</strong> → <strong>Branch Controls</strong>. Remove the wildcard <code>*</code> branch rule, then explicitly add only <code>dev</code> and <code>main</code>. This prevents every random branch from triggering a preview, saving build minutes.</p>
 
 <h3>GitHub Actions CI/CD Pipeline</h3>
-<div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
-  <p style="margin: 0; font-size: 1rem; color: #fca5a5;">
-    <strong style="color: #fff;">⏭️ SKIP THIS for your first website.</strong> Cloudflare Pages already auto-deploys every time you push to GitHub (you set this up in Step 11). You do NOT need a separate CI/CD pipeline. Come back here once your site is live and you want extra pre-deploy checks.
+<div class="callout callout-danger">
+  <p>
+    <strong>&#x23ED;&#xFE0F; SKIP THIS for your first website.</strong> Cloudflare Pages already auto-deploys every time you push to GitHub (you set this up in Step 11). You do NOT need a separate CI/CD pipeline. Come back here once your site is live and you want extra pre-deploy checks.
   </p>
 </div>
 <p>Cloudflare Pages auto-deploys on every push, but what if your code has TypeScript errors or failing tests? Set up a GitHub Actions pipeline to catch problems <strong>before</strong> deployment:</p>
@@ -1178,9 +1560,9 @@ jobs:
 <li>You will now see your main dashboard. Click on <strong>Real-time</strong> to see active users currently on your site, what countries they are visiting from, and other live data.</li>
 </ol>
 <h2>Step 15: Error Monitoring and Crash Reporting</h2>
-<div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 1rem; border-radius: 12px; margin: 1rem 0;">
-  <p style="margin: 0; font-size: 1rem; color: #fde68a;">
-    <strong style="color: #fff;">🟡 OPTIONAL - SKIP FOR NOW.</strong> For a simple micro-tool, you probably do not need Sentry error monitoring. Your users will email you if something breaks. Come back and set this up after your site is getting traffic.
+<div class="callout callout-warning">
+  <p>
+    <strong>&#x1F7E1; OPTIONAL - SKIP FOR NOW.</strong> For a simple micro-tool, you probably do not need Sentry error monitoring. Your users will email you if something breaks. Come back and set this up after your site is getting traffic.
   </p>
 </div>
 <p>Your website will have bugs, especially if AI generated most of the code. Catch them before users report them. Error monitoring tools capture JavaScript exceptions, network failures, and unexpected state so you can fix issues proactively.</p>
@@ -1309,7 +1691,7 @@ Sentry.addGlobalEventProcessor((event) => {
 </ol>
 
 <h2>Checklist Summary</h2>
-<ul>
+<ul class="checklist-summary">
 <li><input disabled="" type="checkbox"> Research keyword and check competition.</li>
 <li><input disabled="" type="checkbox"> Initialize Astro project &amp; AI tools.</li>
 <li><input disabled="" type="checkbox"> AI prompt to generate core tool.</li>
@@ -1684,5 +2066,233 @@ Sentry.addGlobalEventProcessor((event) => {
             });
         });
     </script>
+    <script>
+        (function() {
+            'use strict';
+
+            var tocGrid = document.getElementById('toc-grid');
+            var progressBar = document.getElementById('reading-progress');
+            var backToTop = document.getElementById('back-to-top');
+            var tocToggle = document.getElementById('toc-toggle');
+            var tocContainer = document.getElementById('toc-container');
+            if (!tocGrid) return;
+
+            var headings = [];
+            var tocItems = [];
+            var h2Elements = document.querySelectorAll('h2');
+            var stepIndex = 0;
+
+            h2Elements.forEach(function(h2) {
+                var text = h2.textContent.trim().replace(/▼$/, '').trim();
+                if (!text) return;
+                var isStep = /^Step\s+\d+/i.test(text);
+
+                if (isStep) {
+                    stepIndex++;
+                    var stepNum = text.match(/\d+/);
+                    var stepLabel = stepNum ? 'Step ' + stepNum[0] : text;
+                    var titleText = text.replace(/^Step\s+\d+:\s*/i, '');
+                    headings.push({
+                        el: h2,
+                        text: titleText,
+                        label: stepLabel,
+                        fullText: text,
+                        isStep: true,
+                        stepIdx: stepIndex
+                    });
+                } else {
+                    headings.push({
+                        el: h2,
+                        text: text,
+                        label: '',
+                        fullText: text,
+                        isStep: false,
+                        stepIdx: 0
+                    });
+                }
+            });
+
+            // Build TOC items
+            headings.forEach(function(h, idx) {
+                var item = document.createElement('a');
+                item.className = 'toc-item';
+                item.href = '#';
+                item.setAttribute('role', 'button');
+                item.setAttribute('data-index', idx);
+
+                if (h.isStep) {
+                    var numBadge = document.createElement('span');
+                    numBadge.className = 'toc-step-num';
+                    numBadge.textContent = h.stepIdx;
+                    item.appendChild(numBadge);
+                    item.appendChild(document.createTextNode(h.text));
+                } else {
+                    item.appendChild(document.createTextNode(h.text));
+                }
+
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    h.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+
+                tocGrid.appendChild(item);
+                tocItems.push({ el: item, heading: h });
+            });
+
+            // Scroll spy: highlight current TOC item
+            var observer = new IntersectionObserver(function(entries) {
+                var anyActive = false;
+                entries.forEach(function(entry) {
+                    var idx = parseInt(entry.target.dataset.tocIndex);
+                    if (isNaN(idx)) return;
+                    if (entry.isIntersecting) {
+                        tocItems.forEach(function(ti) { ti.el.classList.remove('active'); });
+                        if (tocItems[idx]) tocItems[idx].el.classList.add('active');
+                        anyActive = true;
+                    }
+                });
+                // If nothing is intersecting (user scrolled past end), keep last active
+            }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+
+            // Assign data attribute and observe
+            headings.forEach(function(h, idx) {
+                h.el.setAttribute('data-toc-index', idx);
+                observer.observe(h.el);
+            });
+
+            // Step badges: add visual badge to step h2s
+            var stepBadgeIdx = 0;
+            h2Elements.forEach(function(h2) {
+                var text = h2.textContent.trim().replace(/▼$/, '').trim();
+                if (/^Step\s+\d+/i.test(text)) {
+                    stepBadgeIdx++;
+                    var badge = document.createElement('span');
+                    badge.className = 'step-badge';
+                    badge.textContent = stepBadgeIdx;
+
+                    var masterCheck = h2.querySelector('input[type="checkbox"]');
+                    if (masterCheck) {
+                        masterCheck.parentNode.insertBefore(badge, masterCheck.nextSibling);
+                        // Watch for completion
+                        masterCheck.addEventListener('change', function() {
+                            badge.classList.toggle('done', masterCheck.checked);
+                            // Also update TOC
+                            var idx = headings.findIndex(function(h) { return h.el === h2; });
+                            if (idx >= 0 && tocItems[idx]) {
+                                tocItems[idx].el.classList.toggle('completed', masterCheck.checked);
+                            }
+                        });
+                        // Initial state
+                        if (masterCheck.checked) {
+                            badge.classList.add('done');
+                        }
+                    } else {
+                        var firstChild = h2.firstChild;
+                        h2.insertBefore(badge, firstChild ? firstChild.nextSibling : null);
+                    }
+                }
+            });
+
+            // Section progress indicators
+            h2Elements.forEach(function(h2) {
+                var text = h2.textContent.trim().replace(/▼$/, '').trim();
+                if (!/^Step\s+\d+/i.test(text) && text !== 'Common Pitfalls & Lessons Learned' && text !== 'Checklist Summary') return;
+                var masterCheck = h2.querySelector('input[type="checkbox"]');
+                if (!masterCheck) return;
+
+                var progressSpan = document.createElement('span');
+                progressSpan.className = 'section-progress';
+
+                // Collect checkboxes between this h2 and the next h2
+                var h2Parent = h2.parentElement;
+                var sectionChecks = [];
+                var foundSection = false;
+                var el = h2Parent.firstElementChild;
+                while (el) {
+                    if (el === h2 || el.querySelector && el.querySelector('h2') === h2) {
+                        foundSection = true;
+                        el = el.nextElementSibling;
+                        continue;
+                    }
+                    if (foundSection) {
+                        if (el.tagName === 'H2') break;
+                        if (el.tagName === 'UL' || el.tagName === 'OL') {
+                            var checksInList = el.querySelectorAll('li.task-item > input[type="checkbox"]');
+                            checksInList.forEach(function(cb) { sectionChecks.push(cb); });
+                        }
+                    }
+                    el = el.nextElementSibling;
+                }
+
+                var updateProgress = function() {
+                    var total = sectionChecks.length;
+                    var done = 0;
+                    sectionChecks.forEach(function(cb) { if (cb.checked) done++; });
+                    progressSpan.textContent = total > 0 ? done + '/' + total : '';
+                };
+
+                var titleSpan = h2.querySelector('span');
+                if (titleSpan) {
+                    titleSpan.parentNode.insertBefore(progressSpan, titleSpan.nextSibling);
+                } else {
+                    h2.appendChild(progressSpan);
+                }
+
+                updateProgress();
+                masterCheck.addEventListener('change', updateProgress);
+                document.addEventListener('change', function(e) {
+                    if (e.target.matches('li.task-item > input[type="checkbox"]') && sectionChecks.indexOf(e.target) >= 0) {
+                        updateProgress();
+                    }
+                });
+            });
+
+            // Reading progress bar
+            var onScroll = function() {
+                var scrollTop = window.scrollY || document.documentElement.scrollTop;
+                var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                progressBar.style.width = Math.min(progress, 100) + '%';
+
+                // Back to top visibility
+                if (scrollTop > 400) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+
+            // Back to top click
+            backToTop.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // TOC toggle on mobile
+            if (tocToggle) {
+                tocToggle.addEventListener('click', function() {
+                    tocContainer.classList.toggle('collapsed');
+                    var expanded = !tocContainer.classList.contains('collapsed');
+                    tocToggle.setAttribute('aria-expanded', expanded);
+                    tocToggle.textContent = expanded ? 'Toggle Table of Contents' : 'Show Table of Contents';
+                });
+            }
+
+            // Code block language labels
+            document.querySelectorAll('pre code[class*="language-"]').forEach(function(codeEl) {
+                var langClass = Array.from(codeEl.classList).find(function(c) { return c.startsWith('language-'); });
+                if (!langClass) return;
+                var lang = langClass.replace('language-', '');
+                if (['text', 'html', 'css', 'javascript', 'js', 'json', 'bash', 'yaml', 'jsx', 'tsx', 'ts', 'typescript'].indexOf(lang) === -1) return;
+                var pre = codeEl.closest('pre');
+                if (!pre || pre.querySelector('.code-lang-label')) return;
+                var label = document.createElement('span');
+                label.className = 'code-lang-label';
+                label.textContent = lang;
+                pre.appendChild(label);
+            });
+        })();
+    </script>
+    <button class="back-to-top" id="back-to-top" aria-label="Back to top">&#x2191;</button>
 </body>
 </html>
