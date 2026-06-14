@@ -56,8 +56,8 @@
             max-width: 1200px;
             margin: 0 auto;
             background: var(--card-bg);
-            backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
             border-radius: 24px;
             padding: 4rem;
@@ -83,6 +83,7 @@
             font-size: 3.5rem;
             background: linear-gradient(135deg, #60a5fa, #c084fc);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             text-align: center;
             margin-bottom: 3rem;
@@ -168,10 +169,6 @@
             margin-top: 2px;
         }
 
-        ul > li.task-item {
-            /* Restoring natural ul indentation */
-        }
-
         li.task-item > ul, li.task-item > ol {
             width: 100%;
             margin-top: 0.5rem;
@@ -186,8 +183,8 @@
         
         /* Checkbox styling */
         input[type="checkbox"] {
-            appearance: none;
             -webkit-appearance: none;
+            appearance: none;
             width: 22px;
             height: 22px;
             border: 2px solid var(--primary-color);
@@ -248,6 +245,7 @@
             border-radius: 50px;
             cursor: pointer;
             font-weight: 600;
+            -webkit-backdrop-filter: blur(8px);
             backdrop-filter: blur(8px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             transition: all 0.2s;
@@ -285,6 +283,7 @@
             font-family: 'Inter', sans-serif;
             transition: all 0.2s ease;
             opacity: 0;
+            -webkit-backdrop-filter: blur(4px);
             backdrop-filter: blur(4px);
         }
 
@@ -395,6 +394,9 @@
             h2 { font-size: 1.3rem; }
         }
     
+        .accent-link { color: var(--accent-color); }
+        .capitalized { text-transform: capitalize; }
+        .view-counter-wrapper { display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 1rem; }
         .domain-input-card { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--primary-color); padding: 1.5rem; border-radius: 12px; margin: 2rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .domain-input-card label { display: block; margin-bottom: 0.5rem; color: #fff; font-size: 1.05rem; }
         .domain-input-wrapper { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
@@ -419,6 +421,7 @@
             margin: 0;
             padding: 1.25rem 1.75rem;
             cursor: pointer;
+            -webkit-user-select: none;
             user-select: none;
             background: rgba(255, 255, 255, 0.02);
             transition: background 0.2s ease;
@@ -461,6 +464,7 @@
             border-radius: 16px;
             padding: 1.75rem 2rem;
             margin-bottom: 2.5rem;
+            -webkit-backdrop-filter: blur(8px);
             backdrop-filter: blur(8px);
         }
         .toc-container .toc-title {
@@ -532,6 +536,7 @@
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-size: 0.9rem;
+            -webkit-backdrop-filter: blur(8px);
             backdrop-filter: blur(8px);
             transition: all 0.2s;
             margin-bottom: 1rem;
@@ -571,6 +576,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
+            -webkit-backdrop-filter: blur(8px);
             backdrop-filter: blur(8px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             transition: all 0.2s ease;
@@ -671,7 +677,6 @@
         }
         .table-responsive {
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
             margin-bottom: 1.5rem;
         }
         .table-responsive table {
@@ -692,6 +697,7 @@
             font-weight: 600;
             letter-spacing: 0.05em;
             text-transform: uppercase;
+            -webkit-user-select: none;
             user-select: none;
             pointer-events: none;
         }
@@ -809,7 +815,7 @@
             #reading-progress, .back-to-top, .reset-btn, .copy-button, .collapse-icon,
             .toc-container, input[type="checkbox"] { display: none !important; }
             body { background: #fff; color: #000; padding: 0; }
-            .container { box-shadow: none; border: none; backdrop-filter: none; background: #fff; padding: 1rem; animation: none; }
+            .container { box-shadow: none; border: none; -webkit-backdrop-filter: none; backdrop-filter: none; background: #fff; padding: 1rem; animation: none; }
             h1, h2, h3, h4, th, .callout strong { color: #000 !important; }
             h1 { -webkit-text-fill-color: #000; background: none; }
             a { color: #000 !important; text-shadow: none !important; }
@@ -853,7 +859,7 @@
 <div class="callout callout-tip">
   <p>
     <strong>Real-World Example:</strong> The author's portfolio at 
-    <a href="https://mohit-arora.me/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color);">mohit-arora.me</a> 
+    <a href="https://mohit-arora.me/" target="_blank" rel="noopener noreferrer" class="accent-link">mohit-arora.me</a> 
     was built following this exact process: React + TypeScript, Cloudflare Pages, multi-theme design with CSS variables, 
     auto-deploy from GitHub, JSON-LD structured data for SEO, custom 404/500 error pages, Sentry error monitoring, 
     PWA with service worker caching, and a custom SPA router with scroll restoration. 
@@ -1010,7 +1016,7 @@ Domain: [<span class="dynamic-domain">yourdomain.com</span>]
 Create a [describe your tool in detail]. My competitor is [URL] - analyze it, identify its weaknesses,
 and build a better version. Use MPA (multi-page application) architecture for best SEO.
 </code></pre>
-<p><strong>Real-World Prompt Example (from <span class="dynamic-domain" style="text-transform: capitalize;">realonlineruler.com</span>):</strong></p>
+<p><strong>Real-World Prompt Example (from <span class="dynamic-domain capitalized">realonlineruler.com</span>):</strong></p>
 <blockquote>
 <p><em>Create an online ruler website that will have ruler on the edges, user can select where to place the ruler. we want these 3 calibration methods</em>
 <em>Method 1: Auto-Detect Device</em>
@@ -1713,33 +1719,33 @@ Sentry.addGlobalEventProcessor((event) => {
 
 <h2>Checklist Summary</h2>
 <ul class="checklist-summary">
-<li><input disabled="" type="checkbox"> Research keyword and check competition.</li>
-<li><input disabled="" type="checkbox"> Initialize Astro project &amp; AI tools.</li>
-<li><input disabled="" type="checkbox"> AI prompt to generate core tool.</li>
-<li><input disabled="" type="checkbox"> Add branding (Logo/Favicon).</li>
-<li><input disabled="" type="checkbox"> AI prompt for On-Page SEO (600 words).</li>
-<li><input disabled="" type="checkbox"> AI prompt for FAQ JSON-LD.</li>
-<li><input disabled="" type="checkbox"> AI prompt for Legal Pages, 404, sitemap.</li>
-<li><input disabled="" type="checkbox"> Push project to GitHub.</li>
-<li><input disabled="" type="checkbox"> Connect GitHub repo to Cloudflare Pages for auto-deploy.</li>
-<li><input disabled="" type="checkbox"> Buy <code>.com</code> domain and map in Cloudflare.</li>
-<li><input disabled="" type="checkbox"> Add <code>_headers</code> to block <code>.pages.dev</code> indexing.</li>
-<li><input disabled="" type="checkbox"> Submit to Google Search Console.</li>
-<li><input disabled="" type="checkbox"> Run mobile performance audits on PageSpeed Insights and optimize code via AI.</li>
-<li><input disabled="" type="checkbox"> Wait for traffic, apply for AdSense.</li>
-<li><input disabled="" type="checkbox"> Add <code>_redirects</code> for SPA routing (if using React/Vue/Svelte).</li>
-<li><input disabled="" type="checkbox"> Configure branch controls (SKIP for first site - main branch deploys automatically).</li>
-<li><input disabled="" type="checkbox"> Add OG meta tags for social sharing previews.</li>
-<li><input disabled="" type="checkbox"> Set up error monitoring (Sentry) with ErrorBoundary wrappers (OPTIONAL - skip for first site).</li>
-<li><input disabled="" type="checkbox"> Add _headers file with security and cache configuration.</li>
-<li><input disabled="" type="checkbox"> Configure PWA service worker and manifest for offline support (OPTIONAL - skip for first site).</li>
-<li><input disabled="" type="checkbox"> Implement code splitting and lazy loading for performance (OPTIONAL - only if using React/Vue/Svelte SPA).</li>
-<li><input disabled="" type="checkbox"> Build multi-theme system with CSS variables (OPTIONAL - basic dark/light mode is enough).</li>
-<li><input disabled="" type="checkbox"> Verify DNS propagation after nameserver change.</li>
-<li><input disabled="" type="checkbox"> Set up GitHub Actions CI/CD pipeline (SKIP - Cloudflare Pages auto-deploys on push; you don't need this).</li>
-<li><input disabled="" type="checkbox"> Enable TypeScript strict mode in tsconfig.json.</li>
-<li><input disabled="" type="checkbox"> Implement accessibility basics (ARIA, semantic HTML, keyboard nav, alt text).</li>
-<li><input disabled="" type="checkbox"> Add Samsung Internet dark mode prevention meta tag.</li>
+<li><input disabled="" type="checkbox" title="Research keyword and check competition."> Research keyword and check competition.</li>
+<li><input disabled="" type="checkbox" title="Initialize Astro project &amp; AI tools."> Initialize Astro project &amp; AI tools.</li>
+<li><input disabled="" type="checkbox" title="AI prompt to generate core tool."> AI prompt to generate core tool.</li>
+<li><input disabled="" type="checkbox" title="Add branding (Logo/Favicon)."> Add branding (Logo/Favicon).</li>
+<li><input disabled="" type="checkbox" title="AI prompt for On-Page SEO (600 words)."> AI prompt for On-Page SEO (600 words).</li>
+<li><input disabled="" type="checkbox" title="AI prompt for FAQ JSON-LD."> AI prompt for FAQ JSON-LD.</li>
+<li><input disabled="" type="checkbox" title="AI prompt for Legal Pages, 404, sitemap."> AI prompt for Legal Pages, 404, sitemap.</li>
+<li><input disabled="" type="checkbox" title="Push project to GitHub."> Push project to GitHub.</li>
+<li><input disabled="" type="checkbox" title="Connect GitHub repo to Cloudflare Pages for auto-deploy."> Connect GitHub repo to Cloudflare Pages for auto-deploy.</li>
+<li><input disabled="" type="checkbox" title="Buy .com domain and map in Cloudflare."> Buy <code>.com</code> domain and map in Cloudflare.</li>
+<li><input disabled="" type="checkbox" title="Add _headers to block .pages.dev indexing."> Add <code>_headers</code> to block <code>.pages.dev</code> indexing.</li>
+<li><input disabled="" type="checkbox" title="Submit to Google Search Console."> Submit to Google Search Console.</li>
+<li><input disabled="" type="checkbox" title="Run mobile performance audits and optimize code via AI."> Run mobile performance audits on PageSpeed Insights and optimize code via AI.</li>
+<li><input disabled="" type="checkbox" title="Wait for traffic, apply for AdSense."> Wait for traffic, apply for AdSense.</li>
+<li><input disabled="" type="checkbox" title="Add _redirects for SPA routing."> Add <code>_redirects</code> for SPA routing (if using React/Vue/Svelte).</li>
+<li><input disabled="" type="checkbox" title="Configure branch controls."> Configure branch controls (SKIP for first site - main branch deploys automatically).</li>
+<li><input disabled="" type="checkbox" title="Add OG meta tags for social sharing previews."> Add OG meta tags for social sharing previews.</li>
+<li><input disabled="" type="checkbox" title="Set up error monitoring with ErrorBoundary wrappers."> Set up error monitoring (Sentry) with ErrorBoundary wrappers (OPTIONAL - skip for first site).</li>
+<li><input disabled="" type="checkbox" title="Add _headers file with security and cache configuration."> Add _headers file with security and cache configuration.</li>
+<li><input disabled="" type="checkbox" title="Configure PWA service worker and manifest for offline support."> Configure PWA service worker and manifest for offline support (OPTIONAL - skip for first site).</li>
+<li><input disabled="" type="checkbox" title="Implement code splitting and lazy loading for performance."> Implement code splitting and lazy loading for performance (OPTIONAL - only if using React/Vue/Svelte SPA).</li>
+<li><input disabled="" type="checkbox" title="Build multi-theme system with CSS variables."> Build multi-theme system with CSS variables (OPTIONAL - basic dark/light mode is enough).</li>
+<li><input disabled="" type="checkbox" title="Verify DNS propagation after nameserver change."> Verify DNS propagation after nameserver change.</li>
+<li><input disabled="" type="checkbox" title="Set up GitHub Actions CI/CD pipeline."> Set up GitHub Actions CI/CD pipeline (SKIP - Cloudflare Pages auto-deploys on push; you don't need this).</li>
+<li><input disabled="" type="checkbox" title="Enable TypeScript strict mode in tsconfig.json."> Enable TypeScript strict mode in tsconfig.json.</li>
+<li><input disabled="" type="checkbox" title="Implement accessibility basics."> Implement accessibility basics (ARIA, semantic HTML, keyboard nav, alt text).</li>
+<li><input disabled="" type="checkbox" title="Add Samsung Internet dark mode prevention meta tag."> Add Samsung Internet dark mode prevention meta tag.</li>
 </ul>
 <hr>
 <blockquote>
@@ -1752,7 +1758,7 @@ Sentry.addGlobalEventProcessor((event) => {
 </ul>
 </blockquote>
 
-<div style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 1rem;">
+<div class="view-counter-wrapper">
     <img src="https://hits.sh/arora-sir.github.io/Website_Buisness_Blueprint.html.svg?style=for-the-badge&label=Total%20Views&color=3b82f6" alt="Website Views"/>
 </div>
 
