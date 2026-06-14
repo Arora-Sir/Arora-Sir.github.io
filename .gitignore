@@ -1,0 +1,12 @@
+# OS
+Thumbs.db
+.DS_Store
+
+# Project skills (local to each dev)
+.opencode/skills/*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

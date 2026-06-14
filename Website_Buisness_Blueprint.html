@@ -1550,7 +1550,28 @@ jobs:
 <li><strong>Site Icon:</strong> It will take roughly <strong>1 week</strong> for your website&#39;s favicon to appear next to your site in Google search results.</li>
 </ul>
 </blockquote>
-<h2>Step 14: Verify Google Analytics is Working</h2>
+<h2>Step 14: Performance Audit and Mobile Optimization</h2>
+<p>Ensure your website is optimized for speed, which is a major Google ranking factor (Core Web Vitals).</p>
+<ol>
+<li><strong>Run a PageSpeed Insights Audit:</strong>
+    <ol>
+    <li>Once your website is live and indexed, go to <a href="https://pagespeed.web.dev/" target="_blank" rel="noopener noreferrer">PageSpeed Insights (pagespeed.web.dev)</a>.</li>
+    <li>Enter your live website URL (e.g., <code>https://<span class="dynamic-domain">realonlineruler.com</span></code>) and click <strong>Analyze</strong>.</li>
+    <li>Let the tool analyze the mobile and desktop performance of your site. Once complete, copy the analysis URL from your browser's address bar (e.g., <code>https://pagespeed.web.dev/analysis/...</code>).</li>
+    </ol>
+</li>
+<li><strong>Leverage your AI Agent for Optimization:</strong>
+    <ol>
+    <li>Paste the PageSpeed Insights analysis URL directly into your AI coding assistant (e.g., Claude Code, Antigravity, or Cursor) and prompt it to optimize your site:
+        <pre><code class="language-text">Analyze the Lighthouse report for my live site from this link: [Paste PageSpeed URL]. Fix all highlighted issues to improve my mobile performance score. Focus on minimizing JavaScript bundle size, reducing main-thread blocking time, and optimizing critical rendering paths.</code></pre>
+    </li>
+    <li>The AI agent will analyze the report, locate performance bottlenecks (such as static/heavy library imports, non-lazy components, or heavy scroll animations), and implement techniques like dynamic SDK loading, section lazy-loading, code-splitting, or converting JS animations to hardware-accelerated CSS animations.</li>
+    </ol>
+</li>
+<li><strong>Verify the Speed Gains:</strong> Push the AI-optimized changes to GitHub to trigger a new Cloudflare Pages deployment. After a few minutes, re-run the PageSpeed Insights analysis. Your mobile score should show significant improvement (ideally exceeding 90).</li>
+</ol>
+
+<h2>Step 15: Verify Google Analytics is Working</h2>
 <p>Back in <strong>Step 7</strong>, you added the Google Analytics tracking code to your website. Now that your site is fully live on the internet, you must verify the installation to track your users.</p>
 <ol>
 <li>Go back to <a href="https://analytics.google.com">Google Analytics</a>.</li>
@@ -1559,7 +1580,7 @@ jobs:
 <li>Click <strong>Confirm</strong> &gt; <strong>Next</strong> &gt; <strong>Continue to Home</strong> &gt; <strong>Save</strong>.</li>
 <li>You will now see your main dashboard. Click on <strong>Real-time</strong> to see active users currently on your site, what countries they are visiting from, and other live data.</li>
 </ol>
-<h2>Step 15: Error Monitoring and Crash Reporting</h2>
+<h2>Step 16: Error Monitoring and Crash Reporting</h2>
 <div class="callout callout-warning">
   <p>
     <strong>&#x1F7E1; OPTIONAL - SKIP FOR NOW.</strong> For a simple micro-tool, you probably do not need Sentry error monitoring. Your users will email you if something breaks. Come back and set this up after your site is getting traffic.
@@ -1604,7 +1625,7 @@ Sentry.addGlobalEventProcessor((event) => {
 </ol>
 <p><strong>Pro tip:</strong> Set up email alerts in Sentry so you know the moment a user hits a bug. This turns a potential bad review into a fix deployed within minutes.</p>
 
-<h2>Step 16: Google AdSense Monetization</h2>
+<h2>Step 17: Google AdSense Monetization</h2>
 <p>Do not apply for AdSense on day one. You need to <strong>wait at least 1 month</strong> before applying so your site has time to age and build trust. You MUST also ensure your Google Analytics shows you are getting a minimum of <strong>10+ consistent organic users per day</strong> (check this in Analytics under <code>Real-time</code> → <code>Users</code>). Applying too early with zero traffic will result in an instant rejection.</p>
 <ol>
 <li>Go to <a href="https://adsense.google.com/start/">Google AdSense</a> and log in.</li>
@@ -1704,6 +1725,7 @@ Sentry.addGlobalEventProcessor((event) => {
 <li><input disabled="" type="checkbox"> Buy <code>.com</code> domain and map in Cloudflare.</li>
 <li><input disabled="" type="checkbox"> Add <code>_headers</code> to block <code>.pages.dev</code> indexing.</li>
 <li><input disabled="" type="checkbox"> Submit to Google Search Console.</li>
+<li><input disabled="" type="checkbox"> Run mobile performance audits on PageSpeed Insights and optimize code via AI.</li>
 <li><input disabled="" type="checkbox"> Wait for traffic, apply for AdSense.</li>
 <li><input disabled="" type="checkbox"> Add <code>_redirects</code> for SPA routing (if using React/Vue/Svelte).</li>
 <li><input disabled="" type="checkbox"> Configure branch controls (SKIP for first site - main branch deploys automatically).</li>
