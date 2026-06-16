@@ -765,6 +765,66 @@
             outline-offset: 2px;
         }
 
+        /* ---- Heading Anchor Copy Button ---- */
+        .heading-wrapper {
+            position: relative;
+            display: inline;
+        }
+        .heading-anchor {
+            position: absolute;
+            left: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.6rem;
+            height: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            opacity: 0;
+            transition: opacity 0.2s ease, background 0.2s ease;
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            z-index: 10;
+            padding: 0;
+            line-height: 1;
+            text-decoration: none;
+        }
+        .heading-anchor:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+        .heading-anchor.copied {
+            background: var(--accent-color);
+            color: #fff;
+            border-color: var(--accent-color);
+        }
+        h1:hover .heading-anchor,
+        h2:hover .heading-anchor,
+        h3:hover .heading-anchor,
+        h4:hover .heading-anchor,
+        .heading-wrapper:hover .heading-anchor {
+            opacity: 1;
+        }
+        h1, h2, h3, h4 {
+            position: relative;
+        }
+        @media (max-width: 768px) {
+            .heading-anchor {
+                left: -1.6rem;
+                width: 1.3rem;
+                height: 1.3rem;
+                font-size: 0.65rem;
+            }
+        }
+
         /* ---- Mobile Responsiveness ---- */
         @media (max-width: 768px) {
             .toc-grid {
@@ -950,6 +1010,49 @@ Alternatively, use free alternatives like <a href="https://www.cursor.com/"><str
     </ol>
     </li>
 </ol>
+
+<h3>Environment &amp; Tooling Setup</h3>
+<p>Before handing the project to your AI agent, set up these foundational files that every production website needs. They keep secrets safe, catch bugs, and make your CI pipeline fast.</p>
+<ol>
+<li><strong>Environment variables:</strong> Create a <code>.env</code> file (added to <code>.gitignore</code> — never commit it) for API keys, analytics tokens, and other secrets. Also create <code>.env.example</code> as a template with placeholder values so other developers (or future you) know what variables are needed:<pre><code class="language-text"># .env.example — copy to .env and fill in your values
+VITE_SENTRY_DSN=
+VITE_ANALYTICS_ID=
+SENTRY_AUTH_TOKEN=
+</code></pre>
+<p>For Vite projects, all client-exposed variables <strong>must</strong> start with <code>VITE_</code> — variables without this prefix are only available during build (server-side). This is a security boundary that prevents accidentally leaking server secrets to the browser.</p>
+</li>
+<li><strong>Package security overrides:</strong> Vulnerable transitive dependencies are a common problem in Node.js projects. Use <code>overrides</code> in <code>package.json</code> to pin specific versions and patch known CVEs:<pre><code class="language-json">{
+  "overrides": {
+    "brace-expansion": "5.0.6"
+  }
+}</code></pre>
+<p>Run <code>npm audit</code> regularly to check for vulnerabilities. When one is found, add it to <code>overrides</code> and commit the fix.</p>
+</li>
+<li><strong>Testing setup:</strong> Install Vitest with a DOM environment for component testing. Create a <code>vitest.config.ts</code> and a test setup file:<pre><code class="language-bash">npm install -D vitest happy-dom</code></pre>
+<pre><code class="language-javascript">// vitest.config.ts
+import { defineConfig } from 'vitest/config'
+export default defineConfig({
+  test: {
+    environment: 'happy-dom',
+    include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+  },
+})</code></pre>
+<pre><code class="language-text">// src/test/setup.ts — runs before every test
+import '@testing-library/jest-dom'</code></pre>
+<p>Add test scripts to <code>package.json</code>:</p>
+<pre><code class="language-json">"scripts": {
+  "test": "vitest run",
+  "test:watch": "vitest"
+}</code></pre>
+</li>
+<li><strong>Cloudflare Pages config (optional alternative to manual UI):</strong> Instead of configuring build settings through the Cloudflare dashboard, create a <code>wrangler.toml</code> in your project root. This is declarative, version-controlled, and avoids manual click-through every time you set up a new project:<pre><code class="language-toml">name = "your-project-name"
+pages_build_output_dir = "dist"</code></pre>
+<p>If you use this file, Cloudflare Pages will detect it and auto-configure the build output directory. You still need to connect the GitHub repo through the dashboard once, but all build settings come from this file.</p>
+</li>
+</ol>
+<p><strong>Prompt the AI to initialize these:</strong></p>
+<pre><code class="language-text">Set up the project tooling: create a .env.example file with VITE_ prefixed placeholders for API keys, add npm overrides for known vulnerable packages, initialize Vitest with happy-dom for testing, and create a wrangler.toml for Cloudflare Pages build output configuration.</code></pre>
+
 <h2>Step 5: Equipping the AI with Design Skills</h2>
 <p>Give the AI the context it needs to create professional, modern designs.</p>
 <ol>
@@ -1050,6 +1153,151 @@ and build a better version. Use MPA (multi-page application) architecture for be
 <p><strong>Prompt the AI:</strong></p>
 <pre><code class="language-text">Make the website fully accessible: add proper ARIA labels, semantic HTML structure, keyboard navigation support, alt text on images, and rel="noopener noreferrer" on all external links.</code></pre>
 
+<h3>CSS Architecture Best Practices</h3>
+<p>These patterns prevent common CSS bugs that plague AI-generated sites and ensure your styles hold up across browsers and devices:</p>
+<ol>
+<li><strong>Sticky positioning fix:</strong> NEVER set <code>body { overflow-x: hidden }</code> — it breaks <code>position: sticky</code> by clipping the sticky element's container. If you need horizontal overflow hidden, set it on <code>&lt;html&gt;</code> instead:<pre><code class="language-css">/* ✅ Correct */
+html { overflow-x: hidden; }
+
+/* ❌ Wrong — breaks sticky positioning */
+body { overflow-x: hidden; }</code></pre>
+</li>
+<li><strong>Respect user motion preferences:</strong> Some users have vestibular disorders where animations cause dizziness. Wrap all animations in a <code>prefers-reduced-motion</code> media query to disable them when the user requests it:<pre><code class="language-css">@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}</code></pre>
+</li>
+<li><strong>Print styles:</strong> Users will print your pages. Hide interactive elements (checkboxes, buttons, nav), force light backgrounds and black text, and collapse expandable sections:<pre><code class="language-css">@media print {
+  nav, button, .no-print, input[type="checkbox"] { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  a { color: #000 !important; }
+  pre { background: #f5f5f5 !important; border: 1px solid #ddd; }
+  .collapsed-section { max-height: none !important; opacity: 1 !important; }
+}</code></pre>
+</li>
+<li><strong>CSS variable fallbacks:</strong> Older browsers (Internet Explorer, old Safari) don't support CSS custom properties. Always provide a fallback value so the site remains usable:<pre><code class="language-css">.card {
+  background: #0a1122;               /* fallback for old browsers */
+  background: var(--bg-secondary);   /* modern override */
+  color: #94a3b8;                    /* fallback */
+  color: var(--text-secondary);      /* modern override */
+}</code></pre>
+</li>
+<li><strong>Responsive grids without media queries:</strong> Use <code>auto-fill</code> / <code>auto-fit</code> with <code>minmax()</code> to create responsive layouts that automatically adjust to container width:<pre><code class="language-css">.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}</code></pre>
+</li>
+</ol>
+<p><strong>Prompt the AI to apply these CSS improvements:</strong></p>
+<pre><code class="language-text">Apply these CSS fixes: move overflow-x: hidden from body to html, add a prefers-reduced-motion media query that disables all animations, add @media print styles that hide interactive elements, add CSS variable fallbacks for older browsers, and use auto-fill/minmax for responsive grids.</code></pre>
+
+<h3>Reusable Component Patterns</h3>
+<p>These battle-tested component patterns solve common UX problems that AI code often gets wrong:</p>
+
+<h4>IntersectionObserver Lazy Loading</h4>
+<p>Instead of React's built-in <code>lazy()</code> (which loads when the component mounts, not when it's visible), use IntersectionObserver to trigger imports only when the user scrolls near the section. The <code>rootMargin</code> starts loading before the user reaches it, eliminating perceived delay:</p>
+<pre><code class="language-jsx">const LazyOnViewport = ({ importFn, fallback }) =&gt; {
+  const [Component, setComponent] = useState(null);
+  const [error, setError] = useState(null);
+  const ref = useRef(null);
+
+  useEffect(() =&gt; {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) =&gt; {
+        if (entries[0].isIntersecting) {
+          observer.disconnect();
+          importFn()
+            .then(mod =&gt; setComponent(() =&gt; mod.default))
+            .catch(err =&gt; setError(err));
+        }
+      },
+      { rootMargin: '300px 0px', threshold: 0 }
+    );
+
+    observer.observe(el);
+    return () =&gt; observer.disconnect();
+  }, [importFn]);
+
+  if (error) return &lt;div&gt;Failed to load. &lt;button onClick={() =&gt; setError(null)}&gt;Retry&lt;/button&gt;&lt;/div&gt;;
+  return &lt;div ref={ref}&gt;{Component ? &lt;Component /&gt; : fallback}&lt;/div&gt;;
+};</code></pre>
+<p>Pair this with <strong>shimmer skeletons</strong> — animated gradient placeholders that match the section's dimensions — instead of a plain loading spinner:</p>
+<pre><code class="language-css">.shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 12px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }</code></pre>
+
+<h4>FAQ Accordion</h4>
+<p>A proper FAQ accordion avoids <code>display: none</code> (which breaks height transition). Instead, use a max-height transition for smooth animation, close the current item when opening another, and add a hover timer for a premium feel:</p>
+<pre><code class="language-jsx">const FaqAccordion = ({ items }) =&gt; {
+  const [openIndex, setOpenIndex] = useState(null);
+  const hoverTimer = useRef(null);
+
+  return items.map((item, i) =&gt; (
+    &lt;div
+      key={i}
+      className="faq-item"
+      onMouseEnter={() =&gt; {
+        hoverTimer.current = setTimeout(() =&gt; setOpenIndex(i), 1000);
+      }}
+      onMouseLeave={() =&gt; clearTimeout(hoverTimer.current)}
+    &gt;
+      &lt;button
+        className="faq-question"
+        onClick={() =&gt; setOpenIndex(openIndex === i ? null : i)}
+        aria-expanded={openIndex === i}
+      &gt;
+        {item.question}
+      &lt;/button&gt;
+      &lt;div
+        className="faq-answer"
+        style={{
+          maxHeight: openIndex === i ? '500px' : '0',
+          overflow: 'hidden',
+          transition: 'max-height 0.35s ease',
+        }}
+      &gt;
+        &lt;p&gt;{item.answer}&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  ));
+};</code></pre>
+
+<h4>Copy-to-Clipboard</h4>
+<p>Every code block and contact detail should have a copy button. Use <code>navigator.clipboard.writeText()</code> with a brief "Copied!" feedback state:</p>
+<pre><code class="language-jsx">const CopyButton = ({ text }) =&gt; {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () =&gt; {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() =&gt; setCopied(false), 2000);
+    } catch (err) {
+      console.error('Copy failed:', err);
+    }
+  };
+
+  return (
+    &lt;button className="copy-btn" onClick={copy}&gt;
+      {copied ? 'Copied!' : 'Copy'}
+    &lt;/button&gt;
+  );
+};</code></pre>
+<p><strong>Prompt the AI to implement these patterns:</strong></p>
+<pre><code class="language-text">Implement these component patterns: lazy-load sections with IntersectionObserver using shimmer skeleton placeholders and a 300px rootMargin, build a FAQ accordion with smooth max-height transitions and hover-to-auto-open, and add copy-to-clipboard buttons on all code blocks and contact information.</code></pre>
+
 <h3>Multi-Theme System (Advanced)</h3>
 <div class="callout callout-warning">
   <p>
@@ -1090,6 +1338,30 @@ and build a better version. Use MPA (multi-page application) architecture for be
 &lt;/script&gt;</code></pre>
 </li>
 <li><strong>Theme Toggle UI:</strong> Add a button in your navbar that cycles through themes or toggles dark/light. Save the selection to localStorage on each change.</li>
+<li><strong>color-scheme Meta Tag:</strong> Add <code>&lt;meta name=&quot;color-scheme&quot; content=&quot;light dark&quot; /&gt;</code> to your <code>&lt;head&gt;</code>. This tells the browser your site natively supports both color schemes. Without it, Chrome may forcibly override your custom themes with its own dark mode algorithm, breaking your carefully designed colors.</li>
+<li><strong>Prevent Chrome Force Dark:</strong> Chrome has a built-in &quot;Force dark mode&quot; feature that ignores your CSS variables. Add this inline script early in <code>&lt;head&gt;</code> to opt out:<pre><code class="language-html">&lt;script&gt;document.documentElement.style.setProperty('forced-color-adjust', 'none');&lt;/script&gt;</code></pre>
+</li>
+<li><strong>theme-color Meta Tag:</strong> Set the browser chrome color per theme. This changes the address bar and tab strip color on mobile browsers. Include it dynamically:<pre><code class="language-html">&lt;script&gt;
+  (function() {
+    var meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    // Match your default theme's background color
+    meta.content = '#040914';
+    document.head.appendChild(meta);
+  })();
+&lt;/script&gt;</code></pre>
+On theme change, update <code>meta.content</code> to the new theme's <code>--bg-color</code>.</li>
+<li><strong>Smooth Theme Transitions (Advanced):</strong> CSS-only transitions often flicker because the browser paints before the new variables apply. Use a <code>requestAnimationFrame</code> (RAF) state machine for paint-guaranteed crossfades:<pre><code class="language-javascript">// Returns an inline style object that blocks rendering until the transition starts
+function getThemeTransitionStyle(isTransitioning) {
+  if (!isTransitioning) return {};
+  return {
+    animation: 'themeFade 0.45s cubic-bezier(0.25, 0.8, 0.25, 1)',
+    // The keyframes simply crossfade opacity
+  };
+}
+// RAF double-tick guarantees the browser has painted the new theme colors
+// before the reveal animation starts</code></pre>
+</li>
 </ol>
 
 <h3>Performance Optimization via Code Splitting</h3>
@@ -1126,6 +1398,37 @@ rollupOptions: {
 <p><strong>Prompt the AI:</strong></p>
 <pre><code class="language-text">Split the website into lazy-loaded sections. The hero, about, and experience sections should load immediately. Projects, education, recommendations, and resume should use dynamic imports.</code></pre>
 
+<h3>Critical Rendering Path Optimizations</h3>
+<p>Beyond code splitting, these techniques improve how quickly the browser renders the initial viewport — directly impacting Core Web Vitals (LCP, FCP, TBT) and Google rankings:</p>
+
+<ol>
+<li><strong>Preload the LCP image:</strong> The Largest Contentful Paint is often the hero image. Preload it in <code>&lt;head&gt;</code> with <code>fetchpriority="high"</code> so the browser discovers it immediately instead of waiting for the CSS to load:<pre><code class="language-html">&lt;link rel=&quot;preload&quot; as=&quot;image&quot; href=&quot;/hero.webp&quot; type=&quot;image/webp&quot; fetchpriority=&quot;high&quot; /&gt;</code></pre>
+</li>
+<li><strong>Preconnect to critical origins:</strong> Add <code>&lt;link rel=&quot;preconnect&quot;&gt;</code> for every third-party origin your page fetches from (Google Fonts, analytics, CDNs). This lets the browser start the DNS + TCP + TLS handshake earlier:<pre><code class="language-html">&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot; /&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin /&gt;</code></pre>
+</li>
+<li><strong>dns-prefetch for less critical origins:</strong> For APIs and third-party services used further down the page, use <code>dns-prefetch</code> — lighter than preconnect but still resolves DNS early:<pre><code class="language-html">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;https://api.example.com&quot; /&gt;
+&lt;link rel=&quot;dns-prefetch&quot; href=&quot;https://cdn.thirdparty.com&quot; /&gt;</code></pre>
+</li>
+<li><strong>Prevent scroll restoration flash:</strong> Browsers try to restore scroll position on reload, which fights with your SPA initialization. Disable it before React mounts:<pre><code class="language-html">&lt;script&gt;history.scrollRestoration='manual';window.scrollTo(0,0);&lt;/script&gt;</code></pre>
+</li>
+<li><strong>noscript branded fallback:</strong> Users with JavaScript disabled see nothing in a React/Vue/Svelte app. Provide a branded fallback with your name, key links, and contact info:<pre><code class="language-html">&lt;noscript&gt;
+  &lt;div style=&quot;padding:2rem;background:#040914;color:#f8fafc;font-family:system-ui;text-align:center;&quot;&gt;
+    &lt;h1&gt;Your Site Name&lt;/h1&gt;
+    &lt;p&gt;Email: &lt;a href=&quot;mailto:you@example.com&quot; style=&quot;color:#00f0ff;&quot;&gt;you@example.com&lt;/a&gt;&lt;/p&gt;
+    &lt;p&gt;GitHub: &lt;a href=&quot;https://github.com/yourhandle&quot; style=&quot;color:#00f0ff;&quot;&gt;github.com/yourhandle&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/noscript&gt;</code></pre>
+</li>
+<li><strong>CSS minifier choice:</strong> If using Vite, prefer <code>esbuild</code> over <code>lightningcss</code> as the CSS minifier. <code>lightningcss</code> strips <code>-webkit-</code> prefixed properties like <code>-webkit-backdrop-filter</code>, breaking glassmorphism effects on Safari:<pre><code class="language-javascript">// vite.config.ts
+build: {
+  cssMinify: 'esbuild', // preserves -webkit-backdrop-filter
+}</code></pre>
+</li>
+</ol>
+<p><strong>Prompt the AI to apply these for your specific project:</strong></p>
+<pre><code class="language-text">Add preconnect links for Google Fonts, dns-prefetch for third-party APIs, preload the main hero image with fetchpriority high, add a branded noscript fallback, and disable automatic scroll restoration. Also set the CSS minifier to esbuild in vite.config.ts.</code></pre>
+
 <h2>Step 7: Branding and Analytics</h2>
 <p>Make the site look legitimate and trackable.</p>
 <ol>
@@ -1157,7 +1460,13 @@ rollupOptions: {
 Main Keyword: [your keyword]
 Supporting Keywords: [comma-separated list of keywords you found in Ahrefs]
 
-Also add proper OG meta tags for social sharing. Write 600 words of highly optimized, user-friendly text about the tool on the home page for SEO purposes. Make sure the page URL structure is clean.
+Add these SEO essentials to the global site header:
+1. A `<link rel="canonical" href="https://yourdomain.com/">` tag to prevent duplicate content penalties.
+2. Full Open Graph meta tags including `og:image:width` (1200), `og:image:height` (630), `og:image:type` (image/jpeg), and `og:image:alt` for social share previews.
+3. `twitter:creator` with your @handle and a proper `twitter:card` tag.
+4. `<meta name="author" content="Your Name">`.
+
+Write 600 words of highly optimized, user-friendly text about the tool on the home page for SEO purposes. Make sure the page URL structure is clean.
 </code></pre></li>
 </ol>
 <h2>Step 9: Adding an SEO-Friendly FAQ Section</h2>
@@ -1185,6 +1494,32 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
 &lt;/script&gt;
 </code></pre>
 <p><em>(<strong>Why JSON-LD Structured Data?</strong> JSON-LD is a machine-readable code format that Google understands perfectly. Instead of just displaying text on a screen, JSON-LD explicitly tells Google "this page has an FAQ section" using schema.org vocabulary. This often results in Google showing your questions directly in search results as rich snippets, expanding them inline so users see answers without clicking. Beyond FAQs, you can also use JSON-LD for breadcrumbs, reviews, how-to guides, and articles to boost your site's search visibility.)</em></p>
+
+<h3>JSON-LD Structured Data: Person / Organization Schema</h3>
+<p>Beyond FAQPage, the single most impactful structured data type for a personal site or portfolio is the <strong>Person</strong> schema. It tells Google who you are, what you do, where you work, and links to all your profiles — directly influencing Knowledge Panel results and E-E-A-T signals.</p>
+<pre><code class="language-html">&lt;script type=&quot;application/ld+json&quot;&gt;
+{
+  &quot;@context&quot;: &quot;https://schema.org&quot;,
+  &quot;@type&quot;: &quot;Person&quot;,
+  &quot;name&quot;: &quot;Your Full Name&quot;,
+  &quot;jobTitle&quot;: &quot;Senior Software Engineer&quot;,
+  &quot;url&quot;: &quot;https://yourdomain.com/&quot;,
+  &quot;sameAs&quot;: [
+    &quot;https://www.linkedin.com/in/yourprofile/&quot;,
+    &quot;https://github.com/yourhandle&quot;,
+    &quot;https://twitter.com/yourhandle&quot;
+  ],
+  &quot;email&quot;: &quot;mailto:you@example.com&quot;,
+  &quot;knowsAbout&quot;: [&quot;Java&quot;, &quot;Spring Boot&quot;, &quot;React&quot;, &quot;TypeScript&quot;],
+  &quot;worksFor&quot;: [
+    { &quot;@type&quot;: &quot;Organization&quot;, &quot;name&quot;: &quot;Current Company&quot; }
+  ]
+}
+&lt;/script&gt;</code></pre>
+<p><strong>Prompt the AI to add this to your site's global header:</strong></p>
+<pre><code class="language-text">Add JSON-LD Person structured data to the site header with my name, job title, LinkedIn, GitHub, Twitter profiles, email, skills, and current employer.</code></pre>
+<p>For a business or micro-tool site, replace <code>Person</code> with <code>Organization</code> or <code>WebSite</code> schema to describe the business behind the tool. If you have both a personal brand and a business, add both — they can coexist in separate <code>&lt;script&gt;</code> blocks.</p>
+
 <h2>Step 10: Essential Pages for Compliance, Trust &amp; SEO</h2>
 <p>Google AdSense will reject your site without standard legal pages. Beyond AdSense, these pages serve critical purposes for every website. Below is what each file does, why it matters, and how to create them.</p>
 
@@ -1237,7 +1572,7 @@ Also add proper OG meta tags for social sharing. Write 600 words of highly optim
   <tr>
     <td><strong>404 Error Page</strong></td>
     <td>The page shown when a user visits a URL that doesn''t exist.</td>
-    <td>Retains users who hit broken links; without it they see a browser error page and leave immediately. A good 404 page guides users back to useful content.</td>
+    <td>Retains users who hit broken links; without it they see a browser error page and leave immediately. A good 404 page guides users back to useful content. Make it engaging — add ambient particle animations, quick-link buttons to main sections, and a prominent "Back to Home" button. A boring 404 page still loses users.</td>
   </tr>
   <tr>
     <td><strong>500 Error Page</strong></td>
@@ -1372,9 +1707,32 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
 
 <h3>Security Headers and HTTP Configuration</h3>
 <p>Beyond redirects, every production site should set proper security and caching headers. Create a file called <code>_headers</code> in your <code>/public</code> folder:</p>
-<pre><code class="language-text">/assets/*
+<pre><code class="language-text"># Long-lived asset cache (JS/CSS/fonts with content hash in filename)
+/assets/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Static media: cache with stale-while-revalidate so stale copies serve instantly
+# while the browser fetches a fresh version in the background
+/avatars/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/favicon.*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/og-banner.* /og-image.*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+# Service worker: NEVER cache — must always get the latest version
+# Service-Worker-Allowed grants it control over the entire site scope
+/sw.js
+  Cache-Control: no-store, no-cache, must-revalidate
+  Service-Worker-Allowed: /
+
+# Web app manifest: short TTL so icon/name changes propagate quickly
+/manifest.webmanifest /manifest.json
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# Everything else: no cache, security headers applied globally
 /*
   Cache-Control: public, max-age=0, must-revalidate
   X-Content-Type-Options: nosniff
@@ -1387,7 +1745,7 @@ Cloudflare automatically detects the push, rebuilds your site, and deploys the u
 https://*.pages.dev/*
   X-Robots-Tag: noindex, nofollow
 </code></pre>
-<p><strong>What these do:</strong> Asset files (JS/CSS) get long-term caching for fast repeat visits. The main page gets zero cache so users always see the latest version. Security headers prevent clickjacking (<code>X-Frame-Options</code>), enforce HTTPS (<code>Strict-Transport-Security</code>), and restrict browser features (<code>Permissions-Policy</code>). The <code>X-Robots-Tag</code> rule blocks the free <code>.pages.dev</code> subdomain from being indexed, preventing duplicate content SEO penalties.</p>
+<p><strong>What these do:</strong> Built assets (JS/CSS) get long-term immutable caching for instant repeat visits. Static media (icons, OG images) use <code>stale-while-revalidate</code> — immediately serve the stale copy while refreshing in the background. The service worker (<code>sw.js</code>) is explicitly set to <code>no-store</code> so updates roll out instantly, with <code>Service-Worker-Allowed: /</code> giving it control over the entire site scope. The web app manifest gets a short TTL so icon/name changes propagate quickly without requiring a full SW update. Security headers prevent clickjacking (<code>X-Frame-Options</code>), enforce HTTPS (<code>Strict-Transport-Security</code>), and restrict browser features (<code>Permissions-Policy</code>). The <code>X-Robots-Tag</code> rule blocks the free <code>.pages.dev</code> subdomain from being indexed, preventing duplicate content SEO penalties.</p>
 
 <h3>Service Workers and PWA (Progressive Web App)</h3>
 <div class="callout callout-warning">
@@ -1398,21 +1756,71 @@ https://*.pages.dev/*
 <p>Make your site installable on users' home screens and work offline. This gives your micro-tool a native app experience without the App Store.</p>
 <ol>
 <li><strong>Install a PWA plugin:</strong> If using Vite, run <code>npm install vite-plugin-pwa</code>. For Next.js, use <code>next-pwa</code>.</li>
-<li><strong>Create a manifest:</strong> The plugin auto-generates a <code>manifest.json</code> with your app name, icons, theme colors, and display mode (<code>standalone</code> hides the browser chrome).</li>
-<li><strong>Configure runtime caching:</strong> Cache API responses so the tool works even without internet:<pre><code class="language-javascript">runtimeCaching: [
+<li><strong>Create a manifest file:</strong> Create <code>public/manifest.webmanifest</code> with your app metadata. SVG icons are preferred over PNG (smaller, resolution-independent, no pixelation on retina displays):<pre><code class="language-json">{
+  "name": "Your Site Name - Tagline",
+  "short_name": "Short Name",
+  "description": "SEO-friendly description of your tool",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#040914",
+  "theme_color": "#040914",
+  "lang": "en",
+  "scope": "/",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon-512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon-maskable.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}</code></pre>
+<p>Include a <strong>maskable</strong> icon (with padding/safe-zone) for Android adaptive icons — they get cropped into circles/squirccles by the OS. The <code>purpose: "maskable"</code> field tells the browser to apply the safe-zone cropping.</p>
+</li>
+<li><strong>Add Apple-specific meta tags</strong> for iOS Safari (which ignores the standard manifest):<pre><code class="language-html">&lt;meta name=&quot;apple-mobile-web-app-capable&quot; content=&quot;yes&quot; /&gt;
+&lt;meta name=&quot;apple-mobile-web-app-status-bar-style&quot; content=&quot;black-translucent&quot; /&gt;
+&lt;meta name=&quot;apple-mobile-web-app-title&quot; content=&quot;Short Name&quot; /&gt;
+&lt;link rel=&quot;apple-touch-icon&quot; href=&quot;/icons/icon-192.svg&quot; /&gt;
+&lt;link rel=&quot;manifest&quot; href=&quot;/manifest.webmanifest&quot; /&gt;</code></pre>
+<p>Without these, iOS users get no splash screen, a generic icon, and the browser chrome (URL bar) stays visible — defeating the app-like experience.</p>
+</li>
+<li><strong>Configure runtime caching with multiple strategies:</strong> Different APIs need different caching approaches. Add these to your PWA plugin config:<pre><code class="language-javascript">runtimeCaching: [
   {
+    // NetworkFirst: Try network first, fall back to cache.
+    // Best for API calls where freshness matters.
     urlPattern: /^https:\/\/api\.example\.com\/.*/i,
     handler: 'NetworkFirst',
     options: {
       cacheName: 'api-cache',
       expiration: { maxEntries: 50, maxAgeSeconds: 3600 },
+      networkTimeoutSeconds: 5,
+    },
+  },
+  {
+    // StaleWhileRevalidate: Serve cached instantly, refresh in background.
+    // Best for avatars, CDN assets, media files.
+    urlPattern: /^https:\/\/cdn\.example\.com\/.*/i,
+    handler: 'StaleWhileRevalidate',
+    options: {
+      cacheName: 'cdn-cache',
+      expiration: { maxEntries: 100, maxAgeSeconds: 604800 },
     },
   },
 ]</code></pre>
+<p>The Service Worker (SW) is auto-generated by the plugin. To ensure the SW always updates instantly when you deploy new code, add these configuration flags:</p>
+<pre><code class="language-javascript">// vite.config.js / next.config.js
+VitePWA({
+  registerType: 'autoUpdate',     // SW updates silently in background
+  workbox: {
+    skipWaiting: true,            // Activate new SW immediately
+    clientsClaim: true,           // Take over all open tabs
+    cleanupOutdatedCaches: true,  // Remove old cache versions
+  },
+})</code></pre>
 </li>
-<li><strong>Test offline mode:</strong> In Chrome DevTools → <strong>Application</strong> → <strong>Service Workers</strong>, check <strong>Offline</strong> and refresh. Your tool should still load core functionality.</li>
+<li><strong>Test offline mode:</strong> In Chrome DevTools → <strong>Application</strong> → <strong>Service Workers</strong>, check <strong>Offline</strong> and refresh. Your tool should still load core functionality. Verify the manifest loads at <code>yourdomain.com/manifest.webmanifest</code> and shows the install prompt (a + icon in the address bar).</li>
 </ol>
 <p><strong>Why PWA matters:</strong> Google rewards fast, installable experiences. A PWA-enabled micro-tool loads instantly for returning visitors. Users can add it to their home screen like a native app, increasing engagement and repeat usage, both positive signals for SEO.</p>
+<p><strong>Prompt the AI to set up PWA for your project:</strong></p>
+<pre><code class="language-text">Set up PWA for this project: create a manifest.webmanifest file in /public with SVG icons (192, 512, maskable), add Apple-specific meta tags for iOS, configure runtime caching with NetworkFirst for API calls and StaleWhileRevalidate for CDN assets, and enable auto-update service worker with skipWaiting and clientsClaim.</code></pre>
 
 <h3>Branch Controls &amp; Preview Deployments</h3>
 <div class="callout callout-warning">
@@ -1438,21 +1846,42 @@ https://*.pages.dev/*
 <p>Cloudflare Pages auto-deploys on every push, but what if your code has TypeScript errors or failing tests? Set up a GitHub Actions pipeline to catch problems <strong>before</strong> deployment:</p>
 <ol>
 <li><strong>Create the workflow file:</strong> In your repo, create <code>.github/workflows/ci.yml</code> with this config:<pre><code class="language-yaml">name: CI
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
 jobs:
-  check:
+  build-and-lint:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run lint 2&gt;/dev/null || true
-      - run: npm run build</code></pre></li>
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Lint code
+      run: npm run lint
+
+    - name: Run tests
+      run: npm test
+
+    - name: Build project
+      run: npm run build</code></pre></li>
 <li><strong>Push and verify:</strong> Commit and push the file. Go to your GitHub repo → <strong>Actions</strong> tab and confirm the workflow runs successfully.</li>
 <li><strong>Add pre-commit hooks (optional):</strong> Run <code>npx husky-init && npm install</code> to set up Git hooks that run lint and tests before every commit, catching issues even earlier.</li>
 <li><strong>Save build minutes:</strong> Add <code>[skip ci]</code> to commit messages for documentation-only changes (this is already covered in Common Pitfalls #8).</li>
+<li><strong>Speed tip:</strong> The <code>cache: 'npm'</code> line caches <code>node_modules</code> between CI runs, cutting install time from ~60s to ~10s on repeat runs. Without it, every CI run downloads all dependencies from scratch.</li>
 </ol>
 <p><em>(<strong>Why CI/CD matters:</strong> Cloudflare Pages only shows you build failures <em>after</em> a deploy attempt. GitHub Actions catches failures in the PR stage, before anything goes live. This is especially important when AI generates code that might have subtle TypeScript errors or broken imports.)</em></p>
 
@@ -1624,6 +2053,40 @@ Sentry.addGlobalEventProcessor((event) => {
     tags: { type: 'unhandledrejection' },
   });
 });</code></pre>
+</li>
+<li><strong>Error Buffer Pattern (Advanced):</strong> Errors that happen <em>before</em> Sentry finishes initializing (e.g., in inline <code>&lt;script&gt;</code> tags or early module imports) will be lost. Buffer them and replay after init:<pre><code class="language-javascript">// Buffer to hold errors during SDK init
+const _errorBuffer = [];
+const _captureException = (err, ctx) =&gt; {
+  _errorBuffer.push({ err, ctx });
+};
+
+// After Sentry.init, replay the buffer
+_errorBuffer.forEach(({ err, ctx }) =&gt; {
+  Sentry.captureException(err, { tags: { fromBuffer: 'true', ...ctx } });
+});
+_errorBuffer.length = 0; // clear
+
+// Expose globally so any component can report errors
+window.captureException = (err, ctx) =&gt; _captureException(err, ctx);</code></pre>
+<p>This also lets you expose <code>window.captureException</code> as a global helper, so any component can report errors without importing Sentry directly.</p>
+</li>
+<li><strong>Lazy Component Error Fallback:</strong> When using dynamic <code>import()</code> for lazy-loaded sections, the import might fail (network glitch, deploy mismatch). Wrap each dynamic import with an error state and a Retry button:<pre><code class="language-jsx">const [error, setError] = useState(null);
+const [Component, setComponent] = useState(null);
+
+useEffect(() =&gt; {
+  import('./SomeSection')
+    .then(mod =&gt; setComponent(() =&gt; mod.default))
+    .catch(err =&gt; { setError(err); window.captureException?.(err); });
+}, []);
+
+if (error) {
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Failed to load this section.&lt;/p&gt;
+      &lt;button onClick={() =&gt; setError(null)}&gt;Retry&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
 </li>
 <li><strong>Test Your Setup:</strong> Trigger a test error to verify Sentry captures it:<pre><code class="language-javascript">Sentry.captureException(new Error('Test error - remove before deploy'));</code></pre>
 <p>Check your Sentry dashboard within 30 seconds. If the error appears, monitoring is working. Remove the test line after verification.</p>
@@ -2322,5 +2785,55 @@ Sentry.addGlobalEventProcessor((event) => {
         })();
     </script>
     <button class="back-to-top" id="back-to-top" aria-label="Back to top">&#x2191;</button>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // Slugify heading text into a URL-safe ID
+            function slugify(text) {
+                return text
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '')
+                    .replace(/[▼]/g, '')
+                    .trim();
+            }
+
+            // Add heading IDs and anchor copy buttons
+            document.querySelectorAll('h1, h2, h3, h4').forEach(function(heading) {
+                if (heading.closest('.toc-container') || heading.closest('.callout')) return;
+
+                var rawText = heading.textContent.replace(/▼$/, '').trim();
+                if (!rawText) return;
+
+                var id = heading.id || slugify(rawText);
+                heading.id = id;
+
+                var btn = document.createElement('button');
+                btn.className = 'heading-anchor';
+                btn.setAttribute('aria-label', 'Copy link to ' + rawText);
+                btn.setAttribute('title', 'Copy anchor link');
+                btn.textContent = '#';
+
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var url = window.location.href.split('#')[0] + '#' + id;
+                    navigator.clipboard.writeText(url).then(function() {
+                        btn.textContent = 'Copied!';
+                        btn.classList.add('copied');
+                        setTimeout(function() {
+                            btn.textContent = '#';
+                            btn.classList.remove('copied');
+                        }, 2000);
+                    }).catch(function(err) {
+                        console.error('Failed to copy heading link:', err);
+                    });
+                });
+
+                heading.appendChild(btn);
+            });
+        })();
+    </script>
 </body>
 </html>
