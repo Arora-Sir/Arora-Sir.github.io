@@ -727,17 +727,22 @@
             list-style: none;
             padding: 0;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 6px;
         }
         .checklist-summary li {
-            display: flex;
-            align-items: center;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: start;
             gap: 10px;
             padding: 0.4rem 0.6rem;
             border-radius: 8px;
             transition: background 0.2s;
             margin: 0;
+        }
+        .checklist-summary li input[type="checkbox"] {
+            margin-top: 4px;
+            cursor: pointer;
         }
         .checklist-summary li:hover {
             background: rgba(255, 255, 255, 0.04);
@@ -2827,34 +2832,74 @@ if (error) {
             const summaryList = document.querySelector('.checklist-summary');
             if (!summaryList) return;
 
-            const summaryChecks = summaryList.querySelectorAll('input[type="checkbox"]');
+            const normalized = (text) => text.toLowerCase().replace(/[^a-z0-9]/g, '');
+
             const stepChecks = Array.from(document.querySelectorAll('input[type="checkbox"]')).filter(cb => {
                 return !cb.closest('.checklist-summary') && !cb.closest('h2') && !cb.closest('h3');
             });
 
-            const normalized = (text) => text.toLowerCase().replace(/[^a-z0-9]/g, '');
+            // 1. First-time initialization: wrap list item text nodes, enable checkboxes, and wire two-way sync
+            summaryList.querySelectorAll('li').forEach(li => {
+                const sCb = li.querySelector('input[type="checkbox"]');
+                if (sCb && sCb.disabled) {
+                    sCb.disabled = false; // Enable checkbox
+                    
+                    // Wrap all siblings of the checkbox in a span
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'summary-text';
+                    while (li.childNodes.length > 1) {
+                        textSpan.appendChild(li.childNodes[1]);
+                    }
+                    li.appendChild(textSpan);
 
+                    // Register two-way sync: checking summary checkbox updates matching step checkboxes
+                    sCb.addEventListener('change', () => {
+                        const isChecked = sCb.checked;
+                        li.classList.toggle('done', isChecked);
+
+                        const titleText = sCb.getAttribute('title') || li.textContent;
+                        const sNorm = normalized(titleText);
+                        const keywords = getSummaryKeywords(sNorm);
+
+                        const matches = stepChecks.filter(stepCb => {
+                            const stepLi = stepCb.closest('li.task-item');
+                            if (!stepLi) return false;
+                            const stepText = normalized(stepLi.textContent);
+                            return keywords.some(kw => stepText.includes(kw));
+                        });
+
+                        matches.forEach(m => {
+                            if (m.checked !== isChecked) {
+                                m.checked = isChecked;
+                                m.dispatchEvent(new Event('change'));
+                            }
+                        });
+                        
+                        updateAllProgressIndicators();
+                    });
+                }
+            });
+
+            // 2. Perform regular check synchronization from steps to summary
+            const summaryChecks = summaryList.querySelectorAll('input[type="checkbox"]');
             summaryChecks.forEach(sCb => {
-                const titleText = sCb.getAttribute('title') || sCb.parentElement.innerText;
+                const summaryLi = sCb.closest('li');
+                if (!summaryLi) return;
+
+                const titleText = sCb.getAttribute('title') || summaryLi.textContent;
                 const sNorm = normalized(titleText);
                 
                 const keywords = getSummaryKeywords(sNorm);
                 const matches = stepChecks.filter(stepCb => {
-                    const stepText = normalized(stepCb.parentElement.innerText);
+                    const stepLi = stepCb.closest('li.task-item');
+                    if (!stepLi) return false;
+                    const stepText = normalized(stepLi.textContent);
                     return keywords.some(kw => stepText.includes(kw));
                 });
 
                 if (matches.length > 0) {
-                    const updateSummary = () => {
-                        sCb.checked = matches.every(m => m.checked);
-                        sCb.parentElement.classList.toggle('done', sCb.checked);
-                    };
-                    
-                    matches.forEach(m => {
-                        m.addEventListener('change', updateSummary);
-                    });
-                    
-                    updateSummary();
+                    sCb.checked = matches.every(m => m.checked);
+                    summaryLi.classList.toggle('done', sCb.checked);
                 }
             });
         }
@@ -2940,6 +2985,9 @@ if (error) {
         // Listen for all checkbox changes to keep progress updated
         document.addEventListener('change', (e) => {
             if (e.target.type === 'checkbox') {
+                if (!e.target.closest('.checklist-summary')) {
+                    syncChecklistSummary();
+                }
                 updateAllProgressIndicators();
             }
         });
