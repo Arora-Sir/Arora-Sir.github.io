@@ -751,6 +751,15 @@
             opacity: 0.6;
         }
 
+        /* ---- Common Pitfalls List Styling ---- */
+        #common-pitfalls-lessons-learned + p + ol {
+            list-style: none;
+            padding-left: 0;
+        }
+        #common-pitfalls-lessons-learned + p + ol li {
+            margin-bottom: 2rem;
+        }
+
         /* ---- Smooth Scroll ---- */
         html {
             scroll-behavior: smooth;
@@ -2143,7 +2152,7 @@ if (error) {
 </li>
 </ol>
 
-<h2>Common Pitfalls &amp; Lessons Learned</h2>
+<h2 id="common-pitfalls-lessons-learned">Common Pitfalls &amp; Lessons Learned</h2>
 <p>Based on real-world experience building and deploying websites, here are the most common mistakes and how to avoid them:</p>
 <ol>
 <li>
@@ -2444,6 +2453,8 @@ if (error) {
             if (h2.id === 'strategy-overview' || text === 'Strategy Overview') return;
             // Skip "Checklist Summary" heading from master-checkbox injection
             if (text === 'Checklist Summary') return;
+            // Skip "Common Pitfalls" from checkbox injection
+            if (text === 'Common Pitfalls & Lessons Learned') return;
 
             // Add Master Checkbox to h2
             const masterCheck = document.createElement('input');
@@ -2909,7 +2920,7 @@ if (error) {
         function updateAllProgressIndicators() {
             document.querySelectorAll('h2').forEach(h2 => {
                 const text = h2.textContent.trim().replace(/▼$/, '').trim();
-                if (!/^Step\s+\d+/i.test(text) && text !== 'Common Pitfalls & Lessons Learned' && text !== 'Checklist Summary') return;
+                if (!/^Step\s+\d+/i.test(text) && text !== 'Checklist Summary') return;
                 
                 let badge = h2.querySelector('.section-progress');
                 if (!badge) {
