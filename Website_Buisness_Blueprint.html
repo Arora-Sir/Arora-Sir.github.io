@@ -751,13 +751,11 @@
             opacity: 0.6;
         }
 
-        /* ---- Common Pitfalls List Styling ---- */
-        #common-pitfalls-lessons-learned + p + ol {
-            list-style: none;
-            padding-left: 0;
-        }
-        #common-pitfalls-lessons-learned + p + ol li {
-            margin-bottom: 2rem;
+        li.task-item h3 {
+            display: inline;
+            margin: 0;
+            font-size: 1.25rem;
+            color: inherit;
         }
 
         /* ---- Smooth Scroll ---- */
@@ -2156,48 +2154,48 @@ if (error) {
 <p>Based on real-world experience building and deploying websites, here are the most common mistakes and how to avoid them:</p>
 <ol>
 <li>
-<h3>1. Buying the Domain Before Building the Site</h3>
+<h3>Buying the Domain Before Building the Site</h3>
 <p><strong>The Mistake:</strong> Purchasing a domain before you have a working prototype, then discovering your idea requires paid APIs, complex logic, or does not work as expected.</p>
 <p><strong>The Fix:</strong> Build the full tool with AI first, test it locally at <code>localhost:4321</code>, and <strong>only then</strong> buy the domain. Domains cost real money; do not waste it on an idea you have not validated.</p>
 </li>
 <li>
-<h3>2. Cloudflare Workers vs Pages Confusion</h3>
+<h3>Cloudflare Workers vs Pages Confusion</h3>
 <p><strong>The Mistake:</strong> Clicking "Create application" in Cloudflare and unknowingly creating a Worker instead of a Pages project. Workers cannot serve static websites; they are for serverless functions.</p>
 <p><strong>The Fix:</strong> When clicking "Create application", immediately switch from the default <strong>Worker</strong> tab to the <strong>Pages</strong> tab. Pages is for full websites; Workers is for API endpoints. Always double-check which tab you are on.</p>
 </li>
 <li>
-<h3>3. CSS Theme Variables: The RGB Trap</h3>
+<h3>CSS Theme Variables: The RGB Trap</h3>
 <p><strong>The Mistake:</strong> Defining CSS custom properties like <code>--accent-rgb: 59, 130, 246</code> only in <code>:root</code> (the default theme) but forgetting to redefine them in alternate theme blocks like <code>[data-theme="dark"]</code>. This causes colors to silently break when users switch themes because the RGB fallback uses the wrong values.</p>
 <p><strong>The Fix:</strong> When implementing dark mode or multiple themes, <strong>every</strong> CSS variable (including the RGB variants used with <code>rgba()</code>) must be explicitly set in each theme''s CSS block. A missing variable silently falls back to the default, which looks broken.</p>
 </li>
 <li>
-<h3>4. SPA Refresh Returns 404</h3>
+<h3>SPA Refresh Returns 404</h3>
 <p><strong>The Mistake:</strong> Building a React, Vue, or Svelte site and deploying it without a <code>_redirects</code> file. Refreshing on <code><span class="dynamic-domain">yoursite.com</span>/about</code> makes the server look for a real <code>/about</code> file, which does not exist, so it returns 404.</p>
 <p><strong>The Fix:</strong> Add a <code>_redirects</code> file with <code>/* /index.html 200</code> to your <code>/public</code> folder. This tells the server to serve the SPA entry point for all unknown paths, letting JavaScript handle routing.</p>
 <p><strong>Note for Astro users:</strong> This pitfall does NOT apply to you. Astro generates real HTML files for every page, so there is no 404-on-refresh issue. You can skip this.</p>
 </li>
 <li>
-<h3>5. Duplicate Analytics Tracking</h3>
+<h3>Duplicate Analytics Tracking</h3>
 <p><strong>The Mistake:</strong> Adding a Google Analytics or Cloudflare Web Analytics JS snippet to your HTML while Cloudflare Pages is already injecting its own edge analytics. This causes every page visit to be counted twice.</p>
 <p><strong>The Fix:</strong> Cloudflare Pages automatically injects basic edge analytics. Your manual JS snippet can coexist if you need more detailed tracking, but be aware the numbers will differ. Never add <strong>two</strong> JS snippets from the same analytics provider.</p>
 </li>
 <li>
-<h3>6. AI Context Overload</h3>
+<h3>AI Context Overload</h3>
 <p><strong>The Mistake:</strong> Continuing a long AI conversation for hours without clearing context. The AI''s context window fills up, it starts making mistakes, forgets earlier instructions, and each prompt becomes slower and more expensive.</p>
 <p><strong>The Fix:</strong> Run <code>/clear</code> before asking for each major new feature. Commit your working code to Git first so you can always revert if the AI breaks something in the new session.</p>
 </li>
 <li>
-<h3>7. Not Committing Before AI Changes</h3>
+<h3>Not Committing Before AI Changes</h3>
 <p><strong>The Mistake:</strong> Letting the AI modify your code for an hour without committing to Git. If the AI makes a catastrophic change, you cannot easily revert.</p>
 <p><strong>The Fix:</strong> Run <code>git add . && git commit -m &quot;checkpoint before [feature]&quot;</code> before every major AI prompt. Git is your undo button; use it generously.</p>
 </li>
 <li>
-<h3>8. CI/CD Running on Every Commit</h3>
+<h3>CI/CD Running on Every Commit</h3>
 <p><strong>The Mistake:</strong> Pushing documentation changes, README updates, or comment-only commits and triggering a full Cloudflare Pages build + deploy, wasting time and build minutes.</p>
 <p><strong>The Fix:</strong> Include <code>[skip ci]</code> in your commit message, e.g. <code>git commit -m &quot;Update README [skip ci]&quot;</code>. This tells Cloudflare Pages to skip the build for changes that do not affect the actual website code.</p>
 </li>
 <li>
-<h3>9. Samsung Internet Overrides Dark Mode</h3>
+<h3>Samsung Internet Overrides Dark Mode</h3>
 <p><strong>The Mistake:</strong> Samsung Internet has its own built-in dark mode that forcefully overrides your site's carefully designed themes. It inverts colors, breaks contrast ratios, and makes your site look terrible, and users on Samsung devices (a huge Android market share) will see a broken version of your site.</p>
 <p><strong>The Fix:</strong> Add <code>&lt;meta name=&quot;darkreader-lock&quot; /&gt;</code> to your <code>&lt;head&gt;</code> to prevent Samsung Internet's dark mode from applying. Also add <code>&lt;meta name=&quot;color-scheme&quot; content=&quot;light dark&quot; /&gt;</code> so the browser knows your site supports both. For stubborn cases, users may need to open <code>internet://flags</code> in Samsung Internet and disable "Force dark mode".</p>
 </li>
@@ -2453,8 +2451,6 @@ if (error) {
             if (h2.id === 'strategy-overview' || text === 'Strategy Overview') return;
             // Skip "Checklist Summary" heading from master-checkbox injection
             if (text === 'Checklist Summary') return;
-            // Skip "Common Pitfalls" from checkbox injection
-            if (text === 'Common Pitfalls & Lessons Learned') return;
 
             // Add Master Checkbox to h2
             const masterCheck = document.createElement('input');
@@ -2920,7 +2916,7 @@ if (error) {
         function updateAllProgressIndicators() {
             document.querySelectorAll('h2').forEach(h2 => {
                 const text = h2.textContent.trim().replace(/▼$/, '').trim();
-                if (!/^Step\s+\d+/i.test(text) && text !== 'Checklist Summary') return;
+                if (!/^Step\s+\d+/i.test(text) && text !== 'Common Pitfalls & Lessons Learned' && text !== 'Checklist Summary') return;
                 
                 let badge = h2.querySelector('.section-progress');
                 if (!badge) {
