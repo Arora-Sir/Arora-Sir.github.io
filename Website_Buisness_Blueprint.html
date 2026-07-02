@@ -2768,6 +2768,7 @@ if (error) {
                     cb.dispatchEvent(new Event('change'));
                 }
             });
+            syncChecklistSummary();
         });
 
         // LocalStorage Save/Load Logic (excludes summary checks)
