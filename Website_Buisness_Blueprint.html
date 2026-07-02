@@ -1602,6 +1602,19 @@ Write 600 words of highly optimized, user-friendly text about the tool on the ho
   </tr>
 </table></div>
 
+<h3>robots.txt Content</h3>
+<p>Your <code>robots.txt</code> file lives at the root of your website's source folder (<code>/public</code> for Astro/static sites, <code>/public</code> for any framework). It should explicitly invite all crawlers to index every page. Your native file should look exactly like this:</p>
+<pre><code class="language-text">User-agent: *
+Allow: /
+Sitemap: https://your-domain.com/sitemap.xml
+</code></pre>
+<ul>
+<li><code>User-agent: *</code> — applies the rules to every known crawler.</li>
+<li><code>Allow: /</code> — wide-open, permits indexing of the entire site. <strong>Do not</strong> use <code>Disallow</code> unless you have admin pages you want to hide.</li>
+<li><code>Sitemap:</code> — tells crawlers where to find your sitemap. Google, Bing, and others will discover all your pages from this file.</li>
+</ul>
+<p>Once you have this file in your project's <code>/public</code> folder and deployed the site to Cloudflare Pages, you must disable Cloudflare's own robots.txt generation so they don't override your native file. See <strong>Step 12: Cloudflare Visibility &amp; AI Crawler Configuration</strong> for details.</p>
+
 <h3>Additional Essential Files</h3>
 <p>Beyond the pages above, these files are critical for every production website:</p>
 <div class="table-responsive"><table>
@@ -1947,6 +1960,61 @@ jobs:
   <li>If all locations show your two Cloudflare nameservers, propagation is complete. If some locations still show your old registrar''s nameservers, wait longer and check again.</li>
   <li><strong>Tip:</strong> Run <code>nslookup -type=ns <span class="dynamic-domain">yourdomain.com</span></code> (or <code>Resolve-DnsName -Name <span class="dynamic-domain">yourdomain.com</span> -Type NS</code> in PowerShell) for a quick local check.</li>
 </ol>
+
+<h3>Cloudflare Visibility &amp; AI Crawler Configuration</h3>
+<p>Now that your site is deployed to Cloudflare Pages and DNS is resolving, optimize it for maximum discoverability by configuring Cloudflare's visibility settings. Perform the following steps in order.</p>
+
+<h4>Step 1: Prepare Your Native robots.txt</h4>
+<p>Before touching Cloudflare, ensure your project's <code>/public</code> directory contains a <code>robots.txt</code> that explicitly invites all crawlers. If you followed the <strong>Technical SEO Files</strong> section above (Step 10), yours should already have this content:</p>
+<pre><code class="language-text">User-agent: *
+Allow: /
+Sitemap: https://your-domain.com/sitemap.xml
+</code></pre>
+<p>This file is now in your project source. The next step is to tell Cloudflare to stop overriding it.</p>
+
+<h4>Step 2: Configure Cloudflare to Respect Your Native File</h4>
+<ol>
+<li>Log in to the <a href="https://dash.cloudflare.com">Cloudflare Dashboard</a>.</li>
+<li>From <strong>Account Home</strong>, go to <strong>Domains</strong> and select your domain.</li>
+<li>In your domain overview page, look at the right side of the page — you will see the <strong>DNS</strong> section and the <strong>Manage AI bot access</strong> option.</li>
+<li>In the DNS section, click <strong>Manage your robots.txt</strong>.</li>
+<li>Choose <strong>Disable robots.txt configuration</strong>.</li>
+<li>Click <strong>Save</strong>, then <strong>Apply</strong>.</li>
+</ol>
+<p><strong>Why:</strong> Cloudflare's default mode intercepts your native <code>Allow: /</code> and may accidentally set <code>Disallow</code> rules. By disabling their configuration, you ensure your absolute Allow remains and no search engines are accidentally blocked.</p>
+
+<h4>Step 3: Grant Unhindered AI Bot Access</h4>
+<ol>
+<li>On the same domain overview page (right side), locate the <strong>Manage AI bot access</strong> section.</li>
+<li>Under <strong>Block AI training bots</strong> rule, select <strong>Do not block (allow crawlers)</strong>.</li>
+<li>Click <strong>Change</strong> to confirm.</li>
+</ol>
+<p><strong>Why:</strong> Choosing "Block on all pages" stops AI assistants (Claude, ChatGPT, Gemini) at the network firewall. By selecting "allow", recruiters and others who use AI search tools or live-summarizing extensions can perfectly view and index your work.</p>
+
+<h4>Why This Specific Setup Works</h4>
+<p>This configuration acts as an open invitation. While a massive corporation would block these bots to save bandwidth, your priority is to be found by the right person using the right tool.</p>
+<div class="table-responsive"><table>
+  <tr>
+    <th>Setting</th>
+    <th>Your Selection</th>
+    <th>The Engineering Impact</th>
+  </tr>
+  <tr>
+    <td>Robots.txt Management</td>
+    <td>Disable Cloudflare Override</td>
+    <td>Keeps your native Allow: / active.</td>
+  </tr>
+  <tr>
+    <td>AI Training Bots</td>
+    <td>Do Not Block</td>
+    <td>Ensures AI tools can parse your tech and site description for talent search.</td>
+  </tr>
+  <tr>
+    <td>Edge Firewall Status</td>
+    <td>Completely Open</td>
+    <td>Bypasses Cloudflare's strict default changes for crawlers.</td>
+  </tr>
+</table></div>
 
 <h3>CRITICAL: Fix Duplicate Content SEO Penalty</h3>
 <p>Your site is now accessible at both <code><span class="dynamic-domain">yourdomain.com</span></code> and <code><span class="dynamic-subdomain">yoursite</span>.pages.dev</code>. Google penalizes this duplicate content. <em>(Note: If you decided to use Cloudflare Workers instead of Pages, you must explicitly disable the <code>.workers.dev</code> domain routing in your Cloudflare dashboard after connecting your <code>.com</code> domain).</em></p>
