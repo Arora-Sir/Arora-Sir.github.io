@@ -104,6 +104,9 @@
         h3 {
             font-size: 1.5rem;
             color: #93c5fd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         p {
@@ -201,6 +204,12 @@
         h2 > input[type="checkbox"] {
             width: 28px;
             height: 28px;
+            margin-top: 0;
+        }
+
+        h3 > input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
             margin-top: 0;
         }
 
@@ -765,63 +774,63 @@
             outline-offset: 2px;
         }
 
-        /* ---- Heading Anchor Copy Button ---- */
-        .heading-wrapper {
+        /* ---- Step Card Hover Copy Button ---- */
+        .step-card {
             position: relative;
-            display: inline;
         }
-        .heading-anchor {
+        .step-copy-btn {
             position: absolute;
-            left: -2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 1.6rem;
-            height: 1.6rem;
+            right: 3.5rem;
+            top: 1.15rem;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 6px;
+            padding: 0.4rem 0.8rem;
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(30, 41, 59, 0.7);
             border: 1px solid var(--border-color);
             color: var(--text-color);
             cursor: pointer;
             font-size: 0.8rem;
             font-family: 'Inter', sans-serif;
+            font-weight: 600;
             opacity: 0;
-            transition: opacity 0.2s ease, background 0.2s ease;
-            -webkit-backdrop-filter: blur(4px);
-            backdrop-filter: blur(4px);
-            z-index: 10;
-            padding: 0;
+            transform: translateY(-4px);
+            transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            z-index: 15;
             line-height: 1;
-            text-decoration: none;
+            user-select: none;
         }
-        .heading-anchor:hover {
-            background: rgba(255, 255, 255, 0.15);
+        .step-card:hover .step-copy-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .step-copy-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
             color: #fff;
             border-color: var(--primary-color);
         }
-        .heading-anchor.copied {
-            background: var(--accent-color);
-            color: #fff;
+        .step-copy-btn:active {
+            transform: scale(0.95);
+        }
+        .step-copy-btn.copied {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-color);
             border-color: var(--accent-color);
         }
-        h1:hover .heading-anchor,
-        h2:hover .heading-anchor,
-        h3:hover .heading-anchor,
-        h4:hover .heading-anchor,
-        .heading-wrapper:hover .heading-anchor {
-            opacity: 1;
-        }
-        h1, h2, h3, h4 {
-            position: relative;
+        .step-copy-btn svg {
+            flex-shrink: 0;
         }
         @media (max-width: 768px) {
-            .heading-anchor {
-                left: -1.6rem;
-                width: 1.3rem;
-                height: 1.3rem;
-                font-size: 0.65rem;
+            .step-copy-btn {
+                right: 3rem;
+                top: 0.9rem;
+                padding: 0.4rem;
+            }
+            .step-copy-btn .btn-text {
+                display: none;
             }
         }
 
@@ -2503,9 +2512,362 @@ if (error) {
         });
     </script>
     <script>
-        // Step Card Collapse Functionality
+        // Convert a step card's DOM content to readable Markdown
+        function getStepContentAsText(card) {
+            const h2 = card.querySelector('h2');
+            const contentDiv = card.querySelector('.step-content');
+            if (!h2 || !contentDiv) return '';
+
+            // Clone h2 to avoid modifying the live DOM
+            const h2Clone = h2.cloneNode(true);
+            h2Clone.querySelectorAll('.step-badge, .section-progress, .collapse-icon, input[type="checkbox"], .step-copy-btn').forEach(el => el.remove());
+            const headingText = h2Clone.textContent.trim();
+
+            let output = `# ${headingText}\n\n`;
+
+            function parseNode(node, depth = 0) {
+                let text = '';
+                if (node.nodeType === Node.TEXT_NODE) {
+                    return node.textContent;
+                }
+                if (node.nodeType !== Node.ELEMENT_NODE) {
+                    return '';
+                }
+
+                // Skip hidden or UI elements
+                const style = window.getComputedStyle(node);
+                if (style.display === 'none' || 
+                    node.classList.contains('copy-button') || 
+                    node.classList.contains('code-lang-label') || 
+                    node.classList.contains('collapse-icon') || 
+                    node.classList.contains('step-copy-btn')) {
+                    return '';
+                }
+
+                const tagName = node.tagName.toUpperCase();
+
+                if (tagName === 'P') {
+                    text += Array.from(node.childNodes).map(child => parseNode(child, depth)).join('').trim() + '\n\n';
+                } else if (tagName === 'H3') {
+                    const clone = node.cloneNode(true);
+                    clone.querySelectorAll('input[type="checkbox"]').forEach(el => el.remove());
+                    text += `## ${clone.textContent.trim()}\n\n`;
+                } else if (tagName === 'H4') {
+                    const clone = node.cloneNode(true);
+                    clone.querySelectorAll('input[type="checkbox"]').forEach(el => el.remove());
+                    text += `### ${clone.textContent.trim()}\n\n`;
+                } else if (tagName === 'PRE') {
+                    const codeEl = node.querySelector('code');
+                    const codeText = codeEl ? codeEl.textContent : node.textContent;
+                    text += `\`\`\`\n${codeText.trim()}\n\`\`\`\n\n`;
+                } else if (tagName === 'UL' || tagName === 'OL') {
+                    const isOrdered = tagName === 'OL';
+                    let index = 1;
+                    Array.from(node.children).forEach(li => {
+                        if (li.tagName.toUpperCase() === 'LI') {
+                            const indent = '  '.repeat(depth);
+                            const prefix = isOrdered ? `${index}. ` : '- ';
+                            
+                            // Check for checklist items
+                            const checkbox = li.querySelector(':scope > input[type="checkbox"]');
+                            let checkPrefix = '';
+                            if (checkbox) {
+                                checkPrefix = checkbox.checked ? '[x] ' : '[ ] ';
+                            }
+
+                            // Process content separately from nested lists
+                            const liClone = li.cloneNode(true);
+                            const nestedLists = liClone.querySelectorAll(':scope > ul, :scope > ol');
+                            nestedLists.forEach(nl => nl.remove());
+                            liClone.querySelectorAll(':scope > input[type="checkbox"]').forEach(el => el.remove());
+
+                            const liText = Array.from(liClone.childNodes)
+                                .map(child => parseNode(child, depth + 1))
+                                .join('')
+                                .trim();
+
+                            text += `${indent}${prefix}${checkPrefix}${liText}\n`;
+
+                            // Process nested lists
+                            nestedLists.forEach(nl => {
+                                text += parseNode(nl, depth + 1);
+                            });
+
+                            index++;
+                        }
+                    });
+                    if (depth === 0) {
+                        text += '\n';
+                    }
+                } else if (node.classList.contains('callout')) {
+                    let calloutType = 'INFO';
+                    if (node.classList.contains('callout-tip')) calloutType = 'TIP';
+                    if (node.classList.contains('callout-warning')) calloutType = 'WARNING';
+                    if (node.classList.contains('callout-danger')) calloutType = 'DANGER';
+                    
+                    const calloutText = Array.from(node.childNodes)
+                        .map(child => parseNode(child, depth))
+                        .join('')
+                        .trim()
+                        .split('\n')
+                        .map(line => `> ${line}`)
+                        .join('\n');
+                    text += `> [!${calloutType}]\n${calloutText}\n\n`;
+                } else if (tagName === 'BLOCKQUOTE') {
+                    const quoteText = Array.from(node.childNodes)
+                        .map(child => parseNode(child, depth))
+                        .join('')
+                        .trim()
+                        .split('\n')
+                        .map(line => `> ${line}`)
+                        .join('\n');
+                    text += `${quoteText}\n\n`;
+                } else if (tagName === 'TABLE') {
+                    text += node.innerText.trim() + '\n\n';
+                } else {
+                    text += Array.from(node.childNodes).map(child => parseNode(child, depth)).join('');
+                }
+                return text;
+            }
+
+            Array.from(contentDiv.childNodes).forEach(child => {
+                output += parseNode(child);
+            });
+
+            return output.replace(/\n{3,}/g, '\n\n').trim();
+        }
+
+        // H2 Checklist Setup
         document.querySelectorAll('h2').forEach(h2 => {
-            const text = h2.textContent.trim();
+            const text = h2.textContent.trim().replace(/▼$/, '').trim();
+            // Skip "Strategy Overview" (informational only, no master check)
+            if (h2.id === 'strategy-overview' || text === 'Strategy Overview') return;
+            // Skip "Checklist Summary" heading from master-checkbox injection
+            if (text === 'Checklist Summary') return;
+
+            // Add Master Checkbox to h2
+            const masterCheck = document.createElement('input');
+            masterCheck.type = 'checkbox';
+            h2.prepend(masterCheck);
+            
+            // Wrap the rest of the h2 content in a span for text-decoration
+            const titleSpan = document.createElement('span');
+            while(h2.childNodes.length > 1) {
+                titleSpan.appendChild(h2.childNodes[1]);
+            }
+            h2.appendChild(titleSpan);
+
+            // Find all elements belonging to this h2
+            let nextEl = h2.nextElementSibling;
+            let subCheckboxes = [];
+            let liElements = [];
+            let sectionElements = [];
+            let h3Elements = [];
+
+            while (nextEl && nextEl.tagName !== 'H2') {
+                if (nextEl.tagName === 'H3') {
+                    h3Elements.push(nextEl);
+                }
+
+                let isActionableList = false;
+                if (nextEl.tagName === 'UL' || nextEl.tagName === 'OL') {
+                    const tempLis = nextEl.querySelectorAll('li');
+                    for (let i = 0; i < tempLis.length; i++) {
+                        const tempLi = tempLis[i];
+                        const nativeCheck = tempLi.querySelector('input[type="checkbox"]');
+                        const isOrdered = tempLi.parentElement.tagName === 'OL';
+                        if (isOrdered || nativeCheck) {
+                            isActionableList = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (nextEl.tagName !== 'HR') {
+                    if (nextEl.tagName !== 'UL' && nextEl.tagName !== 'OL') {
+                        sectionElements.push(nextEl);
+                    } else if (!isActionableList) {
+                        sectionElements.push(nextEl);
+                    }
+                }
+
+                if (nextEl.tagName === 'UL' || nextEl.tagName === 'OL') {
+                    const lis = nextEl.querySelectorAll('li');
+                    lis.forEach(li => {
+                        const nativeCheck = li.querySelector('input[type="checkbox"]');
+                        const isOrdered = li.parentElement.tagName === 'OL';
+
+                        if (!isOrdered && !nativeCheck) {
+                            return; // skip standard bullet points
+                        }
+
+                        li.classList.add('task-item');
+
+                        if (nativeCheck) {
+                            nativeCheck.remove();
+                        }
+
+                        const subCheck = document.createElement('input');
+                        subCheck.type = 'checkbox';
+                        li.prepend(subCheck);
+                        
+                        const liTextSpan = document.createElement('span');
+                        liTextSpan.className = 'task-text';
+                        while(li.childNodes.length > 1) {
+                            const node = li.childNodes[1];
+                            if(node.tagName === 'UL' || node.tagName === 'OL') {
+                                break;
+                            }
+                            liTextSpan.appendChild(node);
+                        }
+                        li.insertBefore(liTextSpan, li.childNodes[1]);
+                        
+                        subCheckboxes.push(subCheck);
+                        liElements.push({ checkbox: subCheck, textSpan: liTextSpan });
+
+                        // Sub-checkbox click logic
+                        subCheck.addEventListener('change', (e) => {
+                            if (e.target.checked) {
+                                liTextSpan.classList.add('completed-text');
+                            } else {
+                                liTextSpan.classList.remove('completed-text');
+                            }
+                            
+                            // Top-down sync for immediate nested lists
+                            const nestedLists = li.querySelectorAll(':scope > ul, :scope > ol');
+                            nestedLists.forEach(list => {
+                                const nestedChecks = list.querySelectorAll(':scope > li.task-item > input[type="checkbox"]');
+                                if (nestedChecks.length === 0) {
+                                    if (e.target.checked) {
+                                        list.classList.add('completed-text');
+                                    } else {
+                                        list.classList.remove('completed-text');
+                                    }
+                                } else {
+                                    nestedChecks.forEach(nc => {
+                                        if(nc.checked !== e.target.checked) {
+                                            nc.checked = e.target.checked;
+                                            nc.dispatchEvent(new Event('change'));
+                                        }
+                                    });
+                                }
+                            });
+
+                            // Bottom-up sync for parent lists
+                            const parentList = li.parentElement;
+                            if (parentList && parentList.parentElement.tagName === 'LI') {
+                                const parentLi = parentList.parentElement;
+                                const parentCheck = parentLi.querySelector(':scope > input[type="checkbox"]');
+                                const siblings = parentList.querySelectorAll(':scope > li > input[type="checkbox"]');
+                                if (parentCheck) {
+                                    const allSiblingsChecked = Array.from(siblings).every(c => c.checked);
+                                    if (parentCheck.checked !== allSiblingsChecked) {
+                                        parentCheck.checked = allSiblingsChecked;
+                                        parentCheck.dispatchEvent(new Event('change'));
+                                    }
+                                }
+                            }
+
+                            // Auto-check master if all are checked
+                            masterCheck.checked = subCheckboxes.every(cb => cb.checked);
+                            if (masterCheck.checked) {
+                                titleSpan.classList.add('completed-text');
+                                sectionElements.forEach(el => el.classList.add('completed-text'));
+                            } else {
+                                titleSpan.classList.remove('completed-text');
+                                sectionElements.forEach(el => el.classList.remove('completed-text'));
+                            }
+                        });
+                    });
+                }
+                nextEl = nextEl.nextElementSibling;
+            }
+
+            // Master Checkbox click logic
+            masterCheck.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                
+                if (isChecked) {
+                    titleSpan.classList.add('completed-text');
+                    sectionElements.forEach(el => el.classList.add('completed-text'));
+                } else {
+                    titleSpan.classList.remove('completed-text');
+                    sectionElements.forEach(el => el.classList.remove('completed-text'));
+                }
+
+                liElements.forEach(item => {
+                    if (item.checkbox.checked !== isChecked) {
+                        item.checkbox.checked = isChecked;
+                        item.checkbox.dispatchEvent(new Event('change'));
+                    }
+                });
+            });
+
+            // Process H3 elements inside this H2 range
+            h3Elements.forEach(h3 => {
+                const h3Check = document.createElement('input');
+                h3Check.type = 'checkbox';
+                h3.prepend(h3Check);
+
+                const h3TitleSpan = document.createElement('span');
+                while(h3.childNodes.length > 1) {
+                    h3TitleSpan.appendChild(h3.childNodes[1]);
+                }
+                h3.appendChild(h3TitleSpan);
+
+                // Find all sub-checkboxes and section elements belonging to this h3
+                let h3Next = h3.nextElementSibling;
+                let h3SubCheckboxes = [];
+                let h3SectionElements = [];
+
+                while (h3Next && h3Next.tagName !== 'H3' && h3Next.tagName !== 'H2') {
+                    if (h3Next.tagName === 'UL' || h3Next.tagName === 'OL') {
+                        const h3Checks = h3Next.querySelectorAll('li.task-item > input[type="checkbox"]');
+                        h3Checks.forEach(cb => h3SubCheckboxes.push(cb));
+                    } else if (h3Next.tagName !== 'HR') {
+                        h3SectionElements.push(h3Next);
+                    }
+                    h3Next = h3Next.nextElementSibling;
+                }
+
+                // Wire master ↔ sub sync for H3
+                h3Check.addEventListener('change', (e) => {
+                    const isChecked = e.target.checked;
+                    if (isChecked) {
+                        h3TitleSpan.classList.add('completed-text');
+                        h3SectionElements.forEach(el => el.classList.add('completed-text'));
+                    } else {
+                        h3TitleSpan.classList.remove('completed-text');
+                        h3SectionElements.forEach(el => el.classList.remove('completed-text'));
+                    }
+
+                    h3SubCheckboxes.forEach(cb => {
+                        if (cb.checked !== isChecked) {
+                            cb.checked = isChecked;
+                            cb.dispatchEvent(new Event('change'));
+                        }
+                    });
+                });
+
+                // Listen to sub-checkbox changes to update h3 master
+                h3SubCheckboxes.forEach(cb => {
+                    cb.addEventListener('change', () => {
+                        h3Check.checked = h3SubCheckboxes.every(c => c.checked);
+                        if (h3Check.checked) {
+                            h3TitleSpan.classList.add('completed-text');
+                            h3SectionElements.forEach(el => el.classList.add('completed-text'));
+                        } else {
+                            h3TitleSpan.classList.remove('completed-text');
+                            h3SectionElements.forEach(el => el.classList.remove('completed-text'));
+                        }
+                    });
+                });
+            });
+        });
+
+        // Step Card Collapse & Copy Functionality (only for Step headings)
+        document.querySelectorAll('h2').forEach(h2 => {
+            const text = h2.textContent.trim().replace(/▼$/, '').trim();
             if (!/^Step\s+\d+/i.test(text)) return;
 
             const siblings = [];
@@ -2532,8 +2894,40 @@ if (error) {
             card.appendChild(h2);
             card.appendChild(content);
 
+            // Create and append Step Copy Button
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'step-copy-btn';
+            copyBtn.setAttribute('aria-label', 'Copy text for ' + text);
+            copyBtn.setAttribute('title', 'Copy step to clipboard');
+            copyBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span class="btn-text">Copy Step</span>
+            `;
+            card.appendChild(copyBtn);
+
+            copyBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const stepText = getStepContentAsText(card);
+                navigator.clipboard.writeText(stepText).then(function() {
+                    copyBtn.classList.add('copied');
+                    copyBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span class="btn-text">Copied!</span>
+                    `;
+                    setTimeout(function() {
+                        copyBtn.classList.remove('copied');
+                        copyBtn.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <span class="btn-text">Copy Step</span>
+                        `;
+                    }, 2000);
+                }).catch(function(err) {
+                    console.error('Failed to copy step content:', err);
+                });
+            });
+
             h2.addEventListener('click', (e) => {
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'A') return;
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'A' || e.target.closest('.step-copy-btn')) return;
                 card.classList.toggle('collapsed');
             });
 
@@ -2555,6 +2949,204 @@ if (error) {
                     }
                 });
             });
+        });
+
+        // Global Reset Button
+        const resetBtn = document.createElement('button');
+        resetBtn.id = 'reset-btn';
+        resetBtn.className = 'reset-btn';
+        resetBtn.innerText = 'Untick All';
+        document.body.appendChild(resetBtn);
+
+        resetBtn.addEventListener('click', () => {
+            const allStepChecks = Array.from(document.querySelectorAll('input[type="checkbox"]')).filter(cb => {
+                return !cb.closest('.checklist-summary');
+            });
+            allStepChecks.forEach(cb => {
+                if(cb.checked) {
+                    cb.checked = false;
+                    cb.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+
+        // LocalStorage Save/Load Logic (excludes summary checks)
+        const allSaveableChecks = Array.from(document.querySelectorAll('input[type="checkbox"]')).filter(cb => {
+            return !cb.closest('.checklist-summary');
+        });
+        
+        allSaveableChecks.forEach((cb, index) => {
+            const parentText = cb.parentElement.innerText.replace(/[^a-zA-Z0-9]/g, '').slice(0, 30);
+            cb.dataset.saveId = 'chk_' + index + '_' + parentText;
+            
+            cb.addEventListener('change', () => {
+                localStorage.setItem(cb.dataset.saveId, cb.checked);
+            });
+        });
+
+        allSaveableChecks.forEach(cb => {
+            const savedState = localStorage.getItem(cb.dataset.saveId);
+            if (savedState === 'true' && !cb.checked) {
+                cb.checked = true;
+                cb.dispatchEvent(new Event('change'));
+            } else if (savedState === 'false' && cb.checked) {
+                cb.checked = false;
+                cb.dispatchEvent(new Event('change'));
+            }
+        });
+
+        // Summary Sync Helper Map
+        function getSummaryKeywords(normText) {
+            if (normText.includes('researchkeyword')) return ['keywordresearch', 'analyzethecompetition', 'findanidea'];
+            if (normText.includes('initializeastro')) return ['installastro', 'installanaicoding'];
+            if (normText.includes('aiprompttogenerate')) return ['generatecoretool', 'createawebsite', 'prompttheai'];
+            if (normText.includes('addbranding')) return ['brandinglogofavicon', 'favicon'];
+            if (normText.includes('aipromptforonpage')) return ['onpageseo'];
+            if (normText.includes('aipromptforfaq')) return ['faqsection', 'faqjsonld'];
+            if (normText.includes('legalpages404')) return ['essentialpagesforcompliance', 'legalpages', 'privacy', 'terms'];
+            if (normText.includes('pushproject')) return ['pushtogithub', 'pushyourinitialcode'];
+            if (normText.includes('connectgithub')) return ['connectgithubrepotocloudflare', 'cloudflarepagesforauto'];
+            if (normText.includes('buycomdomain')) return ['buythedomain', 'domainnameandmap'];
+            if (normText.includes('blockpagesdev')) return ['blockpagesdev', 'addheaders'];
+            if (normText.includes('googlesearchconsole')) return ['submittogooglesearchconsole', 'searchconsole'];
+            if (normText.includes('runmobileperformance')) return ['runmobileperformance', 'performanceauditandmobile'];
+            if (normText.includes('applyforadsense')) return ['googleadsensemonetization', 'applyforadsense', 'turnonads'];
+            if (normText.includes('addredirects')) return ['addredirectsfile', 'redirectsfor'];
+            if (normText.includes('configurebranch')) return ['configurebranchcontrols', 'branchcontrols'];
+            if (normText.includes('addogmetatags')) return ['ogmetatags'];
+            if (normText.includes('setuperrormonitoring')) return ['errormonitoringandcrash', 'sentry'];
+            if (normText.includes('securityandcache')) return ['securityandcacheconfiguration', 'headersfile'];
+            if (normText.includes('configurepwaservice')) return ['configurepwaserviceworker', 'servicecheck', 'pwaserviceworker'];
+            if (normText.includes('codesplittingandlazy')) return ['codesplitting', 'lazyloading'];
+            if (normText.includes('buildmultitheme')) return ['multithemesystem', 'cssvariables'];
+            if (normText.includes('verifydnspropagated')) return ['verifydnspropagated', 'propagation'];
+            if (normText.includes('setupgithubactions')) return ['githubactionscicdpipeline', 'githubactions'];
+            if (normText.includes('enabletypescriptstrict')) return ['enabletypescriptstrictmode', 'tsconfigjson'];
+            if (normText.includes('implementaccessibility')) return ['accessibilitybasics'];
+            if (normText.includes('samsunginternet')) return ['samsunginternetdarkmode', 'samsunginternet'];
+            return [normText];
+        }
+
+        // Checklist Summary Sync function
+        function syncChecklistSummary() {
+            const summaryList = document.querySelector('.checklist-summary');
+            if (!summaryList) return;
+
+            const summaryChecks = summaryList.querySelectorAll('input[type="checkbox"]');
+            const stepChecks = Array.from(document.querySelectorAll('input[type="checkbox"]')).filter(cb => {
+                return !cb.closest('.checklist-summary') && !cb.closest('h2') && !cb.closest('h3');
+            });
+
+            const normalized = (text) => text.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            summaryChecks.forEach(sCb => {
+                const titleText = sCb.getAttribute('title') || sCb.parentElement.innerText;
+                const sNorm = normalized(titleText);
+                
+                const keywords = getSummaryKeywords(sNorm);
+                const matches = stepChecks.filter(stepCb => {
+                    const stepText = normalized(stepCb.parentElement.innerText);
+                    return keywords.some(kw => stepText.includes(kw));
+                });
+
+                if (matches.length > 0) {
+                    const updateSummary = () => {
+                        sCb.checked = matches.every(m => m.checked);
+                        sCb.parentElement.classList.toggle('done', sCb.checked);
+                    };
+                    
+                    matches.forEach(m => {
+                        m.addEventListener('change', updateSummary);
+                    });
+                    
+                    updateSummary();
+                }
+            });
+        }
+
+        // Progress Badges Logic
+        function updateAllProgressIndicators() {
+            document.querySelectorAll('h2').forEach(h2 => {
+                const text = h2.textContent.trim().replace(/▼$/, '').trim();
+                if (!/^Step\s+\d+/i.test(text) && text !== 'Common Pitfalls & Lessons Learned' && text !== 'Checklist Summary') return;
+                
+                let badge = h2.querySelector('.section-progress');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'section-progress';
+                    const titleSpan = h2.querySelector('span');
+                    if (titleSpan) {
+                        titleSpan.parentNode.insertBefore(badge, titleSpan.nextSibling);
+                    } else {
+                        h2.appendChild(badge);
+                    }
+                }
+
+                if (text === 'Checklist Summary') {
+                    const allStepChecks = Array.from(document.querySelectorAll('input[type="checkbox"]')).filter(cb => {
+                        return !cb.closest('.checklist-summary') && !cb.closest('h2') && !cb.closest('h3');
+                    });
+                    const total = allStepChecks.length;
+                    const done = allStepChecks.filter(cb => cb.checked).length;
+                    badge.textContent = total > 0 ? `${done}/${total}` : '';
+                    return;
+                }
+
+                let nextEl = h2.nextElementSibling;
+                let total = 0;
+                let done = 0;
+                while (nextEl && nextEl.tagName !== 'H2') {
+                    if (nextEl.tagName === 'UL' || nextEl.tagName === 'OL') {
+                        const checks = nextEl.querySelectorAll('li.task-item > input[type="checkbox"]');
+                        checks.forEach(cb => {
+                            total++;
+                            if (cb.checked) done++;
+                        });
+                    }
+                    nextEl = nextEl.nextElementSibling;
+                }
+                badge.textContent = total > 0 ? `${done}/${total}` : '';
+            });
+
+            document.querySelectorAll('h3').forEach(h3 => {
+                let badge = h3.querySelector('.section-progress');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'section-progress';
+                    const titleSpan = h3.querySelector('span');
+                    if (titleSpan) {
+                        titleSpan.parentNode.insertBefore(badge, titleSpan.nextSibling);
+                    } else {
+                        h3.appendChild(badge);
+                    }
+                }
+
+                let nextEl = h3.nextElementSibling;
+                let total = 0;
+                let done = 0;
+                while (nextEl && nextEl.tagName !== 'H3' && nextEl.tagName !== 'H2') {
+                    if (nextEl.tagName === 'UL' || nextEl.tagName === 'OL') {
+                        const checks = nextEl.querySelectorAll('li.task-item > input[type="checkbox"]');
+                        checks.forEach(cb => {
+                            total++;
+                            if (cb.checked) done++;
+                        });
+                    }
+                    nextEl = nextEl.nextElementSibling;
+                }
+                badge.textContent = total > 0 ? `${done}/${total}` : '';
+            });
+        }
+
+        // Initialize progress indicators & summary sync on load
+        syncChecklistSummary();
+        updateAllProgressIndicators();
+
+        // Listen for all checkbox changes to keep progress updated
+        document.addEventListener('change', (e) => {
+            if (e.target.type === 'checkbox') {
+                updateAllProgressIndicators();
+            }
         });
     </script>
     <script>
@@ -2684,59 +3276,7 @@ if (error) {
                 }
             });
 
-            // Section progress indicators
-            h2Elements.forEach(function(h2) {
-                var text = h2.textContent.trim().replace(/▼$/, '').trim();
-                if (!/^Step\s+\d+/i.test(text) && text !== 'Common Pitfalls & Lessons Learned' && text !== 'Checklist Summary') return;
-                var masterCheck = h2.querySelector('input[type="checkbox"]');
-                if (!masterCheck) return;
-
-                var progressSpan = document.createElement('span');
-                progressSpan.className = 'section-progress';
-
-                // Collect checkboxes between this h2 and the next h2
-                var h2Parent = h2.parentElement;
-                var sectionChecks = [];
-                var foundSection = false;
-                var el = h2Parent.firstElementChild;
-                while (el) {
-                    if (el === h2 || el.querySelector && el.querySelector('h2') === h2) {
-                        foundSection = true;
-                        el = el.nextElementSibling;
-                        continue;
-                    }
-                    if (foundSection) {
-                        if (el.tagName === 'H2') break;
-                        if (el.tagName === 'UL' || el.tagName === 'OL') {
-                            var checksInList = el.querySelectorAll('li.task-item > input[type="checkbox"]');
-                            checksInList.forEach(function(cb) { sectionChecks.push(cb); });
-                        }
-                    }
-                    el = el.nextElementSibling;
-                }
-
-                var updateProgress = function() {
-                    var total = sectionChecks.length;
-                    var done = 0;
-                    sectionChecks.forEach(function(cb) { if (cb.checked) done++; });
-                    progressSpan.textContent = total > 0 ? done + '/' + total : '';
-                };
-
-                var titleSpan = h2.querySelector('span');
-                if (titleSpan) {
-                    titleSpan.parentNode.insertBefore(progressSpan, titleSpan.nextSibling);
-                } else {
-                    h2.appendChild(progressSpan);
-                }
-
-                updateProgress();
-                masterCheck.addEventListener('change', updateProgress);
-                document.addEventListener('change', function(e) {
-                    if (e.target.matches('li.task-item > input[type="checkbox"]') && sectionChecks.indexOf(e.target) >= 0) {
-                        updateProgress();
-                    }
-                });
-            });
+            // Section progress indicators are handled globally at the end of the script
 
             // Reading progress bar
             var onScroll = function() {
@@ -2800,7 +3340,7 @@ if (error) {
                     .trim();
             }
 
-            // Add heading IDs and anchor copy buttons
+            // Add heading IDs
             document.querySelectorAll('h1, h2, h3, h4').forEach(function(heading) {
                 if (heading.closest('.toc-container') || heading.closest('.callout')) return;
 
@@ -2809,29 +3349,6 @@ if (error) {
 
                 var id = heading.id || slugify(rawText);
                 heading.id = id;
-
-                var btn = document.createElement('button');
-                btn.className = 'heading-anchor';
-                btn.setAttribute('aria-label', 'Copy link to ' + rawText);
-                btn.setAttribute('title', 'Copy anchor link');
-                btn.textContent = '#';
-
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    var url = window.location.href.split('#')[0] + '#' + id;
-                    navigator.clipboard.writeText(url).then(function() {
-                        btn.textContent = 'Copied!';
-                        btn.classList.add('copied');
-                        setTimeout(function() {
-                            btn.textContent = '#';
-                            btn.classList.remove('copied');
-                        }, 2000);
-                    }).catch(function(err) {
-                        console.error('Failed to copy heading link:', err);
-                    });
-                });
-
-                heading.appendChild(btn);
             });
         })();
     </script>
