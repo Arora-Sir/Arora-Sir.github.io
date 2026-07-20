@@ -2216,7 +2216,28 @@ if (error) {
 </ul>
 </li>
 </ol><h2>Step 18: Domain Migration &amp; SEO Transfer</h2>
-<p>If you need to change your website's primary domain (e.g., from <code>olddomain.me</code> to <code>newdomain.me</code>), you must transfer search engine authority (link juice) and redirect users seamlessly without hurting your SEO.</p>
+<p>If you need to change your website's primary domain, you must transfer search engine authority (link juice) and redirect users seamlessly without hurting your SEO.</p>
+
+<div class="interactive-migration-tool callout callout-tip" style="margin-bottom: 1.5rem;">
+  <p><strong>🛠️ Interactive Migration Helper:</strong> Enter your domains and project target to dynamically customize the code snippets and terminal commands in this step:</p>
+  <div style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 0.5rem;">
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 200px;">
+        <label for="migration-old-domain" style="font-size: 0.85rem; font-weight: bold; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Old Domain:</label>
+        <input type="text" id="migration-old-domain" placeholder="e.g. olddomain.me" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: var(--text-primary); font-family: inherit;">
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <label for="migration-new-domain" style="font-size: 0.85rem; font-weight: bold; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">New Domain:</label>
+        <input type="text" id="migration-new-domain" placeholder="e.g. newdomain.me" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: var(--text-primary); font-family: inherit;">
+      </div>
+      <div style="flex: 1; min-width: 200px;">
+        <label for="migration-project-name" style="font-size: 0.85rem; font-weight: bold; color: var(--text-secondary); display: block; margin-bottom: 0.3rem;">Pages Project Target:</label>
+        <input type="text" id="migration-project-name" placeholder="e.g. yourproject.pages.dev" style="width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: var(--text-primary); font-family: inherit;">
+      </div>
+    </div>
+    <button id="migration-apply-btn" style="align-self: flex-start; padding: 0.5rem 1.25rem; border-radius: 0.375rem; border: none; background: var(--primary-color); color: white; font-weight: bold; cursor: pointer; transition: background 0.2s;">Customize Guide</button>
+  </div>
+</div>
 
 <div class="callout callout-warning">
   <p>
@@ -2227,7 +2248,7 @@ if (error) {
 <ol>
   <li><strong>DNS Setup on Cloudflare (New Domain):</strong>
     <ul>
-      <li>Log in to your Cloudflare Dashboard and click <strong>+ Add a site</strong>. Enter your new domain name and select the <strong>Free</strong> plan.</li>
+      <li>Log in to your Cloudflare Dashboard and click <strong>+ Add a site</strong>. Enter your new domain name <code><span class="dynamic-new-domain">newdomain.me</span></code> and select the <strong>Free</strong> plan.</li>
       <li>Cloudflare will scan for existing DNS records. Delete any default temporary records (such as your registrar's default parking page A records).</li>
       <li>Click <strong>Continue to activation</strong>.
         <div class="callout callout-tip">
@@ -2240,19 +2261,19 @@ if (error) {
   <li><strong>Update Registrar Nameservers:</strong>
     <ul>
       <li>Log in to your domain registrar dashboard (e.g., Spaceship, Namecheap).</li>
-      <li>Go to your domain settings, choose <strong>Custom Nameservers</strong>, delete the default ones, and paste the two Cloudflare nameservers.</li>
-      <li>Verify DNS propagation using tools like <a href="https://dnschecker.org">dnschecker.org</a> or by running <code>nslookup -type=ns yournewdomain.com</code> in your terminal. Once active, the domain status in Cloudflare will turn green.</li>
+      <li>Go to your domain settings for <code><span class="dynamic-new-domain">newdomain.me</span></code>, choose <strong>Custom Nameservers</strong>, delete the default ones, and paste the two Cloudflare nameservers.</li>
+      <li>Verify DNS propagation using tools like <a href="https://dnschecker.org">dnschecker.org</a> or by running <code>nslookup -type=ns <span class="dynamic-new-domain">newdomain.me</span></code> in your terminal. Once active, the domain status in Cloudflare will turn green.</li>
     </ul>
   </li>
   <li><strong>Connect New Domain to Cloudflare Pages:</strong>
     <ul>
       <li>In the Cloudflare Dashboard, navigate to <strong>Workers &amp; Pages</strong> → click your project → go to <strong>Settings</strong> → <strong>Custom Domains</strong>.</li>
-      <li>Click <strong>Set up a custom domain</strong>, enter your new root domain, and click <strong>Continue</strong>. Repeat the process for the <code>www</code> subdomain.</li>
+      <li>Click <strong>Set up a custom domain</strong>, enter your new root domain <code><span class="dynamic-new-domain">newdomain.me</span></code>, and click <strong>Continue</strong>. Repeat the process for the <code>www.<span class="dynamic-new-domain">newdomain.me</span></code> subdomain.</li>
       <li>
         <div class="callout callout-tip">
           <p><strong>💡 Trouble Tip:</strong> If Cloudflare shows a "Verifying/Complete DNS setup" page and asks you to add records manually: Go to your new domain's <strong>DNS > Records</strong> tab in Cloudflare, click <strong>Add record</strong>, and add:
-          <br>• Type: <code>CNAME</code> | Name: <code>@</code> | Target: <code>yourproject.pages.dev</code> | Proxy status: <code>Proxied (Orange Cloud ON)</code>
-          <br>• Type: <code>CNAME</code> | Name: <code>www</code> | Target: <code>yourproject.pages.dev</code> | Proxy status: <code>Proxied (Orange Cloud ON)</code>
+          <br>• Type: <code>CNAME</code> | Name: <code>@</code> | Target: <code><span class="dynamic-pages-subdomain">yourproject.pages.dev</span></code> | Proxy status: <code>Proxied (Orange Cloud ON)</code>
+          <br>• Type: <code>CNAME</code> | Name: <code>www</code> | Target: <code><span class="dynamic-pages-subdomain">yourproject.pages.dev</span></code> | Proxy status: <code>Proxied (Orange Cloud ON)</code>
           <br>Then return to the Pages configuration tab and click <strong>Check DNS records</strong>.</p>
         </div>
       </li>
@@ -2260,41 +2281,41 @@ if (error) {
   </li>
   <li><strong>Remove Old Domain from Pages (CRITICAL):</strong>
     <ul>
-      <li>On that same Pages <strong>Custom Domains</strong> settings page, locate your old domain and click the three dots next to it.</li>
-      <li>Click <strong>Remove domain</strong> (and remove the <code>www</code> version as well).</li>
+      <li>On that same Pages <strong>Custom Domains</strong> settings page, locate your old domain <code><span class="dynamic-old-domain">olddomain.me</span></code> and click the three dots next to it.</li>
+      <li>Click <strong>Remove domain</strong> (and remove the <code>www.<span class="dynamic-old-domain">olddomain.me</span></code> version as well).</li>
       <li>
         <div class="callout callout-danger">
-          <p><strong>⚠️ Why this is critical:</strong> Cloudflare Pages hosting always takes priority over Redirect Rules. If your old domain is still mapped directly to Pages, Cloudflare will serve the website directly and bypass any redirect rules you create in the next step.</p>
+          <p><strong>⚠️ Why this is critical:</strong> Cloudflare Pages hosting always takes priority over Redirect Rules. If your old domain <code><span class="dynamic-old-domain">olddomain.me</span></code> is still mapped directly to Pages, Cloudflare will serve the website directly and bypass any redirect rules you create in the next step.</p>
         </div>
       </li>
     </ul>
   </li>
   <li><strong>Set Up the 301 Redirect Rule (Old Domain):</strong>
     <ul>
-      <li>Switch to your <strong>old domain's</strong> site dashboard in Cloudflare.</li>
+      <li>Switch to your <strong>old domain's</strong> (<code><span class="dynamic-old-domain">olddomain.me</span></code>) site dashboard in Cloudflare.</li>
       <li>Go to <strong>Rules</strong> → <strong>Redirect Rules</strong> → click <strong>Create rule</strong>.</li>
       <li>Fill in the fields:
         <ul>
           <li><strong>Rule name:</strong> <code>Permanent Domain Migration Redirect</code></li>
           <li><strong>When incoming requests match:</strong> Select <strong>All incoming requests</strong></li>
           <li><strong>Then (Action):</strong> Select <strong>Dynamic Redirect</strong></li>
-          <li><strong>Expression:</strong> <code>concat("https://yournewdomain.com", http.request.uri.path)</code></li>
+          <li><strong>Expression:</strong> <code>concat("https://<span class="dynamic-new-domain">newdomain.me</span>", http.request.uri.path)</code></li>
           <li><strong>Status Code:</strong> Select <code>301 (Moved Permanently)</code></li>
           <li><strong>Preserve query string:</strong> Check the box to keep query parameters intact.</li>
         </ul>
       </li>
-      <li>Click <strong>Deploy</strong>. Verify the redirect works by running <code>curl -I http://your-old-domain.com</code> (it should return 301 with the location header pointing to the new domain).</li>
+      <li>Click <strong>Deploy</strong>. Verify the redirect works by running <code>curl -I http://<span class="dynamic-old-domain">olddomain.me</span></code> (it should return 301 with the location header pointing to the new domain).</li>
     </ul>
   </li>
   <li><strong>Update Codebase Metadata &amp; Cleanup:</strong>
     <ul>
       <li>In your source files, update all domain references to your new domain:
         <ul>
-          <li>Canonical links (<code>&lt;link rel="canonical" href="https://yournewdomain.com/" /&gt;</code>)</li>
-          <li>Open Graph tags (<code>og:url</code>, <code>og:image</code>, etc.)</li>
-          <li>Sitemap absolute URLs (in sitemap.xml)</li>
+          <li>Canonical links (<code>&lt;link rel="canonical" href="https://<span class="dynamic-new-domain">newdomain.me</span>/" /&gt;</code>)</li>
+          <li>Open Graph tags (<code>og:url</code>, <code>og:image</code>, etc. pointing to <code><span class="dynamic-new-domain">newdomain.me</span></code>)</li>
+          <li>Sitemap absolute URLs (in sitemap.xml pointing to <code><span class="dynamic-new-domain">newdomain.me</span></code>)</li>
           <li>Robots.txt sitemap path</li>
-          <li>JSON-LD structured data (update the url property, and add the old domain into the sameAs array as a historical alias).</li>
+          <li>JSON-LD structured data (update the url property, and add the old domain <code><span class="dynamic-old-domain">olddomain.me</span></code> into the sameAs array as a historical alias).</li>
         </ul>
       </li>
       <li>
@@ -2306,24 +2327,24 @@ if (error) {
   </li>
   <li><strong>Google Search Console Migration:</strong>
     <ul>
-      <li>Add your new domain to Google Search Console as a <strong>Domain property</strong> (do not use URL prefix).
+      <li>Add your new domain <code><span class="dynamic-new-domain">newdomain.me</span></code> to Google Search Console as a <strong>Domain property</strong> (do not use URL prefix).
         <div class="callout callout-tip">
           <p><strong>💡 Trouble Tip:</strong> Since your domain is hosted on Cloudflare, Search Console will ask you to verify via Cloudflare. Simply authorize the popup; the verification completes automatically without needing manual copy-pasting of TXT strings.</p>
         </div>
       </li>
       <li>Submit your new sitemap.
         <div class="callout callout-tip">
-          <p><strong>💡 Trouble Tip:</strong> For Domain properties, Search Console requires you to type the <strong>complete URL</strong> (e.g. <code>https://yournewdomain.com/sitemap.xml</code>) to avoid "Invalid sitemap address" errors.</p>
+          <p><strong>💡 Trouble Tip:</strong> For Domain properties, Search Console requires you to type the <strong>complete URL</strong> (e.g. <code>https://<span class="dynamic-new-domain">newdomain.me</span>/sitemap.xml</code>) to avoid "Invalid sitemap address" errors.</p>
         </div>
       </li>
-      <li>Go to your <strong>old domain's property</strong> in Search Console, go to <strong>Settings</strong> → <strong>Change of address</strong>.</li>
-      <li>Select your new domain, click <strong>Validate and Update</strong>, and ignore any warnings about sample redirects not being active yet. Click <strong>Confirm Move</strong>.
+      <li>Go to your <strong>old domain's property</strong> (<code><span class="dynamic-old-domain">olddomain.me</span></code>) in Search Console, go to <strong>Settings</strong> → <strong>Change of address</strong>.</li>
+      <li>Select your new domain <code><span class="dynamic-new-domain">newdomain.me</span></code>, click <strong>Validate and Update</strong>, and ignore any warnings about sample redirects not being active yet. Click <strong>Confirm Move</strong>.
       </li>
     </ul>
   </li>
   <li><strong>Update External Profiles:</strong>
     <ul>
-      <li>Update your website link in LinkedIn, GitHub profile, Twitter/X bio, resume PDF, and other professional pages to ensure recruiters are pointed to the new domain immediately.</li>
+      <li>Update your website link in LinkedIn, GitHub profile, Twitter/X bio, resume PDF, and other professional pages to ensure recruiters are pointed to the new domain <code><span class="dynamic-new-domain">newdomain.me</span></code> immediately.</li>
     </ul>
   </li>
 </ol>
@@ -3381,6 +3402,68 @@ if (error) {
 
                 var id = heading.id || slugify(rawText);
                 heading.id = id;
+            });
+        })();
+    </script>
+
+    <script>
+        (function() {
+            'use strict';
+            const applyBtn = document.getElementById('migration-apply-btn');
+            if (!applyBtn) return;
+
+            applyBtn.addEventListener('click', () => {
+                let oldDomain = document.getElementById('migration-old-domain').value.trim().toLowerCase();
+                let newDomain = document.getElementById('migration-new-domain').value.trim().toLowerCase();
+                let projName = document.getElementById('migration-project-name').value.trim().toLowerCase();
+                
+                const btn = document.getElementById('migration-apply-btn');
+                
+                if (oldDomain) {
+                    oldDomain = oldDomain.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
+                    document.querySelectorAll('.dynamic-old-domain').forEach(el => {
+                        el.innerText = oldDomain;
+                        el.style.color = 'var(--accent-color)';
+                        setTimeout(() => { el.style.color = ''; }, 1000);
+                    });
+                }
+                if (newDomain) {
+                    newDomain = newDomain.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
+                    document.querySelectorAll('.dynamic-new-domain').forEach(el => {
+                        el.innerText = newDomain;
+                        el.style.color = 'var(--accent-color)';
+                        setTimeout(() => { el.style.color = ''; }, 1000);
+                    });
+                }
+                if (projName) {
+                    projName = projName.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
+                    if (!projName.endsWith('.pages.dev') && projName.indexOf('.') === -1) {
+                        projName = projName + '.pages.dev';
+                    }
+                    document.querySelectorAll('.dynamic-pages-subdomain').forEach(el => {
+                        el.innerText = projName;
+                        el.style.color = 'var(--accent-color)';
+                        setTimeout(() => { el.style.color = ''; }, 1000);
+                    });
+                }
+                
+                btn.innerText = 'Updated!';
+                btn.style.background = 'var(--accent-color)';
+                setTimeout(() => {
+                    btn.innerText = 'Customize Guide';
+                    btn.style.background = 'var(--primary-color)';
+                }, 2000);
+            });
+
+            ['migration-old-domain', 'migration-new-domain', 'migration-project-name'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            applyBtn.click();
+                        }
+                    });
+                }
             });
         })();
     </script>
