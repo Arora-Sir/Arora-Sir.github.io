@@ -940,7 +940,7 @@
 <div class="callout callout-tip">
   <p>
     <strong>Real-World Example:</strong> The author's portfolio at 
-    <a href="https://mohit-arora.me/" target="_blank" rel="noopener noreferrer" class="accent-link">mohit-arora.me</a> 
+    <a href="https://mohitarora.me/" target="_blank" rel="noopener noreferrer" class="accent-link">mohitarora.me</a> 
     was built following this exact process: React + TypeScript, Cloudflare Pages, multi-theme design with CSS variables, 
     auto-deploy from GitHub, JSON-LD structured data for SEO, custom 404/500 error pages, Sentry error monitoring, 
     PWA with service worker caching, and a custom SPA router with scroll restoration. 
@@ -1682,7 +1682,6 @@ Add proper OG meta tags to the global site header and generate a favicon package
 <li>_headers file with security headers configuration</li>
 </ol>
 <p><em>(<strong>Why?</strong> Astro generates static HTML files, so there is no SPA refresh issue. You still need <code>_headers</code> for security, but it is covered in Step 11 below.)</em></p>
-</ol>
 </li>
 </ol>
 <h2>Step 11: Deploying to Cloudflare Pages</h2>
@@ -2216,6 +2215,117 @@ if (error) {
 <li>Your ads will now be automatically placed, and your earnings will update daily!</li>
 </ul>
 </li>
+</ol><h2>Step 18: Domain Migration &amp; SEO Transfer</h2>
+<p>If you need to change your website's primary domain (e.g., from <code>olddomain.me</code> to <code>newdomain.me</code>), you must transfer search engine authority (link juice) and redirect users seamlessly without hurting your SEO.</p>
+
+<div class="callout callout-warning">
+  <p>
+    <strong>⚠️ CRITICAL RULE:</strong> Never simply delete your old domain or remove the redirect after a few months. Keep the old domain active and redirecting for at least 12 months (ideally forever). If you let it expire, automated bots will buy it and host spam or malicious pages, ruining your old portfolio links on PDFs, resumes, and forum posts.
+  </p>
+</div>
+
+<ol>
+  <li><strong>DNS Setup on Cloudflare (New Domain):</strong>
+    <ul>
+      <li>Log in to your Cloudflare Dashboard and click <strong>+ Add a site</strong>. Enter your new domain name and select the <strong>Free</strong> plan.</li>
+      <li>Cloudflare will scan for existing DNS records. Delete any default temporary records (such as your registrar's default parking page A records).</li>
+      <li>Click <strong>Continue to activation</strong>.
+        <div class="callout callout-tip">
+          <p><strong>💡 Trouble Tip:</strong> Deleting the default records will show a warning popup: <em>"Without DNS records, Cloudflare is unable to activate your site..."</em> This is completely normal. Click <strong>Confirm</strong> because Cloudflare Pages will handle mapping your records later.</p>
+        </div>
+      </li>
+      <li>Copy the two custom Cloudflare nameservers provided.</li>
+    </ul>
+  </li>
+  <li><strong>Update Registrar Nameservers:</strong>
+    <ul>
+      <li>Log in to your domain registrar dashboard (e.g., Spaceship, Namecheap).</li>
+      <li>Go to your domain settings, choose <strong>Custom Nameservers</strong>, delete the default ones, and paste the two Cloudflare nameservers.</li>
+      <li>Verify DNS propagation using tools like <a href="https://dnschecker.org">dnschecker.org</a> or by running <code>nslookup -type=ns yournewdomain.com</code> in your terminal. Once active, the domain status in Cloudflare will turn green.</li>
+    </ul>
+  </li>
+  <li><strong>Connect New Domain to Cloudflare Pages:</strong>
+    <ul>
+      <li>In the Cloudflare Dashboard, navigate to <strong>Workers &amp; Pages</strong> → click your project → go to <strong>Settings</strong> → <strong>Custom Domains</strong>.</li>
+      <li>Click <strong>Set up a custom domain</strong>, enter your new root domain, and click <strong>Continue</strong>. Repeat the process for the <code>www</code> subdomain.</li>
+      <li>
+        <div class="callout callout-tip">
+          <p><strong>💡 Trouble Tip:</strong> If Cloudflare shows a "Verifying/Complete DNS setup" page and asks you to add records manually: Go to your new domain's <strong>DNS > Records</strong> tab in Cloudflare, click <strong>Add record</strong>, and add:
+          <br>• Type: <code>CNAME</code> | Name: <code>@</code> | Target: <code>yourproject.pages.dev</code> | Proxy status: <code>Proxied (Orange Cloud ON)</code>
+          <br>• Type: <code>CNAME</code> | Name: <code>www</code> | Target: <code>yourproject.pages.dev</code> | Proxy status: <code>Proxied (Orange Cloud ON)</code>
+          <br>Then return to the Pages configuration tab and click <strong>Check DNS records</strong>.</p>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Remove Old Domain from Pages (CRITICAL):</strong>
+    <ul>
+      <li>On that same Pages <strong>Custom Domains</strong> settings page, locate your old domain and click the three dots next to it.</li>
+      <li>Click <strong>Remove domain</strong> (and remove the <code>www</code> version as well).</li>
+      <li>
+        <div class="callout callout-danger">
+          <p><strong>⚠️ Why this is critical:</strong> Cloudflare Pages hosting always takes priority over Redirect Rules. If your old domain is still mapped directly to Pages, Cloudflare will serve the website directly and bypass any redirect rules you create in the next step.</p>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Set Up the 301 Redirect Rule (Old Domain):</strong>
+    <ul>
+      <li>Switch to your <strong>old domain's</strong> site dashboard in Cloudflare.</li>
+      <li>Go to <strong>Rules</strong> → <strong>Redirect Rules</strong> → click <strong>Create rule</strong>.</li>
+      <li>Fill in the fields:
+        <ul>
+          <li><strong>Rule name:</strong> <code>Permanent Domain Migration Redirect</code></li>
+          <li><strong>When incoming requests match:</strong> Select <strong>All incoming requests</strong></li>
+          <li><strong>Then (Action):</strong> Select <strong>Dynamic Redirect</strong></li>
+          <li><strong>Expression:</strong> <code>concat("https://yournewdomain.com", http.request.uri.path)</code></li>
+          <li><strong>Status Code:</strong> Select <code>301 (Moved Permanently)</code></li>
+          <li><strong>Preserve query string:</strong> Check the box to keep query parameters intact.</li>
+        </ul>
+      </li>
+      <li>Click <strong>Deploy</strong>. Verify the redirect works by running <code>curl -I http://your-old-domain.com</code> (it should return 301 with the location header pointing to the new domain).</li>
+    </ul>
+  </li>
+  <li><strong>Update Codebase Metadata &amp; Cleanup:</strong>
+    <ul>
+      <li>In your source files, update all domain references to your new domain:
+        <ul>
+          <li>Canonical links (<code>&lt;link rel="canonical" href="https://yournewdomain.com/" /&gt;</code>)</li>
+          <li>Open Graph tags (<code>og:url</code>, <code>og:image</code>, etc.)</li>
+          <li>Sitemap absolute URLs (in sitemap.xml)</li>
+          <li>Robots.txt sitemap path</li>
+          <li>JSON-LD structured data (update the url property, and add the old domain into the sameAs array as a historical alias).</li>
+        </ul>
+      </li>
+      <li>
+        <div class="callout callout-tip">
+          <p><strong>💡 Trouble Tip (Analytics Cleanup):</strong> If you use Cloudflare's <strong>Automatic setup</strong> for Web Analytics, Cloudflare automatically injects the tracking script. Go to your Pages dashboard settings, delete the environment variable <code>VITE_CLOUDFLARE_ANALYTICS_TOKEN</code>, and redeploy. This prevents double-tracking script conflicts on your new domain.</p>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Google Search Console Migration:</strong>
+    <ul>
+      <li>Add your new domain to Google Search Console as a <strong>Domain property</strong> (do not use URL prefix).
+        <div class="callout callout-tip">
+          <p><strong>💡 Trouble Tip:</strong> Since your domain is hosted on Cloudflare, Search Console will ask you to verify via Cloudflare. Simply authorize the popup; the verification completes automatically without needing manual copy-pasting of TXT strings.</p>
+        </div>
+      </li>
+      <li>Submit your new sitemap.
+        <div class="callout callout-tip">
+          <p><strong>💡 Trouble Tip:</strong> For Domain properties, Search Console requires you to type the <strong>complete URL</strong> (e.g. <code>https://yournewdomain.com/sitemap.xml</code>) to avoid "Invalid sitemap address" errors.</p>
+        </div>
+      </li>
+      <li>Go to your <strong>old domain's property</strong> in Search Console, go to <strong>Settings</strong> → <strong>Change of address</strong>.</li>
+      <li>Select your new domain, click <strong>Validate and Update</strong>, and ignore any warnings about sample redirects not being active yet. Click <strong>Confirm Move</strong>.
+      </li>
+    </ul>
+  </li>
+  <li><strong>Update External Profiles:</strong>
+    <ul>
+      <li>Update your website link in LinkedIn, GitHub profile, Twitter/X bio, resume PDF, and other professional pages to ensure recruiters are pointed to the new domain immediately.</li>
+    </ul>
+  </li>
 </ol>
 
 <h2 id="common-pitfalls-lessons-learned">Common Pitfalls &amp; Lessons Learned</h2>
@@ -2298,6 +2408,9 @@ if (error) {
 <li><input disabled="" type="checkbox" title="Enable TypeScript strict mode in tsconfig.json."> Enable TypeScript strict mode in tsconfig.json.</li>
 <li><input disabled="" type="checkbox" title="Implement accessibility basics."> Implement accessibility basics (ARIA, semantic HTML, keyboard nav, alt text).</li>
 <li><input disabled="" type="checkbox" title="Add Samsung Internet dark mode prevention meta tag."> Add Samsung Internet dark mode prevention meta tag.</li>
+<li><input disabled="" type="checkbox" title="Verify DNS propagation after nameserver change."> Verify DNS propagation after nameserver change.</li>
+<li><input disabled="" type="checkbox" title="Configure dynamic 301 redirects on Cloudflare."> Configure dynamic 301 redirects on Cloudflare.</li>
+<li><input disabled="" type="checkbox" title="Submit Change of Address in Google Search Console."> Submit Change of Address in Google Search Console.</li>
 </ul>
 <hr>
 <blockquote>
@@ -2305,7 +2418,7 @@ if (error) {
 <ul>
 <li><strong>Original Concept:</strong> Extracted from <a href="https://compilefuture.com/blog/how-to-earn-using-ai/">Compile Future: How to Earn Using AI</a></li>
 <li><strong>Enhanced &amp; Expanded By:</strong> <a href="https://www.linkedin.com/in/arora-sir/">Mohit Arora</a> - Added GitHub to Cloudflare Pages CI/CD automation, Spaceship domain recommendations with promo codes, Workers vs Pages architecture guide, Cloudflare +Add button navigation, interactive domain input widget, checklist persistence with localStorage, copy-to-clipboard code blocks, dark theme glassmorphism UI, SPA security headers, PWA service worker setup, multi-theme CSS architecture, error monitoring with Sentry, code-splitting performance patterns, GitHub Actions CI/CD pipeline, TypeScript strict mode setup, accessibility basics guide, Samsung Internet dark mode fix, and comprehensive step-by-step refinements throughout.</li>
-<li><strong>Portfolio:</strong> <a href="https://mohit-arora.me/">mohit-arora.me</a> - Live production site built using this guide</li>
+<li><strong>Portfolio:</strong> <a href="https://mohitarora.me/">mohitarora.me</a> - Live production site built using this guide</li>
 <li><strong>GitHub:</strong> <a href="https://github.com/Arora-Sir">github.com/Arora-Sir</a></li>
 </ul>
 </blockquote>
