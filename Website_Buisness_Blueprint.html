@@ -943,8 +943,7 @@
     <a href="https://mohitarora.me/" target="_blank" rel="noopener noreferrer" class="accent-link">mohitarora.me</a> 
     was built following this exact process: React + TypeScript, Cloudflare Pages, multi-theme design with CSS variables, 
     auto-deploy from GitHub, JSON-LD structured data for SEO, custom 404/500 error pages, Sentry error monitoring, 
-    PWA with service worker caching, and a custom SPA router with scroll restoration. 
-    Every technique in this guide is battle-tested on a live production site.
+    PWA with service worker caching, a custom SPA router with scroll restoration, and a zero-downtime domain migration from <code>mohit-arora.me</code> &rarr; <code>mohitarora.me</code> including Cloudflare redirect rule tuning, PWA Service Worker self-destruct for cached users, and the full <em>SW Cache Trap</em> debugging pattern documented in this guide.
   </p>
 </div>
 
@@ -1779,6 +1778,9 @@ https://*.pages.dev/*
   X-Robots-Tag: noindex, nofollow
 </code></pre>
 <p><strong>What these do:</strong> Built assets (JS/CSS) get long-term immutable caching for instant repeat visits. Static media (icons, OG images) use <code>stale-while-revalidate</code> — immediately serve the stale copy while refreshing in the background. The service worker (<code>sw.js</code>) is explicitly set to <code>no-store</code> so updates roll out instantly, with <code>Service-Worker-Allowed: /</code> giving it control over the entire site scope. The web app manifest gets a short TTL so icon/name changes propagate quickly without requiring a full SW update. Security headers prevent clickjacking (<code>X-Frame-Options</code>), enforce HTTPS (<code>Strict-Transport-Security</code>), and restrict browser features (<code>Permissions-Policy</code>). The <code>X-Robots-Tag</code> rule blocks the free <code>.pages.dev</code> subdomain from being indexed, preventing duplicate content SEO penalties.</p>
+<div class="callout callout-warning">
+  <p><strong>&#x26A0;&#xFE0F; Why <code>Service-Worker-Allowed: /</code> matters:</strong> Without this header, a service worker registered at <code>/sw.js</code> can only control pages under its own sub-path. Since <code>sw.js</code> lives at the root, modern browsers require this explicit header to grant it authority over the entire site. Without it, the SW registers but cannot intercept navigations on any page, silently breaking your offline mode. This is a non-obvious header that Cloudflare Pages does NOT add by default, so you must set it in your <code>_headers</code> file.</p>
+</div>
 
 <h3>Service Workers and PWA (Progressive Web App)</h3>
 <div class="callout callout-warning">
@@ -1848,6 +1850,14 @@ VitePWA({
     cleanupOutdatedCaches: true,  // Remove old cache versions
   },
 })</code></pre>
+</li>
+<li>
+<div class="callout callout-danger">
+  <p><strong>&#x1F6A8; THE SW.JS GOLDEN RULES &mdash; Read this before deploying any PWA:</strong></p>
+  <p><strong>Rule 1 - Never cache sw.js:</strong> Your <code>_headers</code> file MUST have <code>Cache-Control: no-store, no-cache, must-revalidate</code> for <code>/sw.js</code>. If the browser caches the SW file, it will never detect that a new version was deployed. Users get stuck on the old version forever with no visible error.</p>
+  <p><strong>Rule 2 - Exclude sw.js from ALL Cloudflare Redirect Rules:</strong> If you ever create a Cloudflare Redirect Rule on the same domain (e.g. for domain migration, canonical redirects, or HTTP-to-HTTPS rewrites), you MUST add filter conditions <code>URI Path does not contain sw.js</code> AND <code>URI Path does not contain workbox</code>. If the redirect rule fires on the SW URL, the browser receives a 301 HTML response instead of the JS file, and the SW update silently fails. Old cached site stays forever. This is covered in full detail in <strong>Step 18: Domain Migration</strong>.</p>
+  <p><strong>Rule 3 - Always use autoUpdate + skipWaiting + clientsClaim:</strong> Configure your PWA plugin with <code>registerType: 'autoUpdate'</code>, <code>skipWaiting: true</code>, and <code>clientsClaim: true</code>. Without <code>skipWaiting</code>, a new SW waits until ALL open tabs are closed before activating, which almost never happens naturally. Without <code>clientsClaim</code>, the new SW does not take over existing tabs immediately. Without both, updates only apply to brand-new visits.</p>
+</div>
 </li>
 <li><strong>Test offline mode:</strong> In Chrome DevTools → <strong>Application</strong> → <strong>Service Workers</strong>, check <strong>Offline</strong> and refresh. Your tool should still load core functionality. Verify the manifest loads at <code>yourdomain.com/manifest.webmanifest</code> and shows the install prompt (a + icon in the address bar).</li>
 </ol>
@@ -2305,7 +2315,42 @@ if (error) {
         </ul>
       </li>
       <li>Click <strong>Deploy</strong>. Verify the redirect works by running <code>curl -I http://<span class="dynamic-old-domain">olddomain.me</span></code> (it should return 301 with the location header pointing to the new domain).</li>
+      <li>
+        <div class="callout callout-danger">
+          <p><strong>&#x1F6A8; CRITICAL for PWA sites: Add sw.js exclusion to this redirect rule.</strong> If your site has a Service Worker (PWA), you MUST change "All incoming requests" to a <strong>Custom filter expression</strong> and add these extra conditions:</p>
+          <ul>
+            <li>Hostname <code>equals</code> <code><span class="dynamic-old-domain">olddomain.me</span></code></li>
+            <li>AND URI Path <code>does not contain</code> <code>workbox</code></li>
+            <li>AND URI Path <code>does not contain</code> <code>sw.js</code></li>
+          </ul>
+          <p>Without this, when the browser tries to update the old Service Worker, the redirect rule fires on <code>/sw.js</code> and returns a 301 HTML page instead of the JS file. The SW update silently fails, and users stay on the old cached site forever. One hour of debugging almost always traces back to a missing sw.js exclusion in the redirect rule.</p>
+        </div>
+      </li>
     </ul>
+  </li>
+  <li><strong>&#x1F6A8; CRITICAL for PWA Sites: Fix the SW Cache Trap:</strong>
+    <div class="callout callout-warning">
+      <p><strong>&#x26A0;&#xFE0F; Awareness: The PWA Cache Trap.</strong> Your 301 redirect rule alone is NOT enough for users who previously visited your old domain. Those users have a Service Worker cached in their browser that intercepts ALL network requests &mdash; including navigations. For them, the redirect never fires because the SW handles the request before it even reaches the network. You must force the SW to update itself and then redirect. The steps below handle this.</p>
+    </div>
+    <ol>
+      <li><strong>Ensure your new build uses autoUpdate + skipWaiting:</strong> In your <code>vite.config.ts</code>, make sure your PWA plugin is configured with <code>registerType: 'autoUpdate'</code>, <code>skipWaiting: true</code>, and <code>clientsClaim: true</code> so the new SW activates immediately on the next visit without waiting for all tabs to be closed.</li>
+      <li><strong>Push a new deploy to change the sw.js byte hash:</strong> The browser only downloads a new SW if the file bytes have changed. If no code changed, add a comment anywhere in <code>index.html</code> to force a byte-level change, triggering a new Cloudflare build. This forces all cached browsers to detect the update.</li>
+      <li><strong>Add a JS redirect fallback in index.html (insurance):</strong> As a safety net for users whose SW fails to update for any reason, add this script early in your <code>index.html</code> &lt;body&gt;:<pre><code class="language-html">&lt;!-- Canonical domain redirect fallback for cached PWA users --&gt;
+&lt;script&gt;
+  (function() {
+    if (typeof window !== 'undefined' &amp;&amp;
+        window.location.hostname === 'old-domain.me') {
+      window.location.replace(
+        'https://new-domain.me' +
+        window.location.pathname +
+        window.location.search
+      );
+    }
+  })();
+&lt;/script&gt;</code></pre>
+        This script runs before React/Vue mounts, so even if the SW serves the old cached page, the page immediately redirects itself. Replace <code>old-domain.me</code> and <code>new-domain.me</code> with your actual domains.</li>
+      <li><strong>Verify in Chrome DevTools:</strong> Open the old domain in Chrome. Go to DevTools &rarr; Application &rarr; Service Workers. Click <strong>Update</strong> and then refresh. You should see the new SW activating. After one refresh, all cached users will be permanently migrated to the new domain.</li>
+    </ol>
   </li>
   <li><strong>Update Codebase Metadata &amp; Cleanup:</strong>
     <ul>
@@ -2398,6 +2443,16 @@ if (error) {
 <p><strong>The Mistake:</strong> Samsung Internet has its own built-in dark mode that forcefully overrides your site's carefully designed themes. It inverts colors, breaks contrast ratios, and makes your site look terrible, and users on Samsung devices (a huge Android market share) will see a broken version of your site.</p>
 <p><strong>The Fix:</strong> Add <code>&lt;meta name=&quot;darkreader-lock&quot; /&gt;</code> to your <code>&lt;head&gt;</code> to prevent Samsung Internet's dark mode from applying. Also add <code>&lt;meta name=&quot;color-scheme&quot; content=&quot;light dark&quot; /&gt;</code> so the browser knows your site supports both. For stubborn cases, users may need to open <code>internet://flags</code> in Samsung Internet and disable "Force dark mode".</p>
 </li>
+<li>
+<h3>PWA Service Worker Blocks Domain Redirects</h3>
+<p><strong>The Mistake:</strong> Setting up a Cloudflare 301 redirect rule from your old domain to the new domain, but forgetting that users who previously visited the old domain have a Service Worker (PWA) cached in their browser. The SW intercepts ALL network requests including navigations, serving the old cached site indefinitely. The redirect rule never fires for these users because the SW handles the request before it even reaches the network.</p>
+<p><strong>The Fix:</strong> Three things must happen together: (1) Change your redirect rule from "All incoming requests" to a custom filter that adds <code>URI Path does not contain sw.js</code> AND <code>URI Path does not contain workbox</code> conditions, so the browser can still download the new service worker. (2) Ensure your new SW uses <code>skipWaiting: true</code> and <code>clientsClaim: true</code> so it activates immediately. (3) Add a JavaScript redirect fallback in <code>index.html</code> as insurance for users where the SW fails to update. See <strong>Step 18</strong> for the complete fix procedure.</p>
+</li>
+<li>
+<h3>Old Domain Still Mapped to Cloudflare Pages (Redirect Rules Silently Ignored)</h3>
+<p><strong>The Mistake:</strong> Creating a Redirect Rule in Cloudflare for the old domain, but the old domain is still listed as a Custom Domain in the Cloudflare Pages project. Cloudflare Pages hosting takes absolute priority over Redirect Rules. When the old domain is still a Pages custom domain, the website is served directly and the redirect rule is silently bypassed and never runs. This is the most common reason "my redirect doesn't work".</p>
+<p><strong>The Fix:</strong> Before creating any redirect rules for the old domain, go to <strong>Workers &amp; Pages &rarr; your project &rarr; Settings &rarr; Custom Domains</strong> and remove the old domain from the list (both the root and the <code>www.</code> version). Only after the domain is fully removed from Pages will the redirect rules actually fire.</p>
+</li>
 </ol>
 
 <h2>Checklist Summary</h2>
@@ -2422,6 +2477,7 @@ if (error) {
 <li><input disabled="" type="checkbox" title="Set up error monitoring with ErrorBoundary wrappers."> Set up error monitoring (Sentry) with ErrorBoundary wrappers (OPTIONAL - skip for first site).</li>
 <li><input disabled="" type="checkbox" title="Add _headers file with security and cache configuration."> Add _headers file with security and cache configuration.</li>
 <li><input disabled="" type="checkbox" title="Configure PWA service worker and manifest for offline support."> Configure PWA service worker and manifest for offline support (OPTIONAL - skip for first site).</li>
+<li><input disabled="" type="checkbox" title="If using PWA: configure autoUpdate + skipWaiting + clientsClaim in vite-plugin-pwa."> If using PWA: configure <code>autoUpdate</code> + <code>skipWaiting</code> + <code>clientsClaim</code> in VitePWA plugin, and add <code>sw.js</code> no-store cache headers.</li>
 <li><input disabled="" type="checkbox" title="Implement code splitting and lazy loading for performance."> Implement code splitting and lazy loading for performance (OPTIONAL - only if using React/Vue/Svelte SPA).</li>
 <li><input disabled="" type="checkbox" title="Build multi-theme system with CSS variables."> Build multi-theme system with CSS variables (OPTIONAL - basic dark/light mode is enough).</li>
 <li><input disabled="" type="checkbox" title="Verify DNS propagation after nameserver change."> Verify DNS propagation after nameserver change.</li>
@@ -2431,14 +2487,63 @@ if (error) {
 <li><input disabled="" type="checkbox" title="Add Samsung Internet dark mode prevention meta tag."> Add Samsung Internet dark mode prevention meta tag.</li>
 <li><input disabled="" type="checkbox" title="Verify DNS propagation after nameserver change."> Verify DNS propagation after nameserver change.</li>
 <li><input disabled="" type="checkbox" title="Configure dynamic 301 redirects on Cloudflare."> Configure dynamic 301 redirects on Cloudflare.</li>
+<li><input disabled="" type="checkbox" title="Remove old domain from Pages Custom Domains list BEFORE creating redirect rules."> Remove old domain from Pages <strong>Custom Domains</strong> list BEFORE creating redirect rules (Pages hosting bypasses all redirect rules).</li>
+<li><input disabled="" type="checkbox" title="If PWA + domain migration: exclude sw.js and workbox from redirect rule conditions."> If PWA + domain migration: exclude <code>sw.js</code> and <code>workbox</code> paths from Cloudflare redirect rule conditions.</li>
 <li><input disabled="" type="checkbox" title="Submit Change of Address in Google Search Console."> Submit Change of Address in Google Search Console.</li>
 </ul>
+<hr>
+<h2>Troubleshooting: Common Issues &amp; Quick Fixes</h2>
+<p>If something is not working after following this guide, use this section as a quick diagnostic checklist. Issues are grouped by symptom.</p>
+
+<h3>"My redirect from the old domain is not working"</h3>
+<ol>
+<li><strong>Check if old domain is still in Pages Custom Domains:</strong> Go to Workers &amp; Pages &rarr; your project &rarr; Settings &rarr; Custom Domains. If the old domain still appears there, Pages serves the site directly and bypasses all redirect rules. Remove it first.</li>
+<li><strong>Check if the redirect rule is deployed:</strong> Go to Rules &rarr; Redirect Rules in the old domain's Cloudflare dashboard. Confirm the rule is active (green dot). Run <code>curl -I http://old-domain.me</code> to verify it returns 301.</li>
+<li><strong>Check for browser cache:</strong> Use an Incognito window or a different browser. Old redirect responses are sometimes cached in the browser.</li>
+</ol>
+
+<h3>"Old domain still showing in browser even after redirect rule is live"</h3>
+<ol>
+<li><strong>You have a PWA Service Worker (the SW Cache Trap):</strong> Your browser has a cached SW that intercepts all requests before they reach the network. The redirect rule never fires for cached users. To fix:<ul><li>Ensure the redirect rule excludes <code>sw.js</code> and <code>workbox</code> paths (custom filter expression, not "All incoming requests").</li><li>Push a new code deploy so the sw.js file byte-hash changes.</li><li>Refresh the page once. The old SW downloads the new SW, activates, and wipes the cache on the next reload.</li></ul></li>
+<li><strong>Check sw.js response headers:</strong> Run <code>curl -sI https://old-domain.me/sw.js</code>. If it returns 301 instead of 200, your redirect rule is firing on the SW URL. Add the <code>sw.js</code> exclusion condition to the rule.</li>
+<li><strong>Check sw.js cache headers:</strong> In Chrome DevTools &rarr; Network &rarr; filter for <code>sw.js</code>. If you see <code>Cache-Control: max-age=anything</code>, your <code>_headers</code> file is missing the <code>no-store</code> directive for <code>/sw.js</code>.</li>
+</ol>
+
+<h3>"My PWA does not update after I deploy new code"</h3>
+<ol>
+<li><strong>Check registerType:</strong> Your VitePWA config must have <code>registerType: 'autoUpdate'</code>. If it says <code>'prompt'</code>, users must manually click an update button (most won't).</li>
+<li><strong>Check skipWaiting:</strong> Without <code>skipWaiting: true</code>, the new SW installs but waits for all open tabs to close before activating. Add it to your workbox config.</li>
+<li><strong>Check if sw.js is being cached:</strong> Run <code>curl -sI https://your-domain.com/sw.js</code>. The response MUST have <code>cache-control: no-store</code>. If it has <code>max-age</code> or <code>s-maxage</code>, check your <code>_headers</code> file and any Cloudflare Cache Rules that might be overriding it.</li>
+<li><strong>Check if byte-hash changed:</strong> If the build produces an identical <code>sw.js</code> file, the browser detects no change and skips the update. Add a comment or a dummy version string somewhere in your source to force a new hash.</li>
+</ol>
+
+<h3>"My site is indexed at both the .com and .pages.dev URL (duplicate content)"</h3>
+<ol>
+<li>Verify your <code>_headers</code> file has <code>X-Robots-Tag: noindex, nofollow</code> under the <code>https://*.pages.dev/*</code> rule.</li>
+<li>In Chrome DevTools, open the <code>.pages.dev</code> URL &rarr; Network tab &rarr; check the main document response headers for <code>x-robots-tag: noindex</code>.</li>
+<li>If the header is missing, ensure the <code>_headers</code> file is in your <code>/public</code> folder (not <code>/src</code>) so it gets copied to the build output.</li>
+</ol>
+
+<h3>"Google Search Console shows my sitemap as 'Couldn't fetch'"</h3>
+<ol>
+<li>Wait 30 seconds and refresh the page &mdash; this is a known GSC UI delay. The status usually updates to "Success" on the next page load.</li>
+<li>Verify the sitemap URL resolves: open <code>https://your-domain.com/sitemap.xml</code> in your browser. If it 404s, the sitemap was not generated or not included in the build output.</li>
+<li>For Domain properties in Search Console, you must submit the full URL with protocol (e.g., <code>https://your-domain.com/sitemap.xml</code>), not just the path.</li>
+</ol>
+
+<h3>"My dark theme is broken on Samsung devices"</h3>
+<ol>
+<li>Add <code>&lt;meta name="darkreader-lock" /&gt;</code> to your <code>&lt;head&gt;</code> to block Samsung Internet's force-dark override.</li>
+<li>Add <code>&lt;meta name="color-scheme" content="light dark" /&gt;</code> so the browser knows your site handles both modes natively.</li>
+<li>For Chrome's built-in Force Dark mode: add <code>&lt;script&gt;document.documentElement.style.setProperty('forced-color-adjust', 'none');&lt;/script&gt;</code> early in your <code>&lt;head&gt;</code>.</li>
+</ol>
+
 <hr>
 <blockquote>
 <p><strong>Credits:</strong></p>
 <ul>
 <li><strong>Original Concept:</strong> Extracted from <a href="https://compilefuture.com/blog/how-to-earn-using-ai/">Compile Future: How to Earn Using AI</a></li>
-<li><strong>Enhanced &amp; Expanded By:</strong> <a href="https://www.linkedin.com/in/arora-sir/">Mohit Arora</a> - Added GitHub to Cloudflare Pages CI/CD automation, Spaceship domain recommendations with promo codes, Workers vs Pages architecture guide, Cloudflare +Add button navigation, interactive domain input widget, checklist persistence with localStorage, copy-to-clipboard code blocks, dark theme glassmorphism UI, SPA security headers, PWA service worker setup, multi-theme CSS architecture, error monitoring with Sentry, code-splitting performance patterns, GitHub Actions CI/CD pipeline, TypeScript strict mode setup, accessibility basics guide, Samsung Internet dark mode fix, and comprehensive step-by-step refinements throughout.</li>
+<li><strong>Enhanced &amp; Expanded By:</strong> <a href="https://www.linkedin.com/in/arora-sir/">Mohit Arora</a> - Added GitHub to Cloudflare Pages CI/CD automation, Spaceship domain recommendations with promo codes, Workers vs Pages architecture guide, Cloudflare +Add button navigation, interactive domain input widget, checklist persistence with localStorage, copy-to-clipboard code blocks, dark theme glassmorphism UI, SPA security headers, PWA service worker setup, multi-theme CSS architecture, error monitoring with Sentry, code-splitting performance patterns, GitHub Actions CI/CD pipeline, TypeScript strict mode setup, accessibility basics guide, Samsung Internet dark mode fix, PWA service worker migration patterns for domain changes (the SW Cache Trap), Cloudflare redirect rule sw.js exclusion guide, Service-Worker-Allowed header explanation, the SW Golden Rules callout, and a comprehensive Troubleshooting section from real-world production experience.</li>
 <li><strong>Portfolio:</strong> <a href="https://mohitarora.me/">mohitarora.me</a> - Live production site built using this guide</li>
 <li><strong>GitHub:</strong> <a href="https://github.com/Arora-Sir">github.com/Arora-Sir</a></li>
 </ul>
