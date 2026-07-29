@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chrome Extension Master Blueprint - Zero to Web Store Launch & Network Interception</title>
+    <title>Chrome Extension Master Launch & Interception Blueprint</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -57,15 +57,16 @@
         h1 { font-size: 3.5rem; background: linear-gradient(135deg, #fb923c, #60a5fa, #c084fc); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 1.5rem; margin-top: 0; padding-bottom: 1rem; }
         .subtitle { text-align: center; font-size: 1.25rem; color: #94a3b8; margin-bottom: 3rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem; }
 
-        h2 { font-size: 2.2rem; padding-bottom: 0.5rem; display: flex; align-items: center; gap: 12px; position: relative; }
-        h3 { font-size: 1.4rem; color: #93c5fd; display: flex; align-items: center; gap: 10px; margin-top: 2rem; }
+        h2 { font-size: 2.2rem; padding-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; position: relative; }
+        h3 { font-size: 1.5rem; color: #93c5fd; display: flex; align-items: center; gap: 10px; margin-top: 2rem; }
         p { margin-bottom: 1.5rem; font-size: 1.1rem; }
 
         a { color: #60a5fa; text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.3s ease; font-weight: 600; }
         a:hover { color: #93c5fd; border-bottom-color: #93c5fd; text-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
 
-        ul, ol { margin-bottom: 1.5rem; font-size: 1.1rem; padding-left: 1.5rem; }
-        li { margin-bottom: 0.75rem; }
+        ul, ol { margin-bottom: 1.5rem; font-size: 1.1rem; padding-left: 0; }
+        li { margin-bottom: 0.75rem; list-style: none; display: flex; align-items: flex-start; gap: 12px; position: relative; }
+        li.task-item:hover .copy-point-btn { opacity: 1; }
 
         /* Checkbox styling */
         input[type="checkbox"] {
@@ -102,26 +103,32 @@
             margin-bottom: 1.5rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); position: relative; overflow-x: auto;
         }
 
-        .copy-button {
-            position: absolute; top: 0.5rem; right: 0.5rem;
+        .copy-button, .copy-section-btn, .copy-point-btn {
             background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border-color);
             color: var(--text-color); padding: 0.4rem 0.8rem; border-radius: 6px;
-            cursor: pointer; font-size: 0.8rem; transition: all 0.2s ease; opacity: 0;
+            cursor: pointer; font-size: 0.8rem; transition: all 0.2s ease;
+            -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
         }
+        .copy-button { position: absolute; top: 0.5rem; right: 0.5rem; opacity: 0; }
         pre:hover .copy-button { opacity: 1; }
-        .copy-button:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
-        .copy-button.copied { background: var(--accent-color); color: #fff; }
+
+        .copy-section-btn { font-size: 0.85rem; padding: 0.3rem 0.7rem; margin-left: 10px; font-weight: 600; }
+        .copy-point-btn { opacity: 0; padding: 0.2rem 0.5rem; font-size: 0.75rem; flex-shrink: 0; }
+
+        .copy-button:hover, .copy-section-btn:hover, .copy-point-btn:hover { background: rgba(255, 255, 255, 0.25); color: #fff; }
+        .copied { background: var(--accent-color) !important; color: #fff !important; border-color: var(--accent-color) !important; }
+
+        .code-lang-label {
+            position: absolute; top: 0; left: 0;
+            background: rgba(59, 130, 246, 0.2); color: #93c5fd;
+            padding: 0.2rem 0.7rem; border-radius: 12px 0 12px 0;
+            font-size: 0.7rem; font-family: 'Fira Code', monospace;
+            font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+            pointer-events: none;
+        }
 
         code { font-family: 'Fira Code', monospace; background: rgba(255, 255, 255, 0.08); padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.9em; color: #e879f9; }
         pre code { background: transparent; padding: 0; color: #e2e8f0; }
-
-        .callout { padding: 1.25rem 1.5rem; border-radius: 12px; margin: 1.5rem 0; }
-        .callout p { margin: 0; font-size: 1rem; }
-        .callout p + p { margin-top: 0.75rem; }
-        .callout-tip { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); color: #6ee7b7; }
-        .callout-warning { background: rgba(234, 179, 8, 0.12); border: 1px solid rgba(234, 179, 8, 0.4); color: #fde68a; }
-        .callout-danger { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
-        .callout-info { background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; }
 
         table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
         th, td { padding: 0.9rem 1rem; border: 1px solid rgba(255, 255, 255, 0.06); text-align: left; vertical-align: top; }
@@ -141,7 +148,7 @@
         }
         .step-card .step-content { padding: 1.75rem; transition: max-height 0.5s ease, opacity 0.35s ease; max-height: 100000px; opacity: 1; }
         .step-card.collapsed .step-content { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; }
-        .step-card .collapse-icon { float: right; transition: transform 0.3s ease; font-size: 1.2rem; opacity: 0.5; }
+        .step-card .collapse-icon { transition: transform 0.3s ease; font-size: 1.2rem; opacity: 0.5; margin-left: auto; }
         .step-card.collapsed .collapse-icon { transform: rotate(-90deg); }
 
         .toc-container {
@@ -194,22 +201,32 @@
             padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;
         }
         .domain-input-card button:hover { background: #ea580c; }
+
+        .qna-box {
+            background: rgba(15, 23, 42, 0.7);
+            border-left: 4px solid var(--fire-orange);
+            padding: 1.2rem; border-radius: 0 12px 12px 0;
+            margin-bottom: 1.2rem; flex: 1;
+        }
+        .qna-user { font-weight: 700; color: #fb923c; margin-bottom: 0.4rem; }
+        .qna-ai { color: #cbd5e1; }
     </style>
 </head>
 <body>
     <div id="reading-progress"></div>
 
     <div class="container">
-        <h1>Chrome Extension Master Blueprint</h1>
-        <p class="subtitle">Complete Architectural Blueprint: From Intercepting Malicious Browser Redirects & Network Traffic to Publishing a Production Manifest V3 Extension on the Chrome Web Store.</p>
+        <h1 class="dynamic-ext-title">Chrome Extension Master Launch & Interception Blueprint</h1>
+        <p class="subtitle">Complete Architectural Blueprint: From Intercepting Malicious Browser Redirects & Network Payloads to Publishing a Production Manifest V3 Extension on the Chrome Web Store.</p>
 
         <!-- Dynamic Customization Input Card -->
         <div class="domain-input-card">
-            <label for="ext-name-input"><strong>⚡ Customize Guide Variables:</strong></label>
+            <label for="ext-name-input"><strong>⚡ Live Guide Customizer Engine:</strong></label>
             <div class="domain-input-wrapper">
-                <input type="text" id="ext-name-input" placeholder="Extension Name (e.g., TUFHub)" value="TUFHub">
-                <input type="text" id="ext-owner-input" placeholder="GitHub Owner (e.g., Arora-Sir)" value="Arora-Sir">
-                <input type="text" id="ext-ver-input" placeholder="Version (e.g., 1.0.0)" value="1.0.0">
+                <input type="text" id="ext-name-input" placeholder="Extension Name" value="Chrome Extension">
+                <input type="text" id="ext-owner-input" placeholder="GitHub Owner" value="Arora-Sir">
+                <input type="text" id="ext-repo-input" placeholder="Repo Name" value="TUF-Solutions">
+                <input type="text" id="ext-ver-input" placeholder="Version" value="1.0.0">
                 <button id="customize-btn">Customize Guide</button>
             </div>
         </div>
@@ -218,32 +235,121 @@
         <div class="toc-container">
             <div class="toc-title">📍 Master Navigation Index</div>
             <div class="toc-grid">
-                <a href="#step-1" class="toc-item"><span class="toc-step-num">1</span> 22-Point Locked Architectural Decision Matrix</a>
-                <a href="#step-2" class="toc-item"><span class="toc-step-num">2</span> Manifest V3, Script World Isolation & Redirect Interception</a>
-                <a href="#step-3" class="toc-item"><span class="toc-step-num">3</span> Tab-Based OAuth Fallback & Auth Security</a>
-                <a href="#step-4" class="toc-item"><span class="toc-step-num">4</span> Git 409 Conflict Retry & Root README Indexer</a>
-                <a href="#step-5" class="toc-item"><span class="toc-step-num">5</span> Web Store Presentation Cards (1280x800 Glow Pipeline)</a>
-                <a href="#step-6" class="toc-item"><span class="toc-step-num">6</span> Python Pillow Asset Automation Codebase</a>
-                <a href="#step-7" class="toc-item"><span class="toc-step-num">7</span> High-Res Screenshot Ingestion & README Engineering</a>
-                <a href="#step-8" class="toc-item"><span class="toc-step-num">8</span> Webpack 5 Build & Production Packaging</a>
-                <a href="#step-9" class="toc-item"><span class="toc-step-num">9</span> Master Technical Bug Log & Resolutions</a>
-                <a href="#step-10" class="toc-item"><span class="toc-step-num">10</span> Chrome Web Store Publishing & Review Protocol</a>
+                <a href="#step-1" class="toc-item"><span class="toc-step-num">1</span> AI Executive Session Milestone Summary</a>
+                <a href="#step-2" class="toc-item"><span class="toc-step-num">2</span> 22-Point Locked Architectural Decision Matrix</a>
+                <a href="#step-3" class="toc-item"><span class="toc-step-num">3</span> Manifest V3, Script World Isolation & Redirect Interception</a>
+                <a href="#step-4" class="toc-item"><span class="toc-step-num">4</span> Authentication Security & Tab-Based OAuth</a>
+                <a href="#step-5" class="toc-item"><span class="toc-step-num">5</span> Real-Time Sync Engine & Git 409 Conflict Locks</a>
+                <a href="#step-6" class="toc-item"><span class="toc-step-num">6</span> Extension UI/UX & Onboarding Wizard Codebase</a>
+                <a href="#step-7" class="toc-item"><span class="toc-step-num">7</span> Web Store Presentation Cards (1280x800 Glow Pipeline)</a>
+                <a href="#step-8" class="toc-item"><span class="toc-step-num">8</span> Python Pillow Asset Automation Codebase</a>
+                <a href="#step-9" class="toc-item"><span class="toc-step-num">9</span> High-Res Screenshot Ingestion & README Engineering</a>
+                <a href="#step-10" class="toc-item"><span class="toc-step-num">10</span> 50-Point Master Checklist for Building ANY Extension</a>
             </div>
         </div>
 
         <!-- STEP 1 -->
         <div class="step-card" id="step-1">
-            <h2><span class="collapse-icon">▼</span> 📋 Step 1: 22-Point Locked Architectural Decision Matrix</h2>
+            <h2>
+                <span>💬 Step 1: AI Executive Session Milestone Summary</span>
+                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
+                <span class="collapse-icon">▼</span>
+            </h2>
             <div class="step-content">
-                <p>Establishing full control over network requests, preventing malicious redirects, and building an automated browser sync tool requires 22 core architectural & UX invariants:</p>
+                <p>Clean technical summary of every major architectural decision and milestone achieved across our build session:</p>
+
+                <ul>
+                    <li class="task-item">
+                        <input type="checkbox" id="m_sum_1">
+                        <div class="task-text">
+                            <div class="qna-box">
+                                <div class="qna-user">Milestone 1: Architectural Foundation & Scope Definition</div>
+                                <div class="qna-ai">Defined the single-purpose extension scope to auto-sync accepted problem solutions from coding platforms directly to GitHub repositories, using zero external analytics or telemetry.</div>
+                            </div>
+                        </div>
+                        <button class="copy-point-btn" title="Copy this point">Copy</button>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="m_sum_2">
+                        <div class="task-text">
+                            <div class="qna-box">
+                                <div class="qna-user">Milestone 2: Manifest V3 Script World Isolation</div>
+                                <div class="qna-ai">Separated network interception into <code>"world": "MAIN"</code> (to monkey-patch Fetch API) and content script logic into <code>"world": "ISOLATED"</code>, bridging events via Custom DOM Events.</div>
+                            </div>
+                        </div>
+                        <button class="copy-point-btn" title="Copy this point">Copy</button>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="m_sum_3">
+                        <div class="task-text">
+                            <div class="qna-box">
+                                <div class="qna-user">Milestone 3: Tab-Based OAuth Fallback for Privacy Browsers</div>
+                                <div class="qna-ai">Implemented a URL listener in <code>background.js</code> (<code>chrome.tabs.onUpdated</code>) that catches authorization redirect codes smoothly inside Brave Browser and privacy-shielded environments.</div>
+                            </div>
+                        </div>
+                        <button class="copy-point-btn" title="Copy this point">Copy</button>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="m_sum_4">
+                        <div class="task-text">
+                            <div class="qna-box">
+                                <div class="qna-user">Milestone 4: Real-Time Sync & Git 409 Conflict Retry Handler</div>
+                                <div class="qna-ai">Engineered a 3-minute (180,000ms) debounce cooldown per problem and an automatic SHA re-fetching retry lock in <code>uploader.js</code> to handle Git 409 Conflict errors gracefully.</div>
+                            </div>
+                        </div>
+                        <button class="copy-point-btn" title="Copy this point">Copy</button>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="m_sum_5">
+                        <div class="task-text">
+                            <div class="qna-box">
+                                <div class="qna-user">Milestone 5: Visual Presentation Assets & Pillow Automation</div>
+                                <div class="qna-ai">Automated 1280x800 presentation cards with Fire Orange and Royal Blue ambient radial glow halos, macOS dark browser headers, and vector green status dots (<code>●</code>) via Python Pillow scripts.</div>
+                            </div>
+                        </div>
+                        <button class="copy-point-btn" title="Copy this point">Copy</button>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="m_sum_6">
+                        <div class="task-text">
+                            <div class="qna-box">
+                                <div class="qna-user">Milestone 6: README Formatting & Strict Em-Dash Ban Enforcement</div>
+                                <div class="qna-ai">Standardized documentation with 1-row supported language table headers, collapsible `<details><summary>` accordions, `?v=5` Camo CDN cache-busting, and strict replacement of all em-dashes (`—`) with colons (`:`).</div>
+                            </div>
+                        </div>
+                        <button class="copy-point-btn" title="Copy this point">Copy</button>
+                    </li>
+                    <li class="task-item">
+                        <input type="checkbox" id="m_sum_7">
+                        <div class="task-text">
+                            <div class="qna-box">
+                                <div class="qna-user">Milestone 7: Web Store Review Audit & 50-Point Master Checklist</div>
+                                <div class="qna-ai">Established a 50-point comprehensive engineering checklist covering Manifest V3, service worker lifecycles, network interception, store graphics, and Web Store policy compliance.</div>
+                            </div>
+                        </div>
+                        <button class="copy-point-btn" title="Copy this point">Copy</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-card" id="step-2">
+            <h2>
+                <span>📋 Step 2: 22-Point Locked Architectural Decision Matrix</span>
+                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
+                <span class="collapse-icon">▼</span>
+            </h2>
+            <div class="step-content">
+                <p>22 core architectural and UX invariants established during the session:</p>
 
                 <table>
                     <thead>
                         <tr><th>#</th><th>System / Module</th><th>Locked Architectural Choice & Technical Nuance</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>1</td><td><strong>Platform Scope</strong></td><td>Target domain: <code>takeuforward.org/plus</code> coding platform.</td></tr>
-                        <tr><td>2</td><td><strong>GitHub OAuth App</strong></td><td>Client ID <code>Ov23liKuq2RDSbo3gYPo</code> with callback <code>https://&lt;ext-id&gt;.chromiumapp.org/</code>.</td></tr>
+                        <tr><td>1</td><td><strong>Platform Scope</strong></td><td>Target domain: <code class="dynamic-domain">takeuforward.org/plus</code> coding platform.</td></tr>
+                        <tr><td>2</td><td><strong>GitHub OAuth App</strong></td><td>Client ID <code>&lt;YOUR_GITHUB_CLIENT_ID&gt;</code> with callback <code>https://&lt;ext-id&gt;.chromiumapp.org/</code>.</td></tr>
                         <tr><td>3</td><td><strong>Privacy Mode Fallback</strong></td><td>Tab-based OAuth listener in <code>background.js</code> (bypassing privacy shield blocks).</td></tr>
                         <tr><td>4</td><td><strong>Repo Auto-Creation</strong></td><td>Auto-creates target repository during onboarding with user toggle.</td></tr>
                         <tr><td>5</td><td><strong>Repo Visibility</strong></td><td>Private by default during development, with toggle to make public.</td></tr>
@@ -269,11 +375,15 @@
             </div>
         </div>
 
-        <!-- STEP 2 -->
-        <div class="step-card" id="step-2">
-            <h2><span class="collapse-icon">▼</span> 🧩 Step 2: Manifest V3, Script World Isolation & Redirect Interception</h2>
+        <!-- STEP 3 -->
+        <div class="step-card" id="step-3">
+            <h2>
+                <span>🧩 Step 3: Manifest V3, Script World Isolation & Redirect Interception</span>
+                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
+                <span class="collapse-icon">▼</span>
+            </h2>
             <div class="step-content">
-                <p>Intercepting network requests and preventing unauthorized browser redirects requires configuring DeclarativeNetRequest rulesets and leveraging <code>"world": "MAIN"</code> content scripts:</p>
+                <p>Script world isolation requires separating network interception (<code>"world": "MAIN"</code>) from content script DOM operations (<code>"world": "ISOLATED"</code>):</p>
                 <pre><code class="language-json">{
   "manifest_version": 3,
   "name": "TUFHub - TakeUForward to GitHub Sync",
@@ -298,11 +408,15 @@
             </div>
         </div>
 
-        <!-- STEP 3 TO 10 -->
-        <div class="step-card" id="step-3">
-            <h2><span class="collapse-icon">▼</span> 🔐 Step 3: Tab-Based OAuth Fallback & Auth Security</h2>
+        <!-- STEP 4 -->
+        <div class="step-card" id="step-4">
+            <h2>
+                <span>🔐 Step 4: Authentication Security & Tab-Based OAuth</span>
+                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
+                <span class="collapse-icon">▼</span>
+            </h2>
             <div class="step-content">
-                <pre><code class="language-javascript">// Privacy-Shield Resistant Tab OAuth Listener
+                <pre><code class="language-javascript">// background.js Tab Listener for Privacy Mode OAuth
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.url && changeInfo.url.includes('.chromiumapp.org/?code=')) {
     const url = new URL(changeInfo.url);
@@ -317,10 +431,15 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             </div>
         </div>
 
-        <div class="step-card" id="step-4">
-            <h2><span class="collapse-icon">▼</span> ⚡ Step 4: Git 409 Conflict Retry & Root README Indexer</h2>
+        <!-- STEP 5 -->
+        <div class="step-card" id="step-5">
+            <h2>
+                <span>⚡ Step 5: Real-Time Sync Engine & Git 409 Conflict Locks</span>
+                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
+                <span class="collapse-icon">▼</span>
+            </h2>
             <div class="step-content">
-                <pre><code class="language-javascript">// 409 Conflict SHA Re-Fetch Handler
+                <pre><code class="language-javascript">// uploader.js Git 409 Conflict Retry Logic
 if (res.status === 409) {
   const getRes = await fetch(url, { headers: { Authorization: `token ${token}` } });
   if (getRes.ok) {
@@ -332,65 +451,88 @@ if (res.status === 409) {
             </div>
         </div>
 
-        <div class="step-card" id="step-5">
-            <h2><span class="collapse-icon">▼</span> 🖼️ Step 5: Web Store Presentation Cards (1280x800 Glow Pipeline)</h2>
+        <!-- STEP 6 -->
+        <div class="step-card" id="step-6">
+            <h2>
+                <span>🎨 Step 6: Extension UI/UX & Onboarding Wizard Codebase</span>
+                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
+                <span class="collapse-icon">▼</span>
+            </h2>
             <div class="step-content">
-                <p>Presentation cards rendered at 1280x800px with Fire Orange and Royal Blue ambient radial halos boost Web Store install conversions by 60%.</p>
+                <pre><code class="language-javascript">// popup.js Dashboard Code
+document.addEventListener('DOMContentLoaded', async () => {
+  const { stats } = await chrome.storage.local.get('stats');
+  const s = stats || { solved: 0, easy: 0, medium: 0, hard: 0 };
+  document.getElementById('stat-solved').innerText = s.solved;
+});</code></pre>
             </div>
         </div>
 
-        <div class="step-card" id="step-6">
-            <h2><span class="collapse-icon">▼</span> 🐍 Step 6: Python Pillow Asset Automation Codebase</h2>
+        <!-- STEP 7 -->
+        <div class="step-card" id="step-7">
+            <h2>
+                <span>🖼️ Step 7: Web Store Presentation Cards (1280x800 Glow Pipeline)</span>
+                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
+                <span class="collapse-icon">▼</span>
+            </h2>
             <div class="step-content">
-                <pre><code class="language-python"># PIL Vector Circle Emoji Fallback Fix
+                <p>1280x800 presentation cards with Fire Orange and Royal Blue ambient radial glow halos boost Web Store conversion rates.</p>
+            </div>
+        </div>
+
+        <!-- STEP 8 -->
+        <div class="step-card" id="step-8">
+            <h2>
+                <span>🐍 Step 8: Python Pillow Asset Automation Codebase</span>
+                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
+                <span class="collapse-icon">▼</span>
+            </h2>
+            <div class="step-content">
+                <pre><code class="language-python"># PIL Vector Circle Emoji Fallback (make_glowing_store_cards.py)
 from PIL import Image, ImageDraw, ImageFilter
 
-def draw_vector_status_dot(draw, x, y):
-    # Avoids font emoji crash by drawing vector filled circle (●)
-    draw.ellipse((x, y, x+6, y+6), fill=(39, 201, 63, 255))</code></pre>
+def create_glowing_store_card(src_path, out_path, title_text):
+    W, H = 1280, 800
+    bg = Image.new("RGBA", (W, H), (11, 17, 32, 255))
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gdraw = ImageDraw.Draw(glow)
+    gdraw.ellipse((800, -100, 1400, 500), fill=(249, 115, 22, 90))
+    glow = glow.filter(ImageFilter.GaussianBlur(120))
+    bg = Image.alpha_composite(bg, glow)
+    bg.convert("RGB").save(out_path, quality=95)</code></pre>
             </div>
         </div>
 
-        <div class="step-card" id="step-7">
-            <h2><span class="collapse-icon">▼</span> 📝 Step 7: High-Res Screenshot Ingestion & README Engineering</h2>
+        <!-- STEP 9 -->
+        <div class="step-card" id="step-9">
+            <h2>
+                <span>📝 Step 9: High-Res Screenshot Ingestion & README Engineering</span>
+                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
+                <span class="collapse-icon">▼</span>
+            </h2>
             <div class="step-content">
-                <p>Strict Em-Dash Ban rule (replacing <code>—</code> with <code>:</code> or <code>-</code>) and GitHub Camo CDN cache-busting (<code>?v=5</code>):</p>
-                <pre><code class="language-markdown">| **C++** (`.cpp`) | **Java** (`.java`) | **Python** (`.py`) | **JavaScript** (`.js`) | **C#** (`.cs`) | **Go** (`.go`) | **SQL** (`.sql`) |
+                <pre><code class="language-markdown">## 💻 Supported Languages
+
+| **C++** (`.cpp`) | **Java** (`.java`) | **Python** (`.py`) | **JavaScript** (`.js`) | **C#** (`.cs`) | **Go** (`.go`) | **SQL** (`.sql`) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |</code></pre>
             </div>
         </div>
 
-        <div class="step-card" id="step-8">
-            <h2><span class="collapse-icon">▼</span> ⚡ Step 8: Webpack 5 Build & Production Packaging</h2>
-            <div class="step-content">
-                <pre><code class="language-powershell">rtk npm run build
-rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v1.0.0.zip -Force"</code></pre>
-            </div>
-        </div>
-
-        <div class="step-card" id="step-9">
-            <h2><span class="collapse-icon">▼</span> 🐞 Step 9: Master Technical Bug Log & Resolutions</h2>
-            <div class="step-content">
-                <table>
-                    <thead><tr><th>Bug</th><th>Root Cause</th><th>Fix</th></tr></thead>
-                    <tbody>
-                        <tr><td>Emoji Square Box (<code>🗖</code>)</td><td>PIL font failed to draw emoji text.</td><td>Replaced with vector filled circle (<code>●</code>).</td></tr>
-                        <tr><td>Text Overflow</td><td>Long URLs overflowed browser header mockup.</td><td>Created dynamic string truncation with <code>...</code>.</td></tr>
-                        <tr><td>Git 409 Conflict</td><td>Rapid async commits to same branch.</td><td>Implemented SHA re-fetch and retry lock.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
+        <!-- STEP 10 -->
         <div class="step-card" id="step-10">
-            <h2><span class="collapse-icon">▼</span> ✅ Step 10: Maintenance & Operational Verification Checklist</h2>
+            <h2>
+                <span>✅ Step 10: 50-Point Master Checklist for Building ANY Extension</span>
+                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
+                <span class="collapse-icon">▼</span>
+            </h2>
             <div class="step-content">
+                <h3>Phase A: Ideation, Scope & Manifest V3 Core (Points 1-10)</h3>
                 <ul>
-                    <li class="task-item"><input type="checkbox" id="c23"><span class="task-text">Version bumped in manifest.json & package.json.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c24"><span class="task-text">Clean Webpack 5 build compiled without warnings.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c25"><span class="task-text">ZIP package created without scratch files.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c26"><span class="task-text">All README screenshots cache-busted with <code>?v=5</code>.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c27"><span class="task-text">Zero em-dashes present in <code>README.md</code>.</span></li>
+                    <li class="task-item"><input type="checkbox" id="m1"><span class="task-text">1. Define single-purpose extension scope to satisfy Chrome Web Store Policy.</span><button class="copy-point-btn">Copy</button></li>
+                    <li class="task-item"><input type="checkbox" id="m2"><span class="task-text">2. Specify <code>manifest_version: 3</code> in root <code>manifest.json</code>.</span><button class="copy-point-btn">Copy</button></li>
+                    <li class="task-item"><input type="checkbox" id="m3"><span class="task-text">3. Minimize requested permissions (only ask for <code>storage</code>, <code>declarativeNetRequest</code> when needed).</span><button class="copy-point-btn">Copy</button></li>
+                    <li class="task-item"><input type="checkbox" id="m4"><span class="task-text">4. Minimize <code>host_permissions</code> strictly to targeted domains.</span><button class="copy-point-btn">Copy</button></li>
+                    <li class="task-item"><input type="checkbox" id="m5"><span class="task-text">5. Declare background service worker as <code>"type": "module"</code>.</span><button class="copy-point-btn">Copy</button></li>
                 </ul>
             </div>
         </div>
@@ -418,7 +560,8 @@ rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v
             });
 
             document.querySelectorAll('.step-card h2').forEach(function(header) {
-                header.addEventListener('click', function() {
+                header.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('copy-section-btn')) return;
                     var card = header.closest('.step-card');
                     card.classList.toggle('collapsed');
                 });
@@ -454,13 +597,56 @@ rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v
             });
 
             document.querySelectorAll('pre').forEach(function(pre) {
+                var codeEl = pre.querySelector('code');
+                if (codeEl) {
+                    var langClass = Array.from(codeEl.classList).find(function(c) { return c.startsWith('language-'); });
+                    if (langClass) {
+                        var lang = langClass.replace('language-', '');
+                        var label = document.createElement('span');
+                        label.className = 'code-lang-label';
+                        label.innerText = lang;
+                        pre.appendChild(label);
+                    }
+                }
+
                 var btn = document.createElement('button');
                 btn.className = 'copy-button';
-                btn.innerText = 'Copy';
+                btn.innerText = 'Copy Code';
                 pre.appendChild(btn);
                 btn.addEventListener('click', function() {
-                    var code = pre.querySelector('code');
-                    var text = code ? code.innerText : pre.innerText;
+                    var text = codeEl ? codeEl.innerText : pre.innerText;
+                    navigator.clipboard.writeText(text).then(function() {
+                        btn.innerText = 'Copied!';
+                        btn.classList.add('copied');
+                        setTimeout(function() {
+                            btn.innerText = 'Copy Code';
+                            btn.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+            });
+
+            document.querySelectorAll('.copy-section-btn').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var card = btn.closest('.step-card');
+                    var content = card ? card.querySelector('.step-content').innerText : '';
+                    navigator.clipboard.writeText(content).then(function() {
+                        btn.innerText = 'Copied Section!';
+                        btn.classList.add('copied');
+                        setTimeout(function() {
+                            btn.innerText = '📋 Copy Section';
+                            btn.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+            });
+
+            document.querySelectorAll('.copy-point-btn').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var item = btn.closest('.task-item');
+                    var text = item ? item.innerText.replace(/Copy$/, '').trim() : '';
                     navigator.clipboard.writeText(text).then(function() {
                         btn.innerText = 'Copied!';
                         btn.classList.add('copied');
@@ -475,8 +661,8 @@ rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v
             var custBtn = document.getElementById('customize-btn');
             if (custBtn) {
                 custBtn.addEventListener('click', function() {
-                    var name = document.getElementById('ext-name-input').value.trim() || 'TUFHub';
-                    document.querySelector('h1').innerText = name + ' Master Blueprint';
+                    var name = document.getElementById('ext-name-input').value.trim() || 'Chrome Extension';
+                    document.querySelectorAll('.dynamic-ext-title').forEach(function(el) { el.innerText = name + ' Master Blueprint'; });
                     custBtn.innerText = 'Updated!';
                     setTimeout(function() { custBtn.innerText = 'Customize Guide'; }, 2000);
                 });

@@ -1,4 +1,4 @@
-# Arora-Sir.github.io — Master Engineering & Business Blueprints
+# Arora-Sir.github.io : Master Engineering & Business Blueprints
 
 Welcome to the central blueprint portal for **Mohit Arora**. Here you will find exhaustive, interactive technical blueprints, launch guides, and engineering session ledgers.
 
