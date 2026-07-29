@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chrome Extension Master Blueprint - Full 12-Hour Development & Launch Manual</title>
+    <title>Chrome Extension Launch & Development Master Blueprint</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -201,7 +201,7 @@
 
     <div class="container">
         <h1>Chrome Extension Master Blueprint</h1>
-        <p class="subtitle">Exhaustive 12-Hour Architectural Ledger, Pillow Visual Asset Automation Codebase, GitHub README Optimizations, and Web Store Compliance Blueprint.</p>
+        <p class="subtitle">Exhaustive 12-Hour Architectural Ledger, Script World Isolation, 22-Point Decision Matrix, Pillow Asset Automation Pipeline, and Web Store Compliance Manual.</p>
 
         <!-- Dynamic Customization Input Card -->
         <div class="domain-input-card">
@@ -218,484 +218,304 @@
         <div class="toc-container">
             <div class="toc-title">📍 Master Navigation Index</div>
             <div class="toc-grid">
-                <a href="#step-1" class="toc-item"><span class="toc-step-num">1</span> Manifest V3 & Core Extension Architecture</a>
-                <a href="#step-2" class="toc-item"><span class="toc-step-num">2</span> Authentication Security (PAT vs OAuth 2.0 PKCE)</a>
-                <a href="#step-3" class="toc-item"><span class="toc-step-num">3</span> Onboarding Wizard & Popup UI/UX Design</a>
-                <a href="#step-4" class="toc-item"><span class="toc-step-num">4</span> Web Store Presentation Cards (1280x800 Glow Pipeline)</a>
-                <a href="#step-5" class="toc-item"><span class="toc-step-num">5</span> Python Pillow Asset Automation Codebase</a>
-                <a href="#step-6" class="toc-item"><span class="toc-step-num">6</span> High-Res Screenshot Ingestion & README Engineering</a>
-                <a href="#step-7" class="toc-item"><span class="toc-step-num">7</span> Webpack 5 Build & Production Packaging</a>
-                <a href="#step-8" class="toc-item"><span class="toc-step-num">8</span> Master Technical Bug Log & Resolutions</a>
-                <a href="#step-9" class="toc-item"><span class="toc-step-num">9</span> Chrome Web Store Publishing & Review Protocol</a>
-                <a href="#step-10" class="toc-item"><span class="toc-step-num">10</span> Maintenance & Operational Verification Checklist</a>
+                <a href="#step-1" class="toc-item"><span class="toc-step-num">1</span> 22-Point Locked Architectural Decision Matrix</a>
+                <a href="#step-2" class="toc-item"><span class="toc-step-num">2</span> Manifest V3 & World Isolation (MAIN vs ISOLATED)</a>
+                <a href="#step-3" class="toc-item"><span class="toc-step-num">3</span> Tab-Based OAuth Fallback & Auth Security</a>
+                <a href="#step-4" class="toc-item"><span class="toc-step-num">4</span> Git 409 Conflict Retry & Root README Indexer</a>
+                <a href="#step-5" class="toc-item"><span class="toc-step-num">5</span> Web Store Presentation Cards (1280x800 Glow Pipeline)</a>
+                <a href="#step-6" class="toc-item"><span class="toc-step-num">6</span> Python Pillow Asset Automation Codebase</a>
+                <a href="#step-7" class="toc-item"><span class="toc-step-num">7</span> High-Res Screenshot Ingestion & README Engineering</a>
+                <a href="#step-8" class="toc-item"><span class="toc-step-num">8</span> Webpack 5 Build & Production Packaging</a>
+                <a href="#step-9" class="toc-item"><span class="toc-step-num">9</span> Master Technical Bug Log & Resolutions</a>
+                <a href="#step-10" class="toc-item"><span class="toc-step-num">10</span> Chrome Web Store Publishing & Review Protocol</a>
             </div>
         </div>
 
         <!-- STEP 1 -->
         <div class="step-card" id="step-1">
-            <h2><span class="collapse-icon">▼</span> 🧩 Step 1: Manifest V3 & Core Extension Architecture</h2>
+            <h2><span class="collapse-icon">▼</span> 📋 Step 1: 22-Point Locked Architectural Decision Matrix</h2>
             <div class="step-content">
-                <p>Building modern Chrome Extensions requires strict compliance with Google's Manifest V3 specifications. Below are the foundational architectural decisions established during our build:</p>
-                
-                <div class="callout callout-info">
-                    <p><strong>Key Insight:</strong> Manifest V3 completely removes persistent background pages in favor of event-driven, ephemeral Service Workers that automatically shut down after inactivity to preserve system RAM.</p>
-                </div>
+                <p>During our 12-hour session, 22 core architectural and UX invariants were formally established for production-ready extensions:</p>
 
-                <h3>1.1 Core Manifest V3 Architectural Pillars</h3>
-                <ul>
-                    <li class="task-item"><input type="checkbox" id="c1"><span class="task-text"><strong>Service Worker Lifecycle:</strong> Background logic runs in <code>background.js</code>. Never rely on global window/DOM variables inside service workers. Store persistent state in <code>chrome.storage.local</code>.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c2"><span class="task-text"><strong>Content Scripts vs Network Interceptors:</strong> Use content scripts for DOM inspection and floating overlays. Use webRequest/declarativeNetRequest interceptors to catch API payloads clean without DOM parsing latency.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c3"><span class="task-text"><strong>100% Test Case Enforcement:</strong> Only sync code when the target submission passes 100% test cases. Ignore partial or failing attempts to avoid polluting user repositories.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c4"><span class="task-text"><strong>Conflict-Safe Commit Queue:</strong> Execute GitHub API commits sequentially with a lock queue. Parallel async pushes to the same branch cause Git 409 conflict errors.</span></li>
-                </ul>
-
-                <h3>1.2 Production Manifest V3 Configuration (manifest.json)</h3>
-                <pre><code class="language-json">{
-  "manifest_version": 3,
-  "name": "TUFHub - TakeUForward to GitHub Sync",
-  "version": "1.0.0",
-  "description": "Automatically sync your accepted TakeUForward (TUF+) code solutions directly to your GitHub repository.",
-  "icons": {
-    "16": "assets/icons/icon16.png",
-    "48": "assets/icons/icon48.png",
-    "128": "assets/icons/icon128.png"
-  },
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "assets/icons/icon16.png",
-      "48": "assets/icons/icon48.png",
-      "128": "assets/icons/icon128.png"
-    }
-  },
-  "background": {
-    "service_worker": "scripts/background.js",
-    "type": "module"
-  },
-  "permissions": [
-    "storage",
-    "declarativeNetRequest"
-  ],
-  "host_permissions": [
-    "*://takeuforward.org/*",
-    "*://api.github.com/*"
-  ],
-  "content_scripts": [
-    {
-      "matches": ["*://takeuforward.org/*"],
-      "js": ["scripts/tuf/content.js"],
-      "run_at": "document_idle"
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["scripts/tuf/interceptor.js"],
-      "matches": ["*://takeuforward.org/*"]
-    }
-  ]
-}</code></pre>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Feature / System</th>
+                            <th>Locked Architectural Choice & Technical Nuance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td><strong>Platform Scope</strong></td><td>Locked strictly to <code>takeuforward.org/plus</code> dedicated coding environment.</td></tr>
+                        <tr><td>2</td><td><strong>GitHub OAuth App</strong></td><td>Client ID <code>Ov23liKuq2RDSbo3gYPo</code> with callback <code>https://&lt;ext-id&gt;.chromiumapp.org/</code>.</td></tr>
+                        <tr><td>3</td><td><strong>Privacy Mode Fallback</strong></td><td>Tab-based OAuth listener in <code>background.js</code> because Brave & privacy shields block popup windows without errors.</td></tr>
+                        <tr><td>4</td><td><strong>Repo Auto-Creation</strong></td><td>Auto-creates target <code>TUF-Solutions</code> repo during onboarding with a user visibility toggle.</td></tr>
+                        <tr><td>5</td><td><strong>Repo Visibility</strong></td><td>Private by default during dev/testing, with toggle in <code>welcome.html</code> to allow public.</td></tr>
+                        <tr><td>6</td><td><strong>Directory Hierarchy</strong></td><td><code>{Category}/{Topic}/{problem-slug}/solution.{ext}</code> + per-problem <code>README.md</code>.</td></tr>
+                        <tr><td>7</td><td><strong>Root README Indexer</strong></td><td>Auto-maintains master <code>README.md</code> with a category index table tracking solved problem counts.</td></tr>
+                        <tr><td>8</td><td><strong>Submission Overwrite</strong></td><td>Latest accepted submission overwrites previous code file to keep repo clean.</td></tr>
+                        <tr><td>9</td><td><strong>Debounce Cooldown</strong></td><td><strong>3-minute (180,000ms)</strong> cooldown per problem slug to prevent commit spam when optimizing.</td></tr>
+                        <tr><td>10</td><td><strong>Sync Feedback UX</strong></td><td>In-page floating toast (Green checkmark success / Red X error with clickable <strong>[Fix it]</strong> button).</td></tr>
+                        <tr><td>11</td><td><strong>Toolbar Badge</strong></td><td>Animated green badge dot via <code>chrome.action.setBadgeText</code> on sync success, auto-clears after 5s.</td></tr>
+                        <tr><td>12</td><td><strong>Visual Palette</strong></td><td>Dark glassmorphism UI matching TUF+ palette (TUF Orange <code>#f97316</code>, slate dark cards <code>#1e293b</code>).</td></tr>
+                        <tr><td>13</td><td><strong>Real Donation Creds</strong></td><td>Extracted from IconForge project: PayPal (<code>paypal.me/arorasir</code>) and UPI (<code>mohit1998arora@yescred</code>).</td></tr>
+                        <tr><td>14</td><td><strong>Desktop UPI UX</strong></td><td>Embedded UPI QR code modal (<code>upi_qr.png</code>) in popup for mobile scanning.</td></tr>
+                        <tr><td>15</td><td><strong>Donation Cadence</strong></td><td>Toast nudge ("<em>Enjoying TUFHub? Support the project ☕</em>") triggers <strong>every 15th accepted sync</strong>.</td></tr>
+                        <tr><td>16</td><td><strong>Onboarding Wizard</strong></td><td>3-Step <code>welcome.html</code> workflow (Step 1: Connect → Step 2: Select/Create Repo → Step 3: Done).</td></tr>
+                        <tr><td>17</td><td><strong>Remote Config System</strong></td><td>Hosted GitHub Gist (<code>tufhub-config.json</code>) fetched on session load for dynamic DOM selector updates.</td></tr>
+                        <tr><td>18</td><td><strong>AdBlock / Brave Safety</strong></td><td>Ban on generic <code>.social-</code> CSS classes. Must use <code>.network-btn</code> so privacy shields don't hide UI.</td></tr>
+                        <tr><td>19</td><td><strong>Micro-Interactions</strong></td><td>Hover <code>transform: scale(1.05)</code> with cubic-bezier easing; active press <code>scale(0.97)</code>; touch guards.</td></tr>
+                        <tr><td>20</td><td><strong>Privacy Policy URL</strong></td><td>Hosted at <code>https://Arora-Sir.github.io/tufhub-privacy</code> on GitHub Pages.</td></tr>
+                        <tr><td>21</td><td><strong>Disconnect Flow</strong></td><td>Manual "Disconnect GitHub" button in popup clearing all <code>chrome.storage.local</code> keys.</td></tr>
+                        <tr><td>22</td><td><strong>Build Packaging</strong></td><td>Manifest V3 + Webpack 5 production bundle minified to <code>dist/</code> and zipped.</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
         <!-- STEP 2 -->
         <div class="step-card" id="step-2">
-            <h2><span class="collapse-icon">▼</span> 🔐 Step 2: Authentication Security (PAT vs OAuth 2.0 PKCE)</h2>
+            <h2><span class="collapse-icon">▼</span> 🧩 Step 2: Manifest V3 & World Isolation (MAIN vs ISOLATED)</h2>
             <div class="step-content">
-                <p>Establishing secure, user-friendly authentication between a browser extension and GitHub's API requires balancing convenience with security.</p>
+                <p>Manifest V3 enforces script world isolation: <code>interceptor.js</code> (which monkey-patches <code>window.fetch</code> to catch network API payloads) MUST run in <code>"world": "MAIN"</code>, but MAIN world scripts cannot access <code>chrome.runtime</code> or <code>chrome.storage</code> APIs. Communication must bridge via Custom DOM Events.</p>
 
-                <h3>2.1 Personal Access Tokens (PAT) - Recommended</h3>
-                <p>PAT is the simplest, most resilient setup method for technical users. Pre-fill the token generation link with exact required scopes:</p>
-
-                <pre><code class="language-javascript">// Pre-filled GitHub PAT Generation Link
-const GITHUB_PAT_URL = 'https://github.com/settings/tokens/new?description=TUFHub%20Extension&scopes=repo';
-
-// Token Verification via GitHub API
-async function verifyGithubToken(token) {
-  const res = await fetch('https://api.github.com/user', {
-    headers: {
-      'Authorization': `token ${token}`,
-      'Accept': 'application/vnd.github.v3+json'
+                <h3>2.1 Manifest World Isolation Configuration</h3>
+                <pre><code class="language-json">{
+  "manifest_version": 3,
+  "name": "TUFHub - TakeUForward to GitHub Sync",
+  "version": "1.0.0",
+  "permissions": ["storage", "declarativeNetRequest"],
+  "host_permissions": ["*://takeuforward.org/*", "*://api.github.com/*"],
+  "background": {
+    "service_worker": "scripts/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://takeuforward.org/plus/*"],
+      "js": ["scripts/tuf/interceptor.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://takeuforward.org/plus/*"],
+      "js": ["scripts/tuf/content.js"],
+      "run_at": "document_idle"
     }
-  });
-  if (!res.ok) throw new Error('Invalid GitHub Personal Access Token.');
-  const user = await res.json();
-  return user.login;
+  ]
 }</code></pre>
 
-                <h3>2.2 OAuth 2.0 PKCE Authorization Flow (Advanced)</h3>
-                <p>For a seamless 1-click login without manual token copying, implement GitHub OAuth using Chrome's Identity API:</p>
+                <h3>2.2 Custom Event Communication Bridge</h3>
+                <pre><code class="language-javascript">// interceptor.js (MAIN World - Intercepts raw fetch payload)
+const origFetch = window.fetch;
+window.fetch = async function(...args) {
+  const res = await origFetch.apply(this, args);
+  const clone = res.clone();
+  try {
+    const data = await clone.json();
+    if (data && data.status === 'ACCEPTED' && data.code) {
+      window.dispatchEvent(new CustomEvent('TUFHUB_ACCEPTED_SUBMISSION', {
+        detail: { code: data.code, language: data.language, title: data.title }
+      }));
+    }
+  } catch(e) {}
+  return res;
+};
 
-                <pre><code class="language-javascript">// Background Service Worker OAuth Handler
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.type === 'LAUNCH_OAUTH') {
-    const authUrl = `https://github.com/login/oauth/authorize?client_id=${msg.clientId}&redirect_uri=${chrome.identity.getRedirectURL()}&scope=repo`;
-    
-    chrome.identity.launchWebAuthFlow({ url: authUrl, interactive: true }, (redirectUrl) => {
-      if (chrome.runtime.lastError || !redirectUrl) {
-        sendResponse({ success: false, error: 'OAuth window closed or cancelled.' });
-        return;
-      }
-      const code = new URL(redirectUrl).searchParams.get('code');
-      sendResponse({ success: true, code: code });
-    });
-    return true;
-  }
+// content.js (ISOLATED World - Receives event and talks to chrome.runtime)
+window.addEventListener('TUFHUB_ACCEPTED_SUBMISSION', async (event) => {
+  const { code, language, title } = event.detail;
+  chrome.runtime.sendMessage({ type: 'SYNC_SUBMISSION', payload: { code, language, title } });
 });</code></pre>
             </div>
         </div>
 
         <!-- STEP 3 -->
         <div class="step-card" id="step-3">
-            <h2><span class="collapse-icon">▼</span> 🎨 Step 3: Onboarding Wizard & Popup UI/UX Design</h2>
+            <h2><span class="collapse-icon">▼</span> 🔐 Step 3: Tab-Based OAuth Fallback & Auth Security</h2>
             <div class="step-content">
-                <p>A smooth first-run onboarding wizard increases activation rates by helping users connect their repository in under 60 seconds.</p>
+                <p>Standard <code>chrome.identity.launchWebAuthFlow</code> fails silently inside Brave Browser or Chrome instances with strict privacy extensions. To guarantee 100% auth success across all browsers, implement a tab URL listener fallback in <code>background.js</code>:</p>
 
-                <div class="callout callout-tip">
-                    <p><strong>UX Pattern:</strong> Automatically detect whether the user has configured their credentials upon opening <code>popup.html</code>. If credentials are missing, instantly redirect to <code>welcome.html</code>.</p>
-                </div>
-
-                <h3>3.1 Popup Controller Logic (popup.js)</h3>
-                <pre><code class="language-javascript">document.addEventListener('DOMContentLoaded', async () => {
-  const { token, repo } = await chrome.storage.local.get(['token', 'repo']);
-  
-  if (!token || !repo) {
-    chrome.tabs.create({ url: 'welcome.html' });
-    window.close();
-    return;
+                <pre><code class="language-javascript">// background.js Tab Listener for Privacy-Shielded Browsers
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  if (changeInfo.url && changeInfo.url.includes('.chromiumapp.org/?code=')) {
+    const url = new URL(changeInfo.url);
+    const code = url.searchParams.get('code');
+    if (code) {
+      const token = await exchangeCodeForToken(code);
+      await chrome.storage.local.set({ token });
+      chrome.tabs.remove(tabId);
+      chrome.tabs.create({ url: 'welcome.html?status=success' });
+    }
   }
-
-  // Load user stats
-  const { stats } = await chrome.storage.local.get('stats');
-  updatePopupStats(stats || { solved: 0, easy: 0, medium: 0, hard: 0 });
-
-  document.getElementById('sync-now-btn').addEventListener('click', async () => {
-    const btn = document.getElementById('sync-now-btn');
-    btn.innerText = '↻ Syncing...';
-    await triggerManualSync();
-    btn.innerText = '✓ Synced!';
-    setTimeout(() => { btn.innerText = '↻ Sync Stats'; }, 2000);
-  });
 });</code></pre>
             </div>
         </div>
 
         <!-- STEP 4 -->
         <div class="step-card" id="step-4">
-            <h2><span class="collapse-icon">▼</span> 🖼️ Step 4: Web Store Presentation Cards (1280x800 Glow Pipeline)</h2>
+            <h2><span class="collapse-icon">▼</span> ⚡ Step 4: Git 409 Conflict Retry & Root README Indexer</h2>
             <div class="step-content">
-                <p>Raw unedited screenshots look cheap on the Chrome Web Store. Presentation-grade 1280x800 cards featuring ambient radial halos elevate the perceived quality of your product instantly.</p>
+                <p>Rapid commits to the GitHub REST API cause Git 409 Conflict status codes due to outdated file SHAs. <code>uploader.js</code> implements automatic SHA re-fetching and retry logic:</p>
 
-                <h3>4.1 Presentation Card Architecture</h3>
-                <pre><code>+-----------------------------------------------------------------------+
-| 1280x800 Canvas (#0b1120)                                            |
-|   [Radial Glow Halos: Fire Orange #f97316 & Royal Blue #2563eb]       |
-|                                                                       |
-|   +---------------------------------------------------------------+   |
-|   | Floating Browser Mockup Header (#1e1e26)                      |   |
-|   | [🔴 🟡 🟢]  🔒 https://takeuforward.org/plus/...  [● Active]   |   |
-|   +---------------------------------------------------------------+   |
-|   |                                                               |   |
-|   |             [ High-Res Screenshot Payload Image ]             |   |
-|   |                                                               |   |
-|   +---------------------------------------------------------------+   |
-|                                                                       |
-|   Badge: [ MANIFEST V3 READY ]         Badge: [ ⚡ AUTO-SYNC ]        |
-+-----------------------------------------------------------------------+</code></pre>
+                <h3>4.1 Git 409 Conflict Retry Handler (uploader.js)</h3>
+                <pre><code class="language-javascript">async function uploadFileToGitHub(token, repo, filePath, content, commitMsg, sha = '') {
+  const url = `https://api.github.com/repos/${repo}/contents/${filePath}`;
+  const body = { message: commitMsg, content: btoa(unescape(encodeURIComponent(content))) };
+  if (sha) body.sha = sha;
 
-                <h3>4.2 Store Asset Dimensions Table</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Asset Type</th>
-                            <th>Dimensions</th>
-                            <th>Required Format</th>
-                            <th>Purpose</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Store Presentation Card</td>
-                            <td>1280 x 800 px</td>
-                            <td>PNG / JPEG</td>
-                            <td>Primary screenshot carousel in Store Listing</td>
-                        </tr>
-                        <tr>
-                            <td>Small Promo Tile</td>
-                            <td>440 x 280 px</td>
-                            <td>PNG / JPEG</td>
-                            <td>Chrome Store Category & Search results tile</td>
-                        </tr>
-                        <tr>
-                            <td>Marquee Promo Tile</td>
-                            <td>1400 x 560 px</td>
-                            <td>PNG / JPEG</td>
-                            <td>Featured Store Home Page marquee spotlight banner</td>
-                        </tr>
-                        <tr>
-                            <td>Extension Store Icon</td>
-                            <td>128 x 128 px</td>
-                            <td>PNG (Transparent)</td>
-                            <td>Store Listing Logo & Extension Badge</td>
-                        </tr>
-                    </tbody>
-                </table>
+  let res = await fetch(url, {
+    method: 'PUT',
+    headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' },
+    body: JSON.stringify(body)
+  });
+
+  // Handle Git 409 Conflict: Re-fetch latest SHA and retry once
+  if (res.status === 409) {
+    const getRes = await fetch(url, {
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (getRes.ok) {
+      const getJson = await getRes.json();
+      body.sha = getJson.sha;
+      res = await fetch(url, {
+        method: 'PUT',
+        headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' },
+        body: JSON.stringify(body)
+      });
+    }
+  }
+  return res.ok;
+}</code></pre>
+
+                <h3>4.2 Root Repository README Indexer (rootReadme.js)</h3>
+                <pre><code class="language-javascript">export function generateRootReadmeMarkdown(stats) {
+  const solved = stats ? stats.solved || 0 : 0;
+  const easy = stats ? stats.easy || 0 : 0;
+  const medium = stats ? stats.medium || 0 : 0;
+  const hard = stats ? stats.hard || 0 : 0;
+  const lastSync = new Date().toISOString().split('T')[0];
+
+  return `# 🚀 TUF-Solutions
+
+> Auto-synced using [TUFHub](https://github.com/Arora-Sir/TUFHub)
+
+## 📊 Solution Progress Summary
+
+| Total Solved | 🟢 Easy | 🟡 Medium | 🔴 Hard | Last Synced |
+| :---: | :---: | :---: | :---: | :---: |
+| **${solved}** | ${easy} | ${medium} | ${hard} | \`${lastSync}\` |
+`;
+}</code></pre>
             </div>
         </div>
 
         <!-- STEP 5 -->
         <div class="step-card" id="step-5">
-            <h2><span class="collapse-icon">▼</span> 🐍 Step 5: Python Pillow Asset Automation Codebase</h2>
+            <h2><span class="collapse-icon">▼</span> 🖼️ Step 5: Web Store Presentation Cards (1280x800 Glow Pipeline)</h2>
             <div class="step-content">
-                <p>Automating store image generation ensures 100% pixel-perfect consistency across all screenshots. Below are the complete production Python Pillow scripts created during our session:</p>
-
-                <h3>5.1 1280x800 Glowing Store Presentation Card Generator (make_glowing_store_cards.py)</h3>
-                <pre><code class="language-python">import os
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
-
-def create_glowing_store_card(src_path, out_path, title_text, subtitle_text, url_text="https://takeuforward.org/plus/dsa"):
-    W, H = 1280, 800
-    bg = Image.new("RGBA", (W, H), (11, 17, 32, 255))
-    
-    # 1. Draw Multi-layered Radial Glow Spheres
-    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    gdraw = ImageDraw.Draw(glow)
-    
-    # Fire Orange Glow (Top Right)
-    gdraw.ellipse((800, -100, 1400, 500), fill=(249, 115, 22, 90))
-    # Royal Blue Glow (Bottom Left)
-    gdraw.ellipse((-200, 400, 500, 1000), fill=(37, 99, 235, 90))
-    
-    glow = glow.filter(ImageFilter.GaussianBlur(120))
-    bg = Image.alpha_composite(bg, glow)
-    draw = ImageDraw.Draw(bg)
-    
-    # 2. Window Bounds
-    win_w, win_h = 1060, 620
-    win_x = (W - win_w) // 2
-    win_y = 110
-    header_h = 44
-    
-    # Drop Shadow
-    shadow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    sdraw = ImageDraw.Draw(shadow)
-    sdraw.rounded_rectangle((win_x-10, win_y-10, win_x+win_w+10, win_y+win_h+10), radius=16, fill=(0, 0, 0, 140))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(25))
-    bg = Image.alpha_composite(bg, shadow)
-    
-    # 3. macOS Window Frame (#1e1e26)
-    draw.rounded_rectangle((win_x, win_y, win_x+win_w, win_y+win_h), radius=12, fill=(30, 30, 38, 255), outline=(255,255,255,20))
-    
-    # Traffic Lights (🔴 🟡 🟢)
-    draw.ellipse((win_x+16, win_y+16, win_x+28, win_y+28), fill=(255, 95, 86, 255))
-    draw.ellipse((win_x+36, win_y+16, win_x+48, win_y+28), fill=(255, 189, 46, 255))
-    draw.ellipse((win_x+56, win_y+16, win_x+68, win_y+28), fill=(255, 189, 46, 255))
-    
-    # Address Bar
-    addr_w = 540
-    addr_x = win_x + (win_w - addr_w) // 2
-    draw.rounded_rectangle((addr_x, win_y+10, addr_x+addr_w, win_y+34), radius=6, fill=(15, 23, 42, 200), outline=(255,255,255,15))
-    
-    # Address Bar Vector Status Circle (Avoiding Emoji Font Crash)
-    draw.ellipse((addr_x+12, win_y+19, addr_x+18, win_y+25), fill=(39, 201, 63, 255))
-    
-    # Dynamic URL String Truncation
-    if len(url_text) > 48:
-        url_text = url_text[:45] + "..."
-    
-    # Load High-Res Screenshot Payload
-    if os.path.exists(src_path):
-        img = Image.open(src_path).convert("RGBA")
-        target_w = win_w
-        target_h = win_h - header_h
-        img = img.resize((target_w, target_h), Image.Resampling.LANCZOS)
-        bg.paste(img, (win_x, win_y + header_h), img)
-        
-    bg.convert("RGB").save(out_path, quality=95)
-    print(f"Generated Glowing Presentation Card: {out_path}")</code></pre>
-
-                <h3>5.2 High-Res Browser Framing Script (process_highres_framing.py)</h3>
-                <pre><code class="language-python">import os
-from PIL import Image, ImageDraw, ImageFilter
-
-def frame_highres_screenshot(src_path, out_path):
-    if not os.path.exists(src_path): return
-    img = Image.open(src_path).convert("RGBA")
-    w, h = img.size
-    header_h = 40
-    
-    framed = Image.new("RGBA", (w, h + header_h), (30, 30, 38, 255))
-    draw = ImageDraw.Draw(framed)
-    
-    # Apple Traffic Light Dots
-    draw.ellipse((14, 14, 24, 24), fill=(255, 95, 86, 255))
-    draw.ellipse((32, 14, 42, 24), fill=(255, 189, 46, 255))
-    draw.ellipse((50, 14, 60, 24), fill=(39, 201, 63, 255))
-    
-    framed.paste(img, (0, header_h), img)
-    framed.save(out_path, quality=95)
-    print(f"Framed Screenshot Saved: {out_path}")</code></pre>
-
-                <h3>5.3 Themed Store Promo Tiles Generator (make_themed_promo_tiles.py)</h3>
-                <pre><code class="language-python">from PIL import Image, ImageDraw, ImageFont, ImageFilter
-
-def make_small_promo_tile(out_path):
-    W, H = 440, 280
-    bg = Image.new("RGBA", (W, H), (11, 17, 32, 255))
-    
-    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    gdraw = ImageDraw.Draw(glow)
-    gdraw.ellipse((200, -50, 480, 230), fill=(249, 115, 22, 120))
-    glow = glow.filter(ImageFilter.GaussianBlur(60))
-    bg = Image.alpha_composite(bg, glow)
-    
-    draw = ImageDraw.Draw(bg)
-    # Glassmorphic Card Overlay
-    draw.rounded_rectangle((20, 20, W-20, H-20), radius=16, fill=(30, 41, 59, 180), outline=(255,255,255,30))
-    
-    bg.convert("RGB").save(out_path, quality=95)
-    print(f"Generated Small Promo Tile: {out_path}")</code></pre>
-            </div>
-        </div>
-
-        <!-- STEP 6 -->
-        <div class="step-card" id="step-6">
-            <h2><span class="collapse-icon">▼</span> 📝 Step 6: High-Res Screenshot Ingestion & README Engineering</h2>
-            <div class="step-content">
-                <p>Documentation layout and GitHub README formatting invariants established during our session:</p>
-
-                <div class="callout callout-warning">
-                    <p><strong>Em-Dash Ban Mandate:</strong> Do NOT use em-dashes (<code>—</code>) in documentation or README markdown. Replace all em-dashes with colons (<code>:</code>) or simple hyphens (<code>-</code>).</p>
-                </div>
-
-                <h3>6.1 GitHub Camo CDN Cache-Busting Rule</h3>
-                <p>GitHub caches all README images through its Camo CDN proxy (<code>camo.githubusercontent.com</code>). When updating screenshots in your repository, append a version query parameter (e.g., <code>?v=5</code>) to invalidate stale CDN caches instantly:</p>
-
-                <pre><code class="language-markdown"><!-- Clean Cache-Busted README Screenshot Link -->
-<p align="center">
-  <img src="src/assets/readme_screenshots/popup_dashboard.png?v=5" width="900" alt="TUFHub Extension Popup Dashboard" />
-</p></code></pre>
-
-                <h3>6.2 1-Row Table Header Syntax (Eliminating Blank Lines)</h3>
-                <pre><code class="language-markdown">## 💻 Supported Languages
-
-| **C++** (`.cpp`) | **Java** (`.java`) | **Python** (`.py`) | **JavaScript** (`.js`) | **C#** (`.cs`) | **Go** (`.go`) | **SQL** (`.sql`) |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: |</code></pre>
-
-                <h3>6.3 Collapsible Accordion Blocks for Technical Depth</h3>
-                <pre><code class="language-markdown"><details>
-<summary><b>📂 Developer Setup & Project Architecture</b></summary>
-
-### Build Commands
-```bash
-npm install     # Install dependencies
-npm run build   # Production Webpack 5 build (outputs to dist/)
-npm run dev     # Development build with watch mode
-```
-</details></code></pre>
-            </div>
-        </div>
-
-        <!-- STEP 7 -->
-        <div class="step-card" id="step-7">
-            <h2><span class="collapse-icon">▼</span> ⚡ Step 7: Webpack 5 Build & Production Packaging</h2>
-            <div class="step-content">
-                <p>Production Webpack build configuration ensuring minified output, clean asset copying, and zip archiving:</p>
-
-                <h3>7.1 Production Webpack Config (webpack.config.js)</h3>
-                <pre><code class="language-javascript">const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-
-module.exports = {
-  mode: 'production',
-  entry: {
-    'scripts/background': './src/scripts/background.js',
-    'scripts/popup': './src/scripts/popup.js',
-    'scripts/welcome': './src/scripts/welcome.js',
-    'scripts/tuf/content': './src/scripts/tuf/content.js',
-    'scripts/tuf/interceptor': './src/scripts/tuf/interceptor.js'
-  },
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
-    clean: true
-  },
-  plugins: [
-    new CopyWebpackPlugin({
-      patterns: [
-        { from: 'src/manifest.json', to: 'manifest.json' },
-        { from: 'src/popup.html', to: 'popup.html' },
-        { from: 'src/welcome.html', to: 'welcome.html' },
-        { from: 'src/css', to: 'css' },
-        { from: 'src/assets', to: 'assets' }
-      ]
-    })
-  ]
-};</code></pre>
-
-                <h3>7.2 PowerShell Release Archiving Command</h3>
-                <pre><code class="language-powershell"># Compile Production Bundle & Recompress Clean Zip
-rtk npm run build
-rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v1.0.0.zip -Force"</code></pre>
-            </div>
-        </div>
-
-        <!-- STEP 8 -->
-        <div class="step-card" id="step-8">
-            <h2><span class="collapse-icon">▼</span> 🐞 Step 8: Master Technical Bug Log & Resolutions</h2>
-            <div class="step-content">
-                <p>Complete resolution matrix covering all technical roadblocks encountered during our 12-hour session:</p>
-
+                <p>Presentation-grade 1280x800 cards featuring ambient radial halos elevate the perceived quality of your product instantly.</p>
                 <table>
                     <thead>
-                        <tr>
-                            <th>Issue / Bug Observed</th>
-                            <th>Root Cause</th>
-                            <th>Production Resolution</th>
-                        </tr>
+                        <tr><th>Asset Type</th><th>Dimensions</th><th>Format</th><th>Purpose</th></tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><strong>Emoji Square Box Outline (<code>🗖</code>)</strong></td>
-                            <td>PIL Pillow fallback font failed to render Unicode emoji symbols like <code>⚡</code> in image scripts.</td>
-                            <td>Replaced font emojis with vector filled circles (<code>●</code> green/orange) drawn directly onto the image canvas via <code>ImageDraw.ellipse</code>.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Address Bar Text Overflow</strong></td>
-                            <td>Long URLs overflowed outside the browser header mockup bounds on store presentation cards.</td>
-                            <td>Created a custom dynamic string truncation helper appending trailing <code>...</code> based on pixel width.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>GitHub Table Blank Top Header</strong></td>
-                            <td>Empty table headers (<code>| | | | |</code>) caused GitHub markdown to render an ugly blank line above table contents.</td>
-                            <td>Embedded data items directly into the first markdown <code>| ... |</code> header line.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Stale GitHub Image Cache</strong></td>
-                            <td>GitHub's Camo CDN proxy served old cached versions of updated screenshots.</td>
-                            <td>Appended versioned cache-buster query parameters (<code>?v=5</code>) to all markdown image URLs.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Git 409 Conflict Errors</strong></td>
-                            <td>Concurrent async pushes from background service worker to same branch.</td>
-                            <td>Implemented a sequential execution queue with promise locking in <code>uploader.js</code>.</td>
-                        </tr>
+                        <tr><td>Store Presentation Card</td><td>1280 x 800 px</td><td>PNG / JPEG</td><td>Primary screenshot carousel in Store Listing</td></tr>
+                        <tr><td>Small Promo Tile</td><td>440 x 280 px</td><td>PNG / JPEG</td><td>Chrome Store Category & Search results tile</td></tr>
+                        <tr><td>Marquee Promo Tile</td><td>1400 x 560 px</td><td>PNG / JPEG</td><td>Featured Store Home Page marquee spotlight banner</td></tr>
+                        <tr><td>Extension Store Icon</td><td>128 x 128 px</td><td>PNG (Transparent)</td><td>Store Listing Logo & Extension Badge</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
+        <!-- STEP 6 -->
+        <div class="step-card" id="step-6">
+            <h2><span class="collapse-icon">▼</span> 🐍 Step 6: Python Pillow Asset Automation Codebase</h2>
+            <div class="step-content">
+                <p>Complete Pillow python automation script for generating glowing presentation cards:</p>
+                <pre><code class="language-python">import os
+from PIL import Image, ImageDraw, ImageFilter
+
+def create_glowing_store_card(src_path, out_path, title_text, url_text="https://takeuforward.org/plus/dsa"):
+    W, H = 1280, 800
+    bg = Image.new("RGBA", (W, H), (11, 17, 32, 255))
+    
+    # 1. Multi-layered Radial Glow Spheres
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gdraw = ImageDraw.Draw(glow)
+    gdraw.ellipse((800, -100, 1400, 500), fill=(249, 115, 22, 90)) # Fire Orange
+    gdraw.ellipse((-200, 400, 500, 1000), fill=(37, 99, 235, 90)) # Royal Blue
+    glow = glow.filter(ImageFilter.GaussianBlur(120))
+    bg = Image.alpha_composite(bg, glow)
+    draw = ImageDraw.Draw(bg)
+    
+    # 2. Window Mockup & Header
+    win_w, win_h = 1060, 620
+    win_x = (W - win_w) // 2
+    win_y = 110
+    
+    draw.rounded_rectangle((win_x, win_y, win_x+win_w, win_y+win_h), radius=12, fill=(30, 30, 38, 255), outline=(255,255,255,20))
+    # Traffic Lights (🔴 🟡 🟢)
+    draw.ellipse((win_x+16, win_y+16, win_x+28, win_y+28), fill=(255, 95, 86, 255))
+    draw.ellipse((win_x+36, win_y+16, win_x+48, win_y+28), fill=(255, 189, 46, 255))
+    draw.ellipse((win_x+56, win_y+16, win_x+68, win_y+28), fill=(39, 201, 63, 255))
+    
+    # Vector Status Dot (Green Circle)
+    draw.ellipse((win_x+500, win_y+19, win_x+506, win_y+25), fill=(39, 201, 63, 255))
+    
+    if os.path.exists(src_path):
+        img = Image.open(src_path).convert("RGBA")
+        img = img.resize((win_w, win_h - 44), Image.Resampling.LANCZOS)
+        bg.paste(img, (win_x, win_y + 44), img)
+        
+    bg.convert("RGB").save(out_path, quality=95)
+    print(f"Generated Glowing Presentation Card: {out_path}")</code></pre>
+            </div>
+        </div>
+
+        <!-- STEP 7 -->
+        <div class="step-card" id="step-7">
+            <h2><span class="collapse-icon">▼</span> 📝 Step 7: High-Res Screenshot Ingestion & README Engineering</h2>
+            <div class="step-content">
+                <p>GitHub README documentation rules:</p>
+                <div class="callout callout-warning">
+                    <p><strong>Em-Dash Ban Mandate:</strong> Do NOT use em-dashes (<code>—</code>) in documentation or README markdown. Replace all em-dashes with colons (<code>:</code>) or hyphens (<code>-</code>).</p>
+                </div>
+                <pre><code class="language-markdown">## 💻 Supported Languages
+
+| **C++** (`.cpp`) | **Java** (`.java`) | **Python** (`.py`) | **JavaScript** (`.js`) | **C#** (`.cs`) | **Go** (`.go`) | **SQL** (`.sql`) |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |</code></pre>
+            </div>
+        </div>
+
+        <!-- STEP 8 -->
+        <div class="step-card" id="step-8">
+            <h2><span class="collapse-icon">▼</span> ⚡ Step 8: Webpack 5 Build & Production Packaging</h2>
+            <div class="step-content">
+                <p>Webpack 5 bundle configuration and packaging commands:</p>
+                <pre><code class="language-powershell"># Production Webpack Build & Package Script
+rtk npm run build
+rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v1.0.0.zip -Force"</code></pre>
+            </div>
+        </div>
+
         <!-- STEP 9 -->
         <div class="step-card" id="step-9">
-            <h2><span class="collapse-icon">▼</span> 🚀 Step 9: Chrome Web Store Publishing & Review Protocol</h2>
+            <h2><span class="collapse-icon">▼</span> 🐞 Step 9: Master Technical Bug Log & Resolutions</h2>
             <div class="step-content">
-                <p>Complete operational protocol for submitting your extension package to the Chrome Developer Dashboard:</p>
-
-                <ul>
-                    <li class="task-item"><input type="checkbox" id="c19"><span class="task-text"><strong>Single Purpose Description:</strong> Ensure your store description clearly states the primary function ("Sync TakeUForward code submissions to GitHub").</span></li>
-                    <li class="task-item"><input type="checkbox" id="c20"><span class="task-text"><strong>Host Permission Justification:</strong> Provide explicit justification explaining why <code>*://takeuforward.org/*</code> access is required for real-time submission capture.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c21"><span class="task-text"><strong>Upload Visual Assets:</strong> Attach 1280x800 Store Presentation Cards, 440x280 Small Promo Tile, and 1400x560 Marquee Tile.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c22"><span class="task-text"><strong>Privacy Policy URL:</strong> Link to your host domain privacy policy (e.g. <code>https://arora-sir.github.io/privacy</code>) declaring zero telemetry.</span></li>
-                </ul>
+                <table>
+                    <thead>
+                        <tr><th>Issue / Bug Observed</th><th>Root Cause</th><th>Production Resolution</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Emoji Square Box (<code>🗖</code>)</strong></td><td>PIL Pillow font failed to render Unicode emoji symbols like <code>⚡</code>.</td><td>Replaced font emojis with vector filled circles (<code>●</code> green/orange) via <code>ImageDraw.ellipse</code>.</td></tr>
+                        <tr><td><strong>Address Bar Text Overflow</strong></td><td>Long URLs overflowed browser header mockup bounds.</td><td>Created a custom dynamic string truncation helper appending trailing <code>...</code>.</td></tr>
+                        <tr><td><strong>GitHub Table Blank Top Line</strong></td><td>Empty table headers (<code>| | | | |</code>) rendered a blank top header.</td><td>Embedded data items directly into the first markdown <code>| ... |</code> header line.</td></tr>
+                        <tr><td><strong>Stale GitHub Image Cache</strong></td><td>GitHub's Camo CDN proxy served old cached images.</td><td>Appended versioned cache-buster query parameters (<code>?v=5</code>) to image URLs.</td></tr>
+                        <tr><td><strong>Git 409 Conflict Errors</strong></td><td>Concurrent async pushes to same branch.</td><td>Implemented SHA re-fetch & single retry handler in <code>uploader.js</code>.</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -703,10 +523,8 @@ rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v
         <div class="step-card" id="step-10">
             <h2><span class="collapse-icon">▼</span> ✅ Step 10: Maintenance & Operational Verification Checklist</h2>
             <div class="step-content">
-                <p>Verify all master checklist items before releasing new updates:</p>
-
                 <ul>
-                    <li class="task-item"><input type="checkbox" id="c23"><span class="task-text">Version bumped in both <code>manifest.json</code> and <code>package.json</code>.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c23"><span class="task-text">Version bumped in <code>manifest.json</code> and <code>package.json</code>.</span></li>
                     <li class="task-item"><input type="checkbox" id="c24"><span class="task-text">Clean production build executed via <code>npm run build</code>.</span></li>
                     <li class="task-item"><input type="checkbox" id="c25"><span class="task-text">ZIP package created without source code or scratch files.</span></li>
                     <li class="task-item"><input type="checkbox" id="c26"><span class="task-text">All README screenshots cache-busted with <code>?v=5</code>.</span></li>
@@ -727,7 +545,6 @@ rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v
         (function() {
             'use strict';
 
-            // Reading Progress Bar
             window.addEventListener('scroll', function() {
                 var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
                 var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -746,7 +563,6 @@ rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
-            // Collapsible Step Cards
             document.querySelectorAll('.step-card h2').forEach(function(header) {
                 header.addEventListener('click', function() {
                     var card = header.closest('.step-card');
@@ -754,7 +570,6 @@ rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v
                 });
             });
 
-            // Checkbox LocalStorage Persistence
             var checkboxes = document.querySelectorAll('input[type="checkbox"]');
             checkboxes.forEach(function(cb) {
                 var saved = localStorage.getItem('cb_' + cb.id);
@@ -777,7 +592,6 @@ rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v
                 });
             });
 
-            // Reset Button
             document.getElementById('reset-btn').addEventListener('click', function() {
                 if (confirm('Are you sure you want to reset all checkbox progress?')) {
                     checkboxes.forEach(function(cb) {
@@ -789,7 +603,6 @@ rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v
                 }
             });
 
-            // Copy Buttons for Code Blocks
             document.querySelectorAll('pre').forEach(function(pre) {
                 var btn = document.createElement('button');
                 btn.className = 'copy-button';
@@ -810,7 +623,6 @@ rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v
                 });
             });
 
-            // Dynamic Customization Card Logic
             var custBtn = document.getElementById('customize-btn');
             if (custBtn) {
                 custBtn.addEventListener('click', function() {
