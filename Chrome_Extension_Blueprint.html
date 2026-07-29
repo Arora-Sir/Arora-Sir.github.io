@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chrome Extension Launch & Development Blueprint - From Zero to Web Store Approval</title>
+    <title>Chrome Extension Master Blueprint - Full 12-Hour Development & Launch Manual</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -16,20 +16,11 @@
             --fire-orange: #f97316;
             --card-bg: rgba(30, 41, 59, 0.4);
             --border-color: rgba(255, 255, 255, 0.08);
-            --code-bg: rgba(15, 23, 42, 0.8);
+            --code-bg: rgba(15, 23, 42, 0.85);
         }
         
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html, body {
-            overflow-x: hidden;
-            max-width: 100vw;
-            scroll-behavior: smooth;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { overflow-x: hidden; max-width: 100vw; scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -62,180 +53,69 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        h1, h2, h3, h4 {
-            color: #ffffff;
-            margin-top: 2.5rem;
-            margin-bottom: 1.25rem;
-            font-weight: 800;
-            letter-spacing: -0.025em;
-            line-height: 1.2;
-        }
+        h1, h2, h3, h4 { color: #ffffff; margin-top: 2.5rem; margin-bottom: 1.25rem; font-weight: 800; letter-spacing: -0.025em; line-height: 1.2; }
+        h1 { font-size: 3.5rem; background: linear-gradient(135deg, #fb923c, #60a5fa, #c084fc); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 1.5rem; margin-top: 0; padding-bottom: 1rem; }
+        .subtitle { text-align: center; font-size: 1.25rem; color: #94a3b8; margin-bottom: 3rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem; }
 
-        h1 {
-            font-size: 3.5rem;
-            background: linear-gradient(135deg, #fb923c, #60a5fa);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            margin-top: 0;
-            padding-bottom: 1rem;
-        }
+        h2 { font-size: 2.2rem; padding-bottom: 0.5rem; display: flex; align-items: center; gap: 12px; position: relative; }
+        h3 { font-size: 1.4rem; color: #93c5fd; display: flex; align-items: center; gap: 10px; margin-top: 2rem; }
+        p { margin-bottom: 1.5rem; font-size: 1.1rem; }
 
-        .subtitle {
-            text-align: center;
-            font-size: 1.25rem;
-            color: #94a3b8;
-            margin-bottom: 3rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 2rem;
-        }
+        a { color: #60a5fa; text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.3s ease; font-weight: 600; }
+        a:hover { color: #93c5fd; border-bottom-color: #93c5fd; text-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
 
-        h2 {
-            font-size: 2rem;
-            padding-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: relative;
-        }
-
-        h3 {
-            font-size: 1.4rem;
-            color: #93c5fd;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        p {
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-        }
-
-        a {
-            color: #60a5fa;
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        a:hover {
-            color: #93c5fd;
-            border-bottom-color: #93c5fd;
-            text-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
-        }
-
-        ul, ol {
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            padding-left: 1.5rem;
-        }
-
-        li {
-            margin-bottom: 0.75rem;
-        }
+        ul, ol { margin-bottom: 1.5rem; font-size: 1.1rem; padding-left: 1.5rem; }
+        li { margin-bottom: 0.75rem; }
 
         /* Checkbox styling */
         input[type="checkbox"] {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 22px;
-            height: 22px;
+            -webkit-appearance: none; appearance: none;
+            width: 22px; height: 22px;
             border: 2px solid var(--primary-color);
             border-radius: 6px;
-            display: inline-grid;
-            place-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            background: rgba(15, 23, 42, 0.5);
-            flex-shrink: 0;
-            margin-top: 4px;
+            display: inline-grid; place-content: center;
+            cursor: pointer; transition: all 0.2s ease-in-out;
+            background: rgba(15, 23, 42, 0.5); flex-shrink: 0; margin-top: 4px;
         }
-
         input[type="checkbox"]::before {
-            content: "";
-            width: 12px;
-            height: 12px;
-            transform: scale(0);
-            transition: 120ms transform ease-in-out;
-            box-shadow: inset 1em 1em var(--accent-color);
-            transform-origin: center;
+            content: ""; width: 12px; height: 12px;
+            transform: scale(0); transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em var(--accent-color); transform-origin: center;
             clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
         }
-
-        input[type="checkbox"]:checked {
-            border-color: var(--accent-color);
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        input[type="checkbox"]:checked::before {
-            transform: scale(1);
-        }
-
-        .completed-text {
-            text-decoration: line-through;
-            opacity: 0.5;
-        }
+        input[type="checkbox"]:checked { border-color: var(--accent-color); background: rgba(16, 185, 129, 0.1); }
+        input[type="checkbox"]:checked::before { transform: scale(1); }
+        .completed-text { text-decoration: line-through; opacity: 0.5; }
 
         .reset-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid var(--border-color);
-            color: #ef4444;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            -webkit-backdrop-filter: blur(8px);
-            backdrop-filter: blur(8px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transition: all 0.2s;
-            z-index: 1000;
+            position: fixed; bottom: 2rem; right: 2rem;
+            background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border-color);
+            color: #ef4444; padding: 0.75rem 1.5rem; border-radius: 50px;
+            cursor: pointer; font-weight: 600; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); transition: all 0.2s; z-index: 1000;
         }
-
-        .reset-btn:hover {
-            background: #ef4444;
-            color: white;
-        }
+        .reset-btn:hover { background: #ef4444; color: white; }
 
         pre {
-            background: var(--code-bg);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            border-radius: 12px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            margin-bottom: 1.5rem;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-            position: relative;
+            background: var(--code-bg); border: 1px solid var(--border-color);
+            padding: 1.5rem; border-radius: 12px; white-space: pre-wrap; word-wrap: break-word;
+            margin-bottom: 1.5rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); position: relative; overflow-x: auto;
         }
 
-        code {
-            font-family: 'Fira Code', monospace;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 0.2rem 0.5rem;
-            border-radius: 6px;
-            font-size: 0.9em;
-            color: #e879f9;
+        .copy-button {
+            position: absolute; top: 0.5rem; right: 0.5rem;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border-color);
+            color: var(--text-color); padding: 0.4rem 0.8rem; border-radius: 6px;
+            cursor: pointer; font-size: 0.8rem; transition: all 0.2s ease; opacity: 0;
         }
+        pre:hover .copy-button { opacity: 1; }
+        .copy-button:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+        .copy-button.copied { background: var(--accent-color); color: #fff; }
 
-        pre code {
-            background: transparent;
-            padding: 0;
-            color: #e2e8f0;
-        }
+        code { font-family: 'Fira Code', monospace; background: rgba(255, 255, 255, 0.08); padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.9em; color: #e879f9; }
+        pre code { background: transparent; padding: 0; color: #e2e8f0; }
 
-        /* Callout Boxes */
-        .callout {
-            padding: 1.25rem 1.5rem;
-            border-radius: 12px;
-            margin: 1.5rem 0;
-        }
+        .callout { padding: 1.25rem 1.5rem; border-radius: 12px; margin: 1.5rem 0; }
         .callout p { margin: 0; font-size: 1rem; }
         .callout p + p { margin-top: 0.75rem; }
         .callout-tip { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); color: #6ee7b7; }
@@ -243,141 +123,75 @@
         .callout-danger { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
         .callout-info { background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; }
 
-        /* Tables */
         table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
         th, td { padding: 0.9rem 1rem; border: 1px solid rgba(255, 255, 255, 0.06); text-align: left; vertical-align: top; }
         th { background: rgba(59, 130, 246, 0.15); color: #fff; font-weight: 700; }
         tr:nth-child(even) td { background: rgba(255, 255, 255, 0.02); }
 
-        /* Step Card Layout */
         .step-card {
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            background: rgba(255, 255, 255, 0.02);
-            overflow: hidden;
-            transition: border-color 0.3s ease;
+            border: 1px solid var(--border-color); border-radius: 16px;
+            margin-bottom: 2rem; background: rgba(255, 255, 255, 0.02);
+            overflow: hidden; transition: border-color 0.3s ease;
         }
         .step-card:hover { border-color: rgba(255, 255, 255, 0.15); }
         .step-card h2 {
-            margin: 0;
-            padding: 1.25rem 1.75rem;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.02);
-            border-bottom: 1px solid var(--border-color);
+            margin: 0; padding: 1.25rem 1.75rem; cursor: pointer;
+            background: rgba(255, 255, 255, 0.02); border-bottom: 1px solid var(--border-color);
             font-size: 1.6rem;
         }
-        .step-card .step-content {
-            padding: 1.75rem;
-            transition: max-height 0.5s ease, opacity 0.35s ease;
-            max-height: 10000px;
-            opacity: 1;
-        }
+        .step-card .step-content { padding: 1.75rem; transition: max-height 0.5s ease, opacity 0.35s ease; max-height: 100000px; opacity: 1; }
         .step-card.collapsed .step-content { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; }
         .step-card .collapse-icon { float: right; transition: transform 0.3s ease; font-size: 1.2rem; opacity: 0.5; }
         .step-card.collapsed .collapse-icon { transform: rotate(-90deg); }
 
-        /* TOC Container */
         .toc-container {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.75rem 2rem;
-            margin-bottom: 2.5rem;
+            background: rgba(30, 41, 59, 0.6); border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 1.75rem 2rem; margin-bottom: 2.5rem;
         }
         .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
         .toc-item {
-            color: var(--text-color);
-            padding: 0.5rem 0.75rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            transition: background 0.2s ease;
+            color: var(--text-color); padding: 0.5rem 0.75rem; border-radius: 8px;
+            font-size: 0.9rem; display: flex; align-items: center; gap: 8px;
+            text-decoration: none; transition: background 0.2s ease;
         }
         .toc-item:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
         .toc-step-num {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: rgba(59, 130, 246, 0.2);
-            color: var(--primary-color);
-            font-size: 0.75rem;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            width: 24px; height: 24px; border-radius: 50%;
+            background: rgba(59, 130, 246, 0.2); color: var(--primary-color);
+            font-size: 0.75rem; font-weight: 700; display: inline-flex;
+            align-items: center; justify-content: center; flex-shrink: 0;
         }
 
-        /* Reading Progress Bar */
         #reading-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
+            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
             background: linear-gradient(90deg, var(--fire-orange), var(--primary-color));
-            z-index: 9999;
-            transition: width 0.1s linear;
+            z-index: 9999; transition: width 0.1s linear;
         }
 
-        /* Back to top button */
         .back-to-top {
-            position: fixed;
-            bottom: 5rem;
-            right: 2rem;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(30, 41, 59, 0.9);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: all 0.2s ease;
-            z-index: 999;
-            opacity: 0;
-            pointer-events: none;
+            position: fixed; bottom: 5rem; right: 2rem; width: 44px; height: 44px;
+            border-radius: 50%; background: rgba(30, 41, 59, 0.9);
+            border: 1px solid var(--border-color); color: var(--text-color);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.2s ease;
+            z-index: 999; opacity: 0; pointer-events: none;
         }
         .back-to-top.visible { opacity: 1; pointer-events: auto; }
         .back-to-top:hover { background: var(--primary-color); color: #fff; }
 
-        /* Dynamic Customization Card */
         .domain-input-card {
-            background: rgba(249, 115, 22, 0.1);
-            border: 1px solid var(--fire-orange);
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin: 2rem 0;
+            background: rgba(249, 115, 22, 0.1); border: 1px solid var(--fire-orange);
+            padding: 1.5rem; border-radius: 12px; margin: 2rem 0;
         }
         .domain-input-wrapper { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
         .domain-input-card input {
-            flex: 1;
-            min-width: 180px;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: rgba(15, 23, 42, 0.8);
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
+            flex: 1; min-width: 180px; padding: 0.75rem 1rem; border-radius: 8px;
+            border: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.8);
+            color: #fff; font-size: 1rem; outline: none;
         }
         .domain-input-card button {
-            background: var(--fire-orange);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+            background: var(--fire-orange); color: white; border: none;
+            padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;
         }
         .domain-input-card button:hover { background: #ea580c; }
     </style>
@@ -386,12 +200,12 @@
     <div id="reading-progress"></div>
 
     <div class="container">
-        <h1>Chrome Extension Launch Blueprint</h1>
-        <p class="subtitle">An exhaustive 12-hour architectural ledger, visual asset design pipeline, README optimization strategy, and Web Store compliance manual.</p>
+        <h1>Chrome Extension Master Blueprint</h1>
+        <p class="subtitle">Exhaustive 12-Hour Architectural Ledger, Pillow Visual Asset Automation Codebase, GitHub README Optimizations, and Web Store Compliance Blueprint.</p>
 
         <!-- Dynamic Customization Input Card -->
         <div class="domain-input-card">
-            <label for="ext-name-input"><strong>⚡ Customize Blueprint Target:</strong></label>
+            <label for="ext-name-input"><strong>⚡ Customize Guide Variables:</strong></label>
             <div class="domain-input-wrapper">
                 <input type="text" id="ext-name-input" placeholder="Extension Name (e.g., TUFHub)" value="TUFHub">
                 <input type="text" id="ext-owner-input" placeholder="GitHub Owner (e.g., Arora-Sir)" value="Arora-Sir">
@@ -404,17 +218,22 @@
         <div class="toc-container">
             <div class="toc-title">📍 Master Navigation Index</div>
             <div class="toc-grid">
-                <a href="#step-1" class="toc-item"><span class="toc-step-num">1</span> Manifest V3 Architecture & Sync Engine</a>
-                <a href="#step-2" class="toc-item"><span class="toc-step-num">2</span> Web Store Presentation Cards & Asset Pipeline</a>
-                <a href="#step-3" class="toc-item"><span class="toc-step-num">3</span> README & Documentation Engineering</a>
-                <a href="#step-4" class="toc-item"><span class="toc-step-num">4</span> Exhaustive Bug Log & Technical Fixes</a>
-                <a href="#step-5" class="toc-item"><span class="toc-step-num">5</span> Web Store Submission & Review Audit</a>
+                <a href="#step-1" class="toc-item"><span class="toc-step-num">1</span> Manifest V3 & Core Extension Architecture</a>
+                <a href="#step-2" class="toc-item"><span class="toc-step-num">2</span> Authentication Security (PAT vs OAuth 2.0 PKCE)</a>
+                <a href="#step-3" class="toc-item"><span class="toc-step-num">3</span> Onboarding Wizard & Popup UI/UX Design</a>
+                <a href="#step-4" class="toc-item"><span class="toc-step-num">4</span> Web Store Presentation Cards (1280x800 Glow Pipeline)</a>
+                <a href="#step-5" class="toc-item"><span class="toc-step-num">5</span> Python Pillow Asset Automation Codebase</a>
+                <a href="#step-6" class="toc-item"><span class="toc-step-num">6</span> High-Res Screenshot Ingestion & README Engineering</a>
+                <a href="#step-7" class="toc-item"><span class="toc-step-num">7</span> Webpack 5 Build & Production Packaging</a>
+                <a href="#step-8" class="toc-item"><span class="toc-step-num">8</span> Master Technical Bug Log & Resolutions</a>
+                <a href="#step-9" class="toc-item"><span class="toc-step-num">9</span> Chrome Web Store Publishing & Review Protocol</a>
+                <a href="#step-10" class="toc-item"><span class="toc-step-num">10</span> Maintenance & Operational Verification Checklist</a>
             </div>
         </div>
 
         <!-- STEP 1 -->
         <div class="step-card" id="step-1">
-            <h2><span class="collapse-icon">▼</span> 🧩 Step 1: Manifest V3 Architecture & Sync Engine</h2>
+            <h2><span class="collapse-icon">▼</span> 🧩 Step 1: Manifest V3 & Core Extension Architecture</h2>
             <div class="step-content">
                 <p>Building modern Chrome Extensions requires strict compliance with Google's Manifest V3 specifications. Below are the foundational architectural decisions established during our build:</p>
                 
@@ -430,106 +249,401 @@
                     <li class="task-item"><input type="checkbox" id="c4"><span class="task-text"><strong>Conflict-Safe Commit Queue:</strong> Execute GitHub API commits sequentially with a lock queue. Parallel async pushes to the same branch cause Git 409 conflict errors.</span></li>
                 </ul>
 
-                <h3>1.2 Permission Minimization Strategy</h3>
-                <p>Excessive host permissions (like <code>&lt;all_urls&gt;</code> or <code>http://*/*</code>) trigger mandatory manual Google Web Store security audits, extending review times from 2 hours to 2+ weeks.</p>
-                
+                <h3>1.2 Production Manifest V3 Configuration (manifest.json)</h3>
+                <pre><code class="language-json">{
+  "manifest_version": 3,
+  "name": "TUFHub - TakeUForward to GitHub Sync",
+  "version": "1.0.0",
+  "description": "Automatically sync your accepted TakeUForward (TUF+) code solutions directly to your GitHub repository.",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "scripts/background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "*://takeuforward.org/*",
+    "*://api.github.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://takeuforward.org/*"],
+      "js": ["scripts/tuf/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["scripts/tuf/interceptor.js"],
+      "matches": ["*://takeuforward.org/*"]
+    }
+  ]
+}</code></pre>
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-card" id="step-2">
+            <h2><span class="collapse-icon">▼</span> 🔐 Step 2: Authentication Security (PAT vs OAuth 2.0 PKCE)</h2>
+            <div class="step-content">
+                <p>Establishing secure, user-friendly authentication between a browser extension and GitHub's API requires balancing convenience with security.</p>
+
+                <h3>2.1 Personal Access Tokens (PAT) - Recommended</h3>
+                <p>PAT is the simplest, most resilient setup method for technical users. Pre-fill the token generation link with exact required scopes:</p>
+
+                <pre><code class="language-javascript">// Pre-filled GitHub PAT Generation Link
+const GITHUB_PAT_URL = 'https://github.com/settings/tokens/new?description=TUFHub%20Extension&scopes=repo';
+
+// Token Verification via GitHub API
+async function verifyGithubToken(token) {
+  const res = await fetch('https://api.github.com/user', {
+    headers: {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github.v3+json'
+    }
+  });
+  if (!res.ok) throw new Error('Invalid GitHub Personal Access Token.');
+  const user = await res.json();
+  return user.login;
+}</code></pre>
+
+                <h3>2.2 OAuth 2.0 PKCE Authorization Flow (Advanced)</h3>
+                <p>For a seamless 1-click login without manual token copying, implement GitHub OAuth using Chrome's Identity API:</p>
+
+                <pre><code class="language-javascript">// Background Service Worker OAuth Handler
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === 'LAUNCH_OAUTH') {
+    const authUrl = `https://github.com/login/oauth/authorize?client_id=${msg.clientId}&redirect_uri=${chrome.identity.getRedirectURL()}&scope=repo`;
+    
+    chrome.identity.launchWebAuthFlow({ url: authUrl, interactive: true }, (redirectUrl) => {
+      if (chrome.runtime.lastError || !redirectUrl) {
+        sendResponse({ success: false, error: 'OAuth window closed or cancelled.' });
+        return;
+      }
+      const code = new URL(redirectUrl).searchParams.get('code');
+      sendResponse({ success: true, code: code });
+    });
+    return true;
+  }
+});</code></pre>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step-card" id="step-3">
+            <h2><span class="collapse-icon">▼</span> 🎨 Step 3: Onboarding Wizard & Popup UI/UX Design</h2>
+            <div class="step-content">
+                <p>A smooth first-run onboarding wizard increases activation rates by helping users connect their repository in under 60 seconds.</p>
+
+                <div class="callout callout-tip">
+                    <p><strong>UX Pattern:</strong> Automatically detect whether the user has configured their credentials upon opening <code>popup.html</code>. If credentials are missing, instantly redirect to <code>welcome.html</code>.</p>
+                </div>
+
+                <h3>3.1 Popup Controller Logic (popup.js)</h3>
+                <pre><code class="language-javascript">document.addEventListener('DOMContentLoaded', async () => {
+  const { token, repo } = await chrome.storage.local.get(['token', 'repo']);
+  
+  if (!token || !repo) {
+    chrome.tabs.create({ url: 'welcome.html' });
+    window.close();
+    return;
+  }
+
+  // Load user stats
+  const { stats } = await chrome.storage.local.get('stats');
+  updatePopupStats(stats || { solved: 0, easy: 0, medium: 0, hard: 0 });
+
+  document.getElementById('sync-now-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('sync-now-btn');
+    btn.innerText = '↻ Syncing...';
+    await triggerManualSync();
+    btn.innerText = '✓ Synced!';
+    setTimeout(() => { btn.innerText = '↻ Sync Stats'; }, 2000);
+  });
+});</code></pre>
+            </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step-card" id="step-4">
+            <h2><span class="collapse-icon">▼</span> 🖼️ Step 4: Web Store Presentation Cards (1280x800 Glow Pipeline)</h2>
+            <div class="step-content">
+                <p>Raw unedited screenshots look cheap on the Chrome Web Store. Presentation-grade 1280x800 cards featuring ambient radial halos elevate the perceived quality of your product instantly.</p>
+
+                <h3>4.1 Presentation Card Architecture</h3>
+                <pre><code>+-----------------------------------------------------------------------+
+| 1280x800 Canvas (#0b1120)                                            |
+|   [Radial Glow Halos: Fire Orange #f97316 & Royal Blue #2563eb]       |
+|                                                                       |
+|   +---------------------------------------------------------------+   |
+|   | Floating Browser Mockup Header (#1e1e26)                      |   |
+|   | [🔴 🟡 🟢]  🔒 https://takeuforward.org/plus/...  [● Active]   |   |
+|   +---------------------------------------------------------------+   |
+|   |                                                               |   |
+|   |             [ High-Res Screenshot Payload Image ]             |   |
+|   |                                                               |   |
+|   +---------------------------------------------------------------+   |
+|                                                                       |
+|   Badge: [ MANIFEST V3 READY ]         Badge: [ ⚡ AUTO-SYNC ]        |
++-----------------------------------------------------------------------+</code></pre>
+
+                <h3>4.2 Store Asset Dimensions Table</h3>
                 <table>
                     <thead>
                         <tr>
-                            <th>Permission</th>
+                            <th>Asset Type</th>
+                            <th>Dimensions</th>
+                            <th>Required Format</th>
                             <th>Purpose</th>
-                            <th>Review Risk</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><code>storage</code></td>
-                            <td>Save PAT tokens, user settings, and problem counts locally</td>
-                            <td>🟢 Low Risk (Instant Auto-Approve)</td>
+                            <td>Store Presentation Card</td>
+                            <td>1280 x 800 px</td>
+                            <td>PNG / JPEG</td>
+                            <td>Primary screenshot carousel in Store Listing</td>
                         </tr>
                         <tr>
-                            <td><code>declarativeNetRequest</code></td>
-                            <td>Intercept problem submission payloads in real-time</td>
-                            <td>🟡 Medium Risk (Standard Review)</td>
+                            <td>Small Promo Tile</td>
+                            <td>440 x 280 px</td>
+                            <td>PNG / JPEG</td>
+                            <td>Chrome Store Category & Search results tile</td>
                         </tr>
                         <tr>
-                            <td><code>host_permissions</code></td>
-                            <td>Restricted strictly to target domain (e.g. <code>*://takeuforward.org/*</code>)</td>
-                            <td>🟢 Low Risk (Targeted domain scope)</td>
+                            <td>Marquee Promo Tile</td>
+                            <td>1400 x 560 px</td>
+                            <td>PNG / JPEG</td>
+                            <td>Featured Store Home Page marquee spotlight banner</td>
+                        </tr>
+                        <tr>
+                            <td>Extension Store Icon</td>
+                            <td>128 x 128 px</td>
+                            <td>PNG (Transparent)</td>
+                            <td>Store Listing Logo & Extension Badge</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- STEP 2 -->
-        <div class="step-card" id="step-2">
-            <h2><span class="collapse-icon">▼</span> 🎨 Step 2: Web Store Presentation Cards & Asset Pipeline</h2>
+        <!-- STEP 5 -->
+        <div class="step-card" id="step-5">
+            <h2><span class="collapse-icon">▼</span> 🐍 Step 5: Python Pillow Asset Automation Codebase</h2>
             <div class="step-content">
-                <p>Chrome Web Store conversion rates heavily depend on crisp, presentation-grade graphics. Generic raw screenshots look unpolished and reduce install rates by up to 60%.</p>
+                <p>Automating store image generation ensures 100% pixel-perfect consistency across all screenshots. Below are the complete production Python Pillow scripts created during our session:</p>
 
-                <div class="callout callout-tip">
-                    <p><strong>Design Rule:</strong> Web Store screenshots must be rendered at exactly <strong>1280x800px</strong> inside a presentation card containing ambient radial glow halos, floating browser mockups, and macOS traffic light window headers.</p>
-                </div>
+                <h3>5.1 1280x800 Glowing Store Presentation Card Generator (make_glowing_store_cards.py)</h3>
+                <pre><code class="language-python">import os
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-                <h3>2.1 Visual Asset Specifications</h3>
-                <ul>
-                    <li class="task-item"><input type="checkbox" id="c5"><span class="task-text"><strong>1280x800 Presentation Cards:</strong> Built on a dark `#0b1120` canvas with multi-layered Fire Orange (`#f97316`) and Royal Blue (`#2563eb`) radial glow spheres.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c6"><span class="task-text"><strong>macOS Dark Window Frames:</strong> Wrap screenshots in a dark `#1e1e26` header bar with vector Apple traffic light dots (🔴 `#ff5f56`, 🟡 `#ffbd2e`, 🟢 `#27c93f`).</span></li>
-                    <li class="task-item"><input type="checkbox" id="c7"><span class="task-text"><strong>Address Bar & Vector Status Dots:</strong> Draw clean address bars containing green status dots (`●`) and dynamic URL truncation (`...`) to eliminate text clipping.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c8"><span class="task-text"><strong>Small Promo Tile (440x280px):</strong> Compact promotional card featuring high-contrast typography, extension logo, and `MANIFEST V3 READY` badge.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c9"><span class="task-text"><strong>Marquee Promo Tile (1400x560px):</strong> Wide banner for store search features with Fire Orange glassmorphism background glow.</span></li>
-                </ul>
+def create_glowing_store_card(src_path, out_path, title_text, subtitle_text, url_text="https://takeuforward.org/plus/dsa"):
+    W, H = 1280, 800
+    bg = Image.new("RGBA", (W, H), (11, 17, 32, 255))
+    
+    # 1. Draw Multi-layered Radial Glow Spheres
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gdraw = ImageDraw.Draw(glow)
+    
+    # Fire Orange Glow (Top Right)
+    gdraw.ellipse((800, -100, 1400, 500), fill=(249, 115, 22, 90))
+    # Royal Blue Glow (Bottom Left)
+    gdraw.ellipse((-200, 400, 500, 1000), fill=(37, 99, 235, 90))
+    
+    glow = glow.filter(ImageFilter.GaussianBlur(120))
+    bg = Image.alpha_composite(bg, glow)
+    draw = ImageDraw.Draw(bg)
+    
+    # 2. Window Bounds
+    win_w, win_h = 1060, 620
+    win_x = (W - win_w) // 2
+    win_y = 110
+    header_h = 44
+    
+    # Drop Shadow
+    shadow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    sdraw = ImageDraw.Draw(shadow)
+    sdraw.rounded_rectangle((win_x-10, win_y-10, win_x+win_w+10, win_y+win_h+10), radius=16, fill=(0, 0, 0, 140))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(25))
+    bg = Image.alpha_composite(bg, shadow)
+    
+    # 3. macOS Window Frame (#1e1e26)
+    draw.rounded_rectangle((win_x, win_y, win_x+win_w, win_y+win_h), radius=12, fill=(30, 30, 38, 255), outline=(255,255,255,20))
+    
+    # Traffic Lights (🔴 🟡 🟢)
+    draw.ellipse((win_x+16, win_y+16, win_x+28, win_y+28), fill=(255, 95, 86, 255))
+    draw.ellipse((win_x+36, win_y+16, win_x+48, win_y+28), fill=(255, 189, 46, 255))
+    draw.ellipse((win_x+56, win_y+16, win_x+68, win_y+28), fill=(255, 189, 46, 255))
+    
+    # Address Bar
+    addr_w = 540
+    addr_x = win_x + (win_w - addr_w) // 2
+    draw.rounded_rectangle((addr_x, win_y+10, addr_x+addr_w, win_y+34), radius=6, fill=(15, 23, 42, 200), outline=(255,255,255,15))
+    
+    # Address Bar Vector Status Circle (Avoiding Emoji Font Crash)
+    draw.ellipse((addr_x+12, win_y+19, addr_x+18, win_y+25), fill=(39, 201, 63, 255))
+    
+    # Dynamic URL String Truncation
+    if len(url_text) > 48:
+        url_text = url_text[:45] + "..."
+    
+    # Load High-Res Screenshot Payload
+    if os.path.exists(src_path):
+        img = Image.open(src_path).convert("RGBA")
+        target_w = win_w
+        target_h = win_h - header_h
+        img = img.resize((target_w, target_h), Image.Resampling.LANCZOS)
+        bg.paste(img, (win_x, win_y + header_h), img)
+        
+    bg.convert("RGB").save(out_path, quality=95)
+    print(f"Generated Glowing Presentation Card: {out_path}")</code></pre>
 
-                <h3>2.2 Canvas Layout Architecture</h3>
-                <pre><code>+-----------------------------------------------------------------------+
-| 1280x800 Canvas (#0b1120)                                            |
-|   [Radial Glow: Fire Orange #f97316 & Royal Blue #2563eb]             |
-|                                                                       |
-|   +---------------------------------------------------------------+   |
-|   | Floating Browser Mockup Window (#1e1e26)                      |   |
-|   | [🔴 🟡 🟢]  🔒 https://takeuforward.org/plus/...  [● Status] |   |
-|   +---------------------------------------------------------------+   |
-|   |                                                               |   |
-|   |               [ High-Res Screenshot Payload ]                |   |
-|   |                                                               |   |
-|   +---------------------------------------------------------------+   |
-|                                                                       |
-|   Badge: [ MANIFEST V3 READY ]         Badge: [ ⚡ AUTO-SYNC ]        |
-+-----------------------------------------------------------------------+</code></pre>
+                <h3>5.2 High-Res Browser Framing Script (process_highres_framing.py)</h3>
+                <pre><code class="language-python">import os
+from PIL import Image, ImageDraw, ImageFilter
+
+def frame_highres_screenshot(src_path, out_path):
+    if not os.path.exists(src_path): return
+    img = Image.open(src_path).convert("RGBA")
+    w, h = img.size
+    header_h = 40
+    
+    framed = Image.new("RGBA", (w, h + header_h), (30, 30, 38, 255))
+    draw = ImageDraw.Draw(framed)
+    
+    # Apple Traffic Light Dots
+    draw.ellipse((14, 14, 24, 24), fill=(255, 95, 86, 255))
+    draw.ellipse((32, 14, 42, 24), fill=(255, 189, 46, 255))
+    draw.ellipse((50, 14, 60, 24), fill=(39, 201, 63, 255))
+    
+    framed.paste(img, (0, header_h), img)
+    framed.save(out_path, quality=95)
+    print(f"Framed Screenshot Saved: {out_path}")</code></pre>
+
+                <h3>5.3 Themed Store Promo Tiles Generator (make_themed_promo_tiles.py)</h3>
+                <pre><code class="language-python">from PIL import Image, ImageDraw, ImageFont, ImageFilter
+
+def make_small_promo_tile(out_path):
+    W, H = 440, 280
+    bg = Image.new("RGBA", (W, H), (11, 17, 32, 255))
+    
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gdraw = ImageDraw.Draw(glow)
+    gdraw.ellipse((200, -50, 480, 230), fill=(249, 115, 22, 120))
+    glow = glow.filter(ImageFilter.GaussianBlur(60))
+    bg = Image.alpha_composite(bg, glow)
+    
+    draw = ImageDraw.Draw(bg)
+    # Glassmorphic Card Overlay
+    draw.rounded_rectangle((20, 20, W-20, H-20), radius=16, fill=(30, 41, 59, 180), outline=(255,255,255,30))
+    
+    bg.convert("RGB").save(out_path, quality=95)
+    print(f"Generated Small Promo Tile: {out_path}")</code></pre>
             </div>
         </div>
 
-        <!-- STEP 3 -->
-        <div class="step-card" id="step-3">
-            <h2><span class="collapse-icon">▼</span> 📄 Step 3: README & Documentation Engineering</h2>
+        <!-- STEP 6 -->
+        <div class="step-card" id="step-6">
+            <h2><span class="collapse-icon">▼</span> 📝 Step 6: High-Res Screenshot Ingestion & README Engineering</h2>
             <div class="step-content">
-                <p>A concise, well-structured GitHub README turns casual visitors into stars and active users. Follow these strict documentation invariants:</p>
+                <p>Documentation layout and GitHub README formatting invariants established during our session:</p>
 
                 <div class="callout callout-warning">
                     <p><strong>Em-Dash Ban Mandate:</strong> Do NOT use em-dashes (<code>—</code>) in documentation or README markdown. Replace all em-dashes with colons (<code>:</code>) or simple hyphens (<code>-</code>).</p>
                 </div>
 
-                <h3>3.1 README Best Practices</h3>
-                <ul>
-                    <li class="task-item"><input type="checkbox" id="c10"><span class="task-text"><strong>High-Res Image Cache-Busting:</strong> Append <code>?v=5</code> query parameters to all image paths in `README.md` to force GitHub's Camo CDN proxy to invalidate stale cached images instantly.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c11"><span class="task-text"><strong>1-Row Horizontal Supported Languages Table:</strong> Instead of vertical bullet lists or empty top headers, format supported languages in a clean 1-row table header directly containing the items.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c12"><span class="task-text"><strong>Collapsible Accordions:</strong> Wrap Developer Setup, Advanced OAuth, and FAQs inside <code>&lt;details&gt;&lt;summary&gt;</code> dropdowns to keep the main flow concise.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c13"><span class="task-text"><strong>Single License Badge:</strong> Avoid duplicating a bottom `## License` section if an interactive MIT License button already exists in the header badges.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c14"><span class="task-text"><strong>Empowering Footer:</strong> Use professional, human-crafted wording like `Crafted with ❤️ for Problem Solvers by Mohit Arora`.</span></li>
-                </ul>
+                <h3>6.1 GitHub Camo CDN Cache-Busting Rule</h3>
+                <p>GitHub caches all README images through its Camo CDN proxy (<code>camo.githubusercontent.com</code>). When updating screenshots in your repository, append a version query parameter (e.g., <code>?v=5</code>) to invalidate stale CDN caches instantly:</p>
 
-                <h3>3.2 Standardized 1-Row Table Header Syntax</h3>
-                <pre><code class="language-markdown">| **C++** (`.cpp`) | **Java** (`.java`) | **Python** (`.py`) | **JavaScript** (`.js`) | **C#** (`.cs`) | **Go** (`.go`) | **SQL** (`.sql`) |
+                <pre><code class="language-markdown"><!-- Clean Cache-Busted README Screenshot Link -->
+<p align="center">
+  <img src="src/assets/readme_screenshots/popup_dashboard.png?v=5" width="900" alt="TUFHub Extension Popup Dashboard" />
+</p></code></pre>
+
+                <h3>6.2 1-Row Table Header Syntax (Eliminating Blank Lines)</h3>
+                <pre><code class="language-markdown">## 💻 Supported Languages
+
+| **C++** (`.cpp`) | **Java** (`.java`) | **Python** (`.py`) | **JavaScript** (`.js`) | **C#** (`.cs`) | **Go** (`.go`) | **SQL** (`.sql`) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |</code></pre>
+
+                <h3>6.3 Collapsible Accordion Blocks for Technical Depth</h3>
+                <pre><code class="language-markdown"><details>
+<summary><b>📂 Developer Setup & Project Architecture</b></summary>
+
+### Build Commands
+```bash
+npm install     # Install dependencies
+npm run build   # Production Webpack 5 build (outputs to dist/)
+npm run dev     # Development build with watch mode
+```
+</details></code></pre>
             </div>
         </div>
 
-        <!-- STEP 4 -->
-        <div class="step-card" id="step-4">
-            <h2><span class="collapse-icon">▼</span> 🐞 Step 4: Exhaustive Bug Log & Technical Fixes</h2>
+        <!-- STEP 7 -->
+        <div class="step-card" id="step-7">
+            <h2><span class="collapse-icon">▼</span> ⚡ Step 7: Webpack 5 Build & Production Packaging</h2>
             <div class="step-content">
-                <p>Every complex build encounters unexpected runtime & rendering glitches. Here is our master resolution ledger:</p>
+                <p>Production Webpack build configuration ensuring minified output, clean asset copying, and zip archiving:</p>
+
+                <h3>7.1 Production Webpack Config (webpack.config.js)</h3>
+                <pre><code class="language-javascript">const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+module.exports = {
+  mode: 'production',
+  entry: {
+    'scripts/background': './src/scripts/background.js',
+    'scripts/popup': './src/scripts/popup.js',
+    'scripts/welcome': './src/scripts/welcome.js',
+    'scripts/tuf/content': './src/scripts/tuf/content.js',
+    'scripts/tuf/interceptor': './src/scripts/tuf/interceptor.js'
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    clean: true
+  },
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/manifest.json', to: 'manifest.json' },
+        { from: 'src/popup.html', to: 'popup.html' },
+        { from: 'src/welcome.html', to: 'welcome.html' },
+        { from: 'src/css', to: 'css' },
+        { from: 'src/assets', to: 'assets' }
+      ]
+    })
+  ]
+};</code></pre>
+
+                <h3>7.2 PowerShell Release Archiving Command</h3>
+                <pre><code class="language-powershell"># Compile Production Bundle & Recompress Clean Zip
+rtk npm run build
+rtk powershell -Command "Compress-Archive -Path dist\* -DestinationPath TUFHub-v1.0.0.zip -Force"</code></pre>
+            </div>
+        </div>
+
+        <!-- STEP 8 -->
+        <div class="step-card" id="step-8">
+            <h2><span class="collapse-icon">▼</span> 🐞 Step 8: Master Technical Bug Log & Resolutions</h2>
+            <div class="step-content">
+                <p>Complete resolution matrix covering all technical roadblocks encountered during our 12-hour session:</p>
 
                 <table>
                     <thead>
@@ -560,32 +674,51 @@
                             <td>GitHub's Camo CDN proxy served old cached versions of updated screenshots.</td>
                             <td>Appended versioned cache-buster query parameters (<code>?v=5</code>) to all markdown image URLs.</td>
                         </tr>
+                        <tr>
+                            <td><strong>Git 409 Conflict Errors</strong></td>
+                            <td>Concurrent async pushes from background service worker to same branch.</td>
+                            <td>Implemented a sequential execution queue with promise locking in <code>uploader.js</code>.</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- STEP 5 -->
-        <div class="step-card" id="step-5">
-            <h2><span class="collapse-icon">▼</span> 🚀 Step 5: Web Store Submission & Review Audit</h2>
+        <!-- STEP 9 -->
+        <div class="step-card" id="step-9">
+            <h2><span class="collapse-icon">▼</span> 🚀 Step 9: Chrome Web Store Publishing & Review Protocol</h2>
             <div class="step-content">
-                <p>Follow this checklist before pushing your ZIP package to the Chrome Developer Dashboard:</p>
+                <p>Complete operational protocol for submitting your extension package to the Chrome Developer Dashboard:</p>
 
                 <ul>
-                    <li class="task-item"><input type="checkbox" id="c15"><span class="task-text"><strong>Production Bundle Verification:</strong> Execute <code>npm run build</code> and verify all files in <code>dist/</code> compile without warnings.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c16"><span class="task-text"><strong>Clean Package Archiving:</strong> Zip contents of <code>dist/</code> into <code>TUFHub-v1.0.0.zip</code> without including source code, node_modules, or scratch scripts.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c17"><span class="task-text"><strong>Single Purpose Justification:</strong> Write a concise single-purpose justification in the developer dashboard explaining why your extension requires permission to access host domains.</span></li>
-                    <li class="task-item"><input type="checkbox" id="c18"><span class="task-text"><strong>Upload Visual Assets:</strong> Attach 1280x800 Store Presentation Cards, 440x280 Small Promo Tile, and 1400x560 Marquee Tile.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c19"><span class="task-text"><strong>Single Purpose Description:</strong> Ensure your store description clearly states the primary function ("Sync TakeUForward code submissions to GitHub").</span></li>
+                    <li class="task-item"><input type="checkbox" id="c20"><span class="task-text"><strong>Host Permission Justification:</strong> Provide explicit justification explaining why <code>*://takeuforward.org/*</code> access is required for real-time submission capture.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c21"><span class="task-text"><strong>Upload Visual Assets:</strong> Attach 1280x800 Store Presentation Cards, 440x280 Small Promo Tile, and 1400x560 Marquee Tile.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c22"><span class="task-text"><strong>Privacy Policy URL:</strong> Link to your host domain privacy policy (e.g. <code>https://arora-sir.github.io/privacy</code>) declaring zero telemetry.</span></li>
                 </ul>
+            </div>
+        </div>
 
-                <div class="callout callout-tip">
-                    <p><strong>Success Criteria:</strong> When all steps above are checked, your extension will pass automated Chrome Web Store reviews in under 2 hours!</p>
-                </div>
+        <!-- STEP 10 -->
+        <div class="step-card" id="step-10">
+            <h2><span class="collapse-icon">▼</span> ✅ Step 10: Maintenance & Operational Verification Checklist</h2>
+            <div class="step-content">
+                <p>Verify all master checklist items before releasing new updates:</p>
+
+                <ul>
+                    <li class="task-item"><input type="checkbox" id="c23"><span class="task-text">Version bumped in both <code>manifest.json</code> and <code>package.json</code>.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c24"><span class="task-text">Clean production build executed via <code>npm run build</code>.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c25"><span class="task-text">ZIP package created without source code or scratch files.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c26"><span class="task-text">All README screenshots cache-busted with <code>?v=5</code>.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c27"><span class="task-text">Zero em-dashes present in <code>README.md</code>.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c28"><span class="task-text">Supported Languages formatted in a clean 1-row table header.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c29"><span class="task-text">Interactive Blueprint linked at top and bottom of README.</span></li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <!-- Floating Reset Button -->
+    <!-- Floating Reset & Back to Top Buttons -->
     <button class="reset-btn" id="reset-btn">Reset Checkboxes</button>
     <button class="back-to-top" id="back-to-top" aria-label="Back to top">&#x2191;</button>
 
@@ -656,15 +789,33 @@
                 }
             });
 
+            // Copy Buttons for Code Blocks
+            document.querySelectorAll('pre').forEach(function(pre) {
+                var btn = document.createElement('button');
+                btn.className = 'copy-button';
+                btn.innerText = 'Copy';
+                pre.appendChild(btn);
+
+                btn.addEventListener('click', function() {
+                    var code = pre.querySelector('code');
+                    var text = code ? code.innerText : pre.innerText;
+                    navigator.clipboard.writeText(text).then(function() {
+                        btn.innerText = 'Copied!';
+                        btn.classList.add('copied');
+                        setTimeout(function() {
+                            btn.innerText = 'Copy';
+                            btn.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+            });
+
             // Dynamic Customization Card Logic
             var custBtn = document.getElementById('customize-btn');
             if (custBtn) {
                 custBtn.addEventListener('click', function() {
                     var name = document.getElementById('ext-name-input').value.trim() || 'TUFHub';
-                    var owner = document.getElementById('ext-owner-input').value.trim() || 'Arora-Sir';
-                    var ver = document.getElementById('ext-ver-input').value.trim() || '1.0.0';
-
-                    document.querySelector('h1').innerText = name + ' Extension Launch Blueprint';
+                    document.querySelector('h1').innerText = name + ' Master Blueprint';
                     custBtn.innerText = 'Updated!';
                     setTimeout(function() { custBtn.innerText = 'Customize Guide'; }, 2000);
                 });
