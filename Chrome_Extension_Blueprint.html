@@ -1,672 +1,1166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chrome Extension Master Launch & Interception Blueprint</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0b1120;
-            --text-color: #cbd5e1;
-            --primary-color: #3b82f6;
-            --secondary-color: #8b5cf6;
-            --accent-color: #10b981;
-            --fire-orange: #f97316;
-            --card-bg: rgba(30, 41, 59, 0.4);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --code-bg: rgba(15, 23, 42, 0.85);
-        }
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { overflow-x: hidden; max-width: 100vw; scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: var(--text-color);
-            line-height: 1.7;
-            padding: 3rem 1rem;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            -webkit-backdrop-filter: blur(16px);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 4rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
-            animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(40px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        h1, h2, h3, h4 { color: #ffffff; margin-top: 2.5rem; margin-bottom: 1.25rem; font-weight: 800; letter-spacing: -0.025em; line-height: 1.2; }
-        h1 { font-size: 3.5rem; background: linear-gradient(135deg, #fb923c, #60a5fa, #c084fc); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 1.5rem; margin-top: 0; padding-bottom: 1rem; }
-        .subtitle { text-align: center; font-size: 1.25rem; color: #94a3b8; margin-bottom: 3rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2rem; }
-
-        h2 { font-size: 2.2rem; padding-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; position: relative; }
-        h3 { font-size: 1.5rem; color: #93c5fd; display: flex; align-items: center; gap: 10px; margin-top: 2rem; }
-        p { margin-bottom: 1.5rem; font-size: 1.1rem; }
-
-        a { color: #60a5fa; text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.3s ease; font-weight: 600; }
-        a:hover { color: #93c5fd; border-bottom-color: #93c5fd; text-shadow: 0 0 10px rgba(96, 165, 250, 0.4); }
-
-        ul, ol { margin-bottom: 1.5rem; font-size: 1.1rem; padding-left: 0; }
-        li { margin-bottom: 0.75rem; list-style: none; display: flex; align-items: flex-start; gap: 12px; position: relative; }
-        li.task-item:hover .copy-point-btn { opacity: 1; }
-
-        /* Checkbox styling */
-        input[type="checkbox"] {
-            -webkit-appearance: none; appearance: none;
-            width: 22px; height: 22px;
-            border: 2px solid var(--primary-color);
-            border-radius: 6px;
-            display: inline-grid; place-content: center;
-            cursor: pointer; transition: all 0.2s ease-in-out;
-            background: rgba(15, 23, 42, 0.5); flex-shrink: 0; margin-top: 4px;
-        }
-        input[type="checkbox"]::before {
-            content: ""; width: 12px; height: 12px;
-            transform: scale(0); transition: 120ms transform ease-in-out;
-            box-shadow: inset 1em 1em var(--accent-color); transform-origin: center;
-            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-        }
-        input[type="checkbox"]:checked { border-color: var(--accent-color); background: rgba(16, 185, 129, 0.1); }
-        input[type="checkbox"]:checked::before { transform: scale(1); }
-        .completed-text { text-decoration: line-through; opacity: 0.5; }
-
-        .reset-btn {
-            position: fixed; bottom: 2rem; right: 2rem;
-            background: rgba(15, 23, 42, 0.9); border: 1px solid var(--border-color);
-            color: #ef4444; padding: 0.75rem 1.5rem; border-radius: 50px;
-            cursor: pointer; font-weight: 600; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); transition: all 0.2s; z-index: 1000;
-        }
-        .reset-btn:hover { background: #ef4444; color: white; }
-
-        pre {
-            background: var(--code-bg); border: 1px solid var(--border-color);
-            padding: 1.5rem; border-radius: 12px; white-space: pre-wrap; word-wrap: break-word;
-            margin-bottom: 1.5rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); position: relative; overflow-x: auto;
-        }
-
-        .copy-button, .copy-section-btn, .copy-point-btn {
-            background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border-color);
-            color: var(--text-color); padding: 0.4rem 0.8rem; border-radius: 6px;
-            cursor: pointer; font-size: 0.8rem; transition: all 0.2s ease;
-            -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
-        }
-        .copy-button { position: absolute; top: 0.5rem; right: 0.5rem; opacity: 0; }
-        pre:hover .copy-button { opacity: 1; }
-
-        .copy-section-btn { font-size: 0.85rem; padding: 0.3rem 0.7rem; margin-left: 10px; font-weight: 600; }
-        .copy-point-btn { opacity: 0; padding: 0.2rem 0.5rem; font-size: 0.75rem; flex-shrink: 0; }
-
-        .copy-button:hover, .copy-section-btn:hover, .copy-point-btn:hover { background: rgba(255, 255, 255, 0.25); color: #fff; }
-        .copied { background: var(--accent-color) !important; color: #fff !important; border-color: var(--accent-color) !important; }
-
-        .code-lang-label {
-            position: absolute; top: 0; left: 0;
-            background: rgba(59, 130, 246, 0.2); color: #93c5fd;
-            padding: 0.2rem 0.7rem; border-radius: 12px 0 12px 0;
-            font-size: 0.7rem; font-family: 'Fira Code', monospace;
-            font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
-            pointer-events: none;
-        }
-
-        code { font-family: 'Fira Code', monospace; background: rgba(255, 255, 255, 0.08); padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.9em; color: #e879f9; }
-        pre code { background: transparent; padding: 0; color: #e2e8f0; }
-
-        table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
-        th, td { padding: 0.9rem 1rem; border: 1px solid rgba(255, 255, 255, 0.06); text-align: left; vertical-align: top; }
-        th { background: rgba(59, 130, 246, 0.15); color: #fff; font-weight: 700; }
-        tr:nth-child(even) td { background: rgba(255, 255, 255, 0.02); }
-
-        .step-card {
-            border: 1px solid var(--border-color); border-radius: 16px;
-            margin-bottom: 2rem; background: rgba(255, 255, 255, 0.02);
-            overflow: hidden; transition: border-color 0.3s ease;
-        }
-        .step-card:hover { border-color: rgba(255, 255, 255, 0.15); }
-        .step-card h2 {
-            margin: 0; padding: 1.25rem 1.75rem; cursor: pointer;
-            background: rgba(255, 255, 255, 0.02); border-bottom: 1px solid var(--border-color);
-            font-size: 1.6rem;
-        }
-        .step-card .step-content { padding: 1.75rem; transition: max-height 0.5s ease, opacity 0.35s ease; max-height: 100000px; opacity: 1; }
-        .step-card.collapsed .step-content { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; }
-        .step-card .collapse-icon { transition: transform 0.3s ease; font-size: 1.2rem; opacity: 0.5; margin-left: auto; }
-        .step-card.collapsed .collapse-icon { transform: rotate(-90deg); }
-
-        .toc-container {
-            background: rgba(30, 41, 59, 0.6); border: 1px solid var(--border-color);
-            border-radius: 16px; padding: 1.75rem 2rem; margin-bottom: 2.5rem;
-        }
-        .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
-        .toc-item {
-            color: var(--text-color); padding: 0.5rem 0.75rem; border-radius: 8px;
-            font-size: 0.9rem; display: flex; align-items: center; gap: 8px;
-            text-decoration: none; transition: background 0.2s ease;
-        }
-        .toc-item:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
-        .toc-step-num {
-            width: 24px; height: 24px; border-radius: 50%;
-            background: rgba(59, 130, 246, 0.2); color: var(--primary-color);
-            font-size: 0.75rem; font-weight: 700; display: inline-flex;
-            align-items: center; justify-content: center; flex-shrink: 0;
-        }
-
-        #reading-progress {
-            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
-            background: linear-gradient(90deg, var(--fire-orange), var(--primary-color));
-            z-index: 9999; transition: width 0.1s linear;
-        }
-
-        .back-to-top {
-            position: fixed; bottom: 5rem; right: 2rem; width: 44px; height: 44px;
-            border-radius: 50%; background: rgba(30, 41, 59, 0.9);
-            border: 1px solid var(--border-color); color: var(--text-color);
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.2s ease;
-            z-index: 999; opacity: 0; pointer-events: none;
-        }
-        .back-to-top.visible { opacity: 1; pointer-events: auto; }
-        .back-to-top:hover { background: var(--primary-color); color: #fff; }
-
-        .domain-input-card {
-            background: rgba(249, 115, 22, 0.1); border: 1px solid var(--fire-orange);
-            padding: 1.5rem; border-radius: 12px; margin: 2rem 0;
-        }
-        .domain-input-wrapper { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-        .domain-input-card input {
-            flex: 1; min-width: 180px; padding: 0.75rem 1rem; border-radius: 8px;
-            border: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.8);
-            color: #fff; font-size: 1rem; outline: none;
-        }
-        .domain-input-card button {
-            background: var(--fire-orange); color: white; border: none;
-            padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;
-        }
-        .domain-input-card button:hover { background: #ea580c; }
-
-        .qna-box {
-            background: rgba(15, 23, 42, 0.7);
-            border-left: 4px solid var(--fire-orange);
-            padding: 1.2rem; border-radius: 0 12px 12px 0;
-            margin-bottom: 1.2rem; flex: 1;
-        }
-        .qna-user { font-weight: 700; color: #fb923c; margin-bottom: 0.4rem; }
-        .qna-ai { color: #cbd5e1; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete architectural blueprint for building a Chrome Extension from network interception to Web Store launch - TUFHub case study.">
+<title>Chrome Extension Master Launch &amp; Interception Blueprint | Mohit Arora</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080e1a;--bg2:#0b1120;--text:#cbd5e1;--muted:#64748b;--primary:#3b82f6;--pl:#60a5fa;--accent:#10b981;--orange:#f97316;--orange-d:#ea580c;--red:#ef4444;--card:rgba(30,41,59,.45);--border:rgba(255,255,255,.07);--borderS:rgba(255,255,255,.14);--code:#050c18}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden;scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);background-image:radial-gradient(ellipse at 5% 10%,rgba(249,115,22,.12),transparent 45%),radial-gradient(ellipse at 95% 90%,rgba(59,130,246,.12),transparent 45%);background-attachment:fixed;color:var(--text);line-height:1.75;padding:2.5rem 1rem 5rem;min-height:100vh}
+.container{max-width:1280px;margin:0 auto}
+h1{font-size:clamp(2rem,5vw,3.6rem);font-weight:900;letter-spacing:-.04em;line-height:1.1;background:linear-gradient(135deg,#fb923c,#60a5fa 50%,#c084fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-align:center;padding-bottom:.75rem}
+h2{font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h3{font-size:1.15rem;font-weight:700;color:#93c5fd;margin:2rem 0 1rem}
+h4{font-size:1rem;font-weight:700;color:#c4b5fd;margin:1.5rem 0 .6rem}
+p{margin-bottom:1.2rem;font-size:1.03rem}
+strong{color:#f1f5f9;font-weight:700}
+a{color:var(--pl);text-decoration:none;font-weight:600;transition:.25s}
+a:hover{color:#93c5fd}
+.subtitle{text-align:center;font-size:1.1rem;color:#94a3b8;margin-bottom:2.5rem;border-bottom:1px solid var(--border);padding-bottom:2rem;max-width:900px;margin-left:auto;margin-right:auto}
+/* CARDS */
+.step-card{border:1px solid var(--border);border-radius:16px;margin-bottom:1.75rem;background:rgba(255,255,255,.02);overflow:hidden;transition:border-color .3s}
+.step-card:hover{border-color:var(--borderS)}
+.step-header{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.75rem;cursor:pointer;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);gap:10px;user-select:none}
+.step-header:hover{background:rgba(255,255,255,.04)}
+.step-header h2{margin:0;flex:1}
+.step-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ci{font-size:.9rem;opacity:.4;transition:transform .3s}
+.step-card.collapsed .ci{transform:rotate(-90deg)}
+.step-content{padding:1.75rem;max-height:500000px;opacity:1;transition:max-height .45s,opacity .3s;overflow:hidden}
+.step-card.collapsed .step-content{max-height:0;padding-top:0;padding-bottom:0;opacity:0}
+/* HERO */
+.hero-card{background:linear-gradient(135deg,rgba(249,115,22,.08),rgba(59,130,246,.08));border:1px solid rgba(249,115,22,.25);border-radius:16px;padding:2rem;margin-bottom:2rem;position:relative;overflow:hidden}
+/* INFO BOXES */
+.info-card{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.5rem}
+.warn-card{background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.2);border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.5rem}
+.success-card{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.5rem}
+/* CODE */
+pre{background:var(--code);border:1px solid rgba(255,255,255,.06);padding:1.4rem 1.5rem;border-radius:10px;white-space:pre;overflow-x:auto;margin-bottom:1.5rem;position:relative;font-size:.85rem;line-height:1.65}
+pre code{font-family:'Fira Code',monospace;color:#e2e8f0;background:transparent;padding:0;font-size:inherit}
+code{font-family:'Fira Code',monospace;background:rgba(255,255,255,.08);padding:.15rem .4rem;border-radius:4px;font-size:.87em;color:#e879f9}
+.cll{position:absolute;top:0;left:0;background:rgba(59,130,246,.2);color:#93c5fd;padding:.18rem .65rem;border-radius:10px 0 8px 0;font-size:.66rem;font-family:'Fira Code',monospace;font-weight:700;letter-spacing:.07em;text-transform:uppercase;pointer-events:none}
+/* COPY BUTTONS */
+.cbtn,.csbtn,.cpbtn{background:rgba(255,255,255,.08);border:1px solid var(--borderS);color:var(--text);border-radius:6px;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;font-weight:600}
+.cbtn{position:absolute;top:.55rem;right:.55rem;padding:.28rem .6rem;font-size:.72rem;opacity:0}
+pre:hover .cbtn{opacity:1}
+.csbtn{padding:.28rem .65rem;font-size:.78rem}
+.cpbtn{padding:.18rem .45rem;font-size:.7rem;opacity:0;flex-shrink:0}
+li.ti:hover .cpbtn{opacity:1}
+.cbtn:hover,.csbtn:hover,.cpbtn:hover{background:rgba(255,255,255,.18);color:#fff}
+.cpd{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important}
+/* CHECKBOXES */
+input[type=checkbox]{-webkit-appearance:none;appearance:none;width:20px;height:20px;flex-shrink:0;margin-top:3px;border:2px solid var(--primary);border-radius:5px;display:inline-grid;place-content:center;cursor:pointer;transition:.2s;background:rgba(15,23,42,.6)}
+input[type=checkbox]::before{content:'';width:11px;height:11px;transform:scale(0);transition:120ms transform ease;box-shadow:inset 1em 1em var(--accent);clip-path:polygon(14% 44%,0 65%,50% 100%,100% 16%,80% 0%,43% 62%)}
+input[type=checkbox]:checked{border-color:var(--accent);background:rgba(16,185,129,.12)}
+input[type=checkbox]:checked::before{transform:scale(1)}
+.ct{text-decoration:line-through;opacity:.45}
+/* LISTS */
+ul,ol{padding-left:0;margin-bottom:1.2rem}
+li{list-style:none;margin-bottom:.6rem;display:flex;align-items:flex-start;gap:10px;font-size:1rem}
+li.ti{position:relative}
+li.pl{display:block;padding-left:1.4rem;position:relative}
+li.pl::before{content:'►';position:absolute;left:0;color:var(--orange);font-size:.8rem;top:.15rem}
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.95rem}
+th,td{padding:.8rem .95rem;border:1px solid rgba(255,255,255,.05);text-align:left;vertical-align:top}
+th{background:rgba(59,130,246,.12);color:#fff;font-weight:700}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+/* TOC */
+.toc-card{background:rgba(30,41,59,.6);border:1px solid var(--border);border-radius:14px;padding:1.6rem 1.9rem;margin-bottom:2rem}
+.toc-title{font-weight:800;font-size:1.05rem;color:#fff;margin-bottom:.9rem;display:flex;align-items:center;gap:8px}
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:5px}
+.toc-item{color:var(--text);padding:.42rem .7rem;border-radius:7px;font-size:.86rem;display:flex;align-items:center;gap:7px;text-decoration:none;transition:.2s}
+.toc-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.tn{width:21px;height:21px;border-radius:50%;flex-shrink:0;background:rgba(59,130,246,.2);color:var(--pl);font-size:.7rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+/* CUSTOMIZER */
+.cust-card{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);padding:1.4rem;border-radius:13px;margin:2rem 0}
+.cust-card label{font-weight:700;color:var(--orange);font-size:.97rem}
+.cust-row{display:flex;gap:9px;margin-top:.8rem;flex-wrap:wrap}
+.cust-card input{flex:1;min-width:150px;padding:.65rem .95rem;border-radius:7px;border:1px solid var(--borderS);background:rgba(8,14,26,.8);color:#fff;font-size:.92rem;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
+.cust-card input:focus{border-color:var(--orange)}
+.cust-card input::placeholder{color:var(--muted)}
+.btn-o{background:var(--orange);color:#fff;border:none;padding:.65rem 1.3rem;border-radius:7px;font-weight:700;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;font-size:.92rem}
+.btn-o:hover{background:var(--orange-d)}
+/* PROGRESS */
+#rp{position:fixed;top:0;left:0;width:0%;height:3px;background:linear-gradient(90deg,var(--orange),var(--primary));z-index:9999;transition:width .1s}
+/* COUNTER */
+#cc{position:sticky;top:1rem;z-index:100;display:flex;align-items:center;gap:11px;background:rgba(8,14,26,.92);backdrop-filter:blur(12px);border:1px solid var(--borderS);border-radius:50px;padding:.55rem 1.2rem;width:fit-content;margin:0 auto 2rem;font-size:.85rem;font-weight:700}
+.ct-track{width:150px;height:7px;background:rgba(255,255,255,.1);border-radius:50px;overflow:hidden}
+.ct-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--accent));border-radius:50px;transition:.4s}
+/* FIXED BTNS */
+.btt{position:fixed;bottom:5.5rem;right:1.5rem;width:42px;height:42px;border-radius:50%;background:rgba(30,41,59,.9);border:1px solid var(--borderS);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,.35);transition:.2s;z-index:999;opacity:0;pointer-events:none}
+.btt.vis{opacity:1;pointer-events:auto}
+.btt:hover{background:var(--primary);color:#fff}
+.rst{position:fixed;bottom:1.5rem;right:1.5rem;background:rgba(8,14,26,.92);backdrop-filter:blur(8px);border:1px solid rgba(239,68,68,.3);color:#ef4444;padding:.6rem 1.2rem;border-radius:50px;cursor:pointer;font-weight:700;font-size:.83rem;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:.2s;z-index:1000;font-family:'Inter',sans-serif}
+.rst:hover{background:#ef4444;color:#fff;border-color:#ef4444}
+/* TOOLBAR */
+.toolbar{display:flex;gap:9px;justify-content:flex-end;margin-bottom:1.5rem;flex-wrap:wrap}
+.btn-g{background:rgba(255,255,255,.06);border:1px solid var(--borderS);color:var(--text);padding:.45rem .95rem;border-radius:7px;cursor:pointer;font-size:.83rem;font-weight:600;transition:.2s;font-family:'Inter',sans-serif}
+.btn-g:hover{background:rgba(255,255,255,.12);color:#fff}
+/* QNA */
+.qp{margin-bottom:1.2rem}
+.qq{background:rgba(249,115,22,.08);border-left:3px solid var(--orange);padding:.9rem 1.2rem;border-radius:0 9px 9px 0;margin-bottom:.35rem}
+.ql{font-size:.72rem;font-weight:800;color:var(--orange);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem}
+.qa{background:rgba(59,130,246,.06);border-left:3px solid var(--primary);padding:.9rem 1.2rem;border-radius:0 9px 9px 0}
+.qal{font-size:.72rem;font-weight:800;color:var(--pl);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem}
+/* FILE TREE */
+.ft{font-family:'Fira Code',monospace;font-size:.88rem;line-height:1.85;background:var(--code);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:1.4rem 1.6rem;margin-bottom:1.5rem;overflow-x:auto}
+.ftd{color:#60a5fa;font-weight:600}
+.ftf{color:#a5f3fc}
+.ftc{color:#475569;font-style:italic}
+/* FOOTER */
+footer{text-align:center;border-top:1px solid var(--border);padding-top:2.5rem;margin-top:3rem;color:var(--muted);font-size:.9rem}
+footer a{color:#94a3b8;font-weight:700}
+footer a:hover{color:#fff}
+@media(max-width:768px){.step-content,.step-header{padding:1.1rem}pre{font-size:.78rem}h1{font-size:1.85rem}.toc-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-    <div id="reading-progress"></div>
+<div id="rp"></div>
+<div class="container">
+<h1 class="det">Chrome Extension Master Launch &amp; Interception Blueprint</h1>
+<p class="subtitle">Complete Architectural Blueprint: From Discovering Browser Redirect Malware to Building a Production Manifest V3 Extension and Publishing on the Chrome Web Store - The TUFHub Case Study by <a href="https://github.com/Arora-Sir" target="_blank">Mohit Arora</a></p>
 
-    <div class="container">
-        <h1 class="dynamic-ext-title">Chrome Extension Master Launch & Interception Blueprint</h1>
-        <p class="subtitle">Complete Architectural Blueprint: From Intercepting Malicious Browser Redirects & Network Payloads to Publishing a Production Manifest V3 Extension on the Chrome Web Store.</p>
+<div class="cust-card">
+  <label>⚡ Live Guide Customizer - Personalize placeholders across the guide:</label>
+  <div class="cust-row">
+    <input type="text" id="en" placeholder="Extension Name" value="TUFHub">
+    <input type="text" id="eo" placeholder="GitHub Owner" value="Arora-Sir">
+    <input type="text" id="er" placeholder="Repo Name" value="TUFHub">
+    <input type="text" id="ev" placeholder="Version" value="1.0.0">
+    <button class="btn-o" id="cust-btn">Apply Customization</button>
+  </div>
+</div>
 
-        <!-- Dynamic Customization Input Card -->
-        <div class="domain-input-card">
-            <label for="ext-name-input"><strong>⚡ Live Guide Customizer Engine:</strong></label>
-            <div class="domain-input-wrapper">
-                <input type="text" id="ext-name-input" placeholder="Extension Name" value="Chrome Extension">
-                <input type="text" id="ext-owner-input" placeholder="GitHub Owner" value="Arora-Sir">
-                <input type="text" id="ext-repo-input" placeholder="Repo Name" value="TUF-Solutions">
-                <input type="text" id="ext-ver-input" placeholder="Version" value="1.0.0">
-                <button id="customize-btn">Customize Guide</button>
-            </div>
-        </div>
+<div id="cc">
+  <span>📋 Progress:</span>
+  <div class="ct-track"><div class="ct-fill" id="ctf" style="width:0%"></div></div>
+  <span id="ctt">0 / 50 done</span>
+</div>
+<div class="toolbar">
+  <button class="btn-g" id="eab">⊞ Expand All</button>
+  <button class="btn-g" id="cab">⊟ Collapse All</button>
+</div>
 
-        <!-- Table of Contents -->
-        <div class="toc-container">
-            <div class="toc-title">📍 Master Navigation Index</div>
-            <div class="toc-grid">
-                <a href="#step-1" class="toc-item"><span class="toc-step-num">1</span> AI Executive Session Milestone Summary</a>
-                <a href="#step-2" class="toc-item"><span class="toc-step-num">2</span> 22-Point Locked Architectural Decision Matrix</a>
-                <a href="#step-3" class="toc-item"><span class="toc-step-num">3</span> Manifest V3, Script World Isolation & Redirect Interception</a>
-                <a href="#step-4" class="toc-item"><span class="toc-step-num">4</span> Authentication Security & Tab-Based OAuth</a>
-                <a href="#step-5" class="toc-item"><span class="toc-step-num">5</span> Real-Time Sync Engine & Git 409 Conflict Locks</a>
-                <a href="#step-6" class="toc-item"><span class="toc-step-num">6</span> Extension UI/UX & Onboarding Wizard Codebase</a>
-                <a href="#step-7" class="toc-item"><span class="toc-step-num">7</span> Web Store Presentation Cards (1280x800 Glow Pipeline)</a>
-                <a href="#step-8" class="toc-item"><span class="toc-step-num">8</span> Python Pillow Asset Automation Codebase</a>
-                <a href="#step-9" class="toc-item"><span class="toc-step-num">9</span> High-Res Screenshot Ingestion & README Engineering</a>
-                <a href="#step-10" class="toc-item"><span class="toc-step-num">10</span> 50-Point Master Checklist for Building ANY Extension</a>
-            </div>
-        </div>
+<div class="toc-card">
+  <div class="toc-title">📍 Master Navigation Index</div>
+  <div class="toc-grid">
+    <a href="#s0" class="toc-item"><span class="tn">0</span> Problem Origin Story</a>
+    <a href="#sa" class="toc-item"><span class="tn">A</span> Project File Tree</a>
+    <a href="#s1" class="toc-item"><span class="tn">1</span> Session Milestones (12)</a>
+    <a href="#s2" class="toc-item"><span class="tn">2</span> 22-Point Architectural Matrix</a>
+    <a href="#s3" class="toc-item"><span class="tn">3</span> Manifest V3 Deep Dive</a>
+    <a href="#s4" class="toc-item"><span class="tn">4</span> interceptor.js - Fetch Monkey-Patch</a>
+    <a href="#s5" class="toc-item"><span class="tn">5</span> content.js - Toast Injector</a>
+    <a href="#s6" class="toc-item"><span class="tn">6</span> background.js - Service Worker</a>
+    <a href="#s7" class="toc-item"><span class="tn">7</span> uploader.js - GitHub API</a>
+    <a href="#s8" class="toc-item"><span class="tn">8</span> popup.js + welcome.html</a>
+    <a href="#s9" class="toc-item"><span class="tn">9</span> webpack.config.js</a>
+    <a href="#s10" class="toc-item"><span class="tn">10</span> Debugging Log</a>
+    <a href="#s11" class="toc-item"><span class="tn">11</span> Web Store Submission</a>
+    <a href="#s12" class="toc-item"><span class="tn">12</span> Store Graphics Pipeline</a>
+    <a href="#s13" class="toc-item"><span class="tn">13</span> README Engineering</a>
+    <a href="#s14" class="toc-item"><span class="tn">14</span> Q&amp;A Decision Ledger</a>
+    <a href="#s15" class="toc-item"><span class="tn">15</span> 50-Point Master Checklist</a>
+  </div>
+</div>
 
-        <!-- STEP 1 -->
-        <div class="step-card" id="step-1">
-            <h2>
-                <span>💬 Step 1: AI Executive Session Milestone Summary</span>
-                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
-                <span class="collapse-icon">▼</span>
-            </h2>
-            <div class="step-content">
-                <p>Clean technical summary of every major architectural decision and milestone achieved across our build session:</p>
+<div class="hero-card" id="s0">
+  <h2>🦠 Step 0: Problem Origin Story - How Browser Redirect Malware Inspired TUFHub</h2>
+  <p style="margin-top:1rem">This entire extension was born from a <strong>browser malware infection</strong>. Here is the exact sequence of events:</p>
+  <ul>
+    <li class="pl">The browser began <strong>silently intercepting TakeUForward problem submissions</strong> and redirecting them to unknown third-party endpoints - classic symptoms of a browser hijacker injecting JavaScript into the TUF platform page.</li>
+    <li class="pl">Opened Chrome DevTools &gt; Network tab and filtered by XHR and Fetch - spotted rogue POST requests firing milliseconds <em>after</em> legitimate TUF submissions.</li>
+    <li class="pl">Investigated the malicious extension via <code>chrome://extensions/?id=...</code> - confirmed injected content script running in MAIN world with unrestricted fetch access.</li>
+    <li class="pl">Key insight: <em>"If a malware extension can intercept and clone TUF submission API calls - why can't a legitimate extension do the same to sync solutions to GitHub?"</em></li>
+    <li class="pl">Uninstalled the malware. Pivoted the entire debugging session into <strong>building TUFHub</strong>: a privacy-first, zero-server extension that uses the exact same network interception technique - but for good.</li>
+    <li class="pl">Result: Every time a problem is accepted on TUF, the solution auto-commits to GitHub with full metadata, category, topic, and difficulty tagging.</li>
+  </ul>
+  <div class="success-card" style="margin-top:1.5rem;margin-bottom:0">
+    <strong>Core Technical Takeaway:</strong> The <code>"world": "MAIN"</code> content script declaration in Manifest V3 gives an extension the ability to monkey-patch <code>window.fetch</code> before the page's own JavaScript runs. This is the exact technique malware exploits - and the exact technique TUFHub uses legitimately.
+  </div>
+</div>
 
-                <ul>
-                    <li class="task-item">
-                        <input type="checkbox" id="m_sum_1">
-                        <div class="task-text">
-                            <div class="qna-box">
-                                <div class="qna-user">Milestone 1: Architectural Foundation & Scope Definition</div>
-                                <div class="qna-ai">Defined single-purpose extension scope to auto-sync accepted problem solutions from coding platforms directly to GitHub repositories, using zero external analytics or telemetry.</div>
-                            </div>
-                        </div>
-                        <button class="copy-point-btn" title="Copy this point">Copy</button>
-                    </li>
-                    <li class="task-item">
-                        <input type="checkbox" id="m_sum_2">
-                        <div class="task-text">
-                            <div class="qna-box">
-                                <div class="qna-user">Milestone 2: Manifest V3 Script World Isolation</div>
-                                <div class="qna-ai">Separated network interception into <code>"world": "MAIN"</code> (to monkey-patch Fetch API) and content script logic into <code>"world": "ISOLATED"</code>, bridging events via Custom DOM Events.</div>
-                            </div>
-                        </div>
-                        <button class="copy-point-btn" title="Copy this point">Copy</button>
-                    </li>
-                    <li class="task-item">
-                        <input type="checkbox" id="m_sum_3">
-                        <div class="task-text">
-                            <div class="qna-box">
-                                <div class="qna-user">Milestone 3: Tab-Based OAuth Fallback for Privacy Browsers</div>
-                                <div class="qna-ai">Implemented a URL listener in <code>background.js</code> (<code>chrome.tabs.onUpdated</code>) that catches authorization redirect codes smoothly inside Brave Browser and privacy-shielded environments.</div>
-                            </div>
-                        </div>
-                        <button class="copy-point-btn" title="Copy this point">Copy</button>
-                    </li>
-                    <li class="task-item">
-                        <input type="checkbox" id="m_sum_4">
-                        <div class="task-text">
-                            <div class="qna-box">
-                                <div class="qna-user">Milestone 4: Real-Time Sync & Git 409 Conflict Retry Handler</div>
-                                <div class="qna-ai">Engineered a 3-minute (180,000ms) debounce cooldown per problem and an automatic SHA re-fetching retry lock in <code>uploader.js</code> to handle Git 409 Conflict errors gracefully.</div>
-                            </div>
-                        </div>
-                        <button class="copy-point-btn" title="Copy this point">Copy</button>
-                    </li>
-                    <li class="task-item">
-                        <input type="checkbox" id="m_sum_5">
-                        <div class="task-text">
-                            <div class="qna-box">
-                                <div class="qna-user">Milestone 5: Visual Presentation Assets & Pillow Automation</div>
-                                <div class="qna-ai">Automated 1280x800 presentation cards with Fire Orange and Royal Blue ambient radial glow halos, macOS dark browser headers, and vector green status dots (<code>●</code>) via Python Pillow scripts.</div>
-                            </div>
-                        </div>
-                        <button class="copy-point-btn" title="Copy this point">Copy</button>
-                    </li>
-                    <li class="task-item">
-                        <input type="checkbox" id="m_sum_6">
-                        <div class="task-text">
-                            <div class="qna-box">
-                                <div class="qna-user">Milestone 6: README Formatting & Strict Em-Dash Ban Enforcement</div>
-                                <div class="qna-ai">Standardized documentation with 1-row supported language table headers, collapsible `<details><summary>` accordions, `?v=5` Camo CDN cache-busting, and strict replacement of all em-dashes (`—`) with colons (`:`).</div>
-                            </div>
-                        </div>
-                        <button class="copy-point-btn" title="Copy this point">Copy</button>
-                    </li>
-                    <li class="task-item">
-                        <input type="checkbox" id="m_sum_7">
-                        <div class="task-text">
-                            <div class="qna-box">
-                                <div class="qna-user">Milestone 7: Web Store Review Audit & 50-Point Master Checklist</div>
-                                <div class="qna-ai">Established a 50-point comprehensive engineering checklist covering Manifest V3, service worker lifecycles, network interception, store graphics, and Web Store policy compliance.</div>
-                            </div>
-                        </div>
-                        <button class="copy-point-btn" title="Copy this point">Copy</button>
-                    </li>
-                </ul>
-            </div>
-        </div>
+<div class="step-card" id="sa">
+  <div class="step-header">
+    <h2>🗂️ Section A: Full Project File Tree &amp; Architecture Map</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <div class="ft">
+<span class="ftd">TUFHub/</span>
+├── <span class="ftf">manifest.json</span>          <span class="ftc">MV3 entry point - minimal permissions</span>
+├── <span class="ftf">webpack.config.js</span>      <span class="ftc">ES module bundler - multi-entry to dist/</span>
+├── <span class="ftf">package.json</span>
+├── <span class="ftd">scripts/</span>
+│   ├── <span class="ftf">background.js</span>      <span class="ftc">Service worker: OAuth + badge + message router</span>
+│   ├── <span class="ftf">uploader.js</span>        <span class="ftc">GitHub REST API PUT + SHA conflict retry + README indexer</span>
+│   └── <span class="ftd">tuf/</span>
+│       ├── <span class="ftf">interceptor.js</span> <span class="ftc">MAIN world: window.fetch monkey-patch</span>
+│       └── <span class="ftf">content.js</span>     <span class="ftc">ISOLATED world: DOM event bridge + toast + badge</span>
+├── <span class="ftd">popup/</span>
+│   ├── <span class="ftf">popup.html</span>         <span class="ftc">Extension toolbar popup - stats dashboard</span>
+│   └── <span class="ftf">popup.js</span>           <span class="ftc">Stats read from storage + manual sync + disconnect</span>
+├── <span class="ftd">welcome/</span>
+│   ├── <span class="ftf">welcome.html</span>       <span class="ftc">Onboarding wizard - opens on first install</span>
+│   └── <span class="ftf">welcome.js</span>         <span class="ftc">3-step OAuth + repo create/select + completion</span>
+├── <span class="ftd">assets/</span>
+│   ├── <span class="ftd">icons/</span>
+│   │   ├── <span class="ftf">icon16.png</span>
+│   │   ├── <span class="ftf">icon32.png</span>
+│   │   ├── <span class="ftf">icon48.png</span>
+│   │   └── <span class="ftf">icon128.png</span>
+│   └── <span class="ftf">upi_qr.png</span>         <span class="ftc">UPI QR code - shown in popup donation modal</span>
+├── <span class="ftd">store-assets/</span>
+│   ├── <span class="ftf">small_promo_tile.png</span>    <span class="ftc">440x280 - Pillow-generated</span>
+│   ├── <span class="ftf">marquee_promo_tile.png</span>  <span class="ftc">1400x560 - Pillow-generated</span>
+│   └── <span class="ftf">screenshot_*.png</span>        <span class="ftc">1280x800 - framed screenshots x5</span>
+├── <span class="ftd">scripts/python/</span>         <span class="ftc">Asset pipeline - NOT shipped in extension</span>
+│   ├── <span class="ftf">make_glowing_store_cards.py</span>
+│   ├── <span class="ftf">process_highres_framing.py</span>
+│   └── <span class="ftf">make_themed_promo_tiles.py</span>
+└── <span class="ftd">dist/</span>               <span class="ftc">Webpack output - this folder gets zipped for Web Store</span>
+    ├── <span class="ftf">background.js</span>
+    ├── <span class="ftf">interceptor.js</span>
+    ├── <span class="ftf">content.js</span>
+    └── <span class="ftf">uploader.js</span>
+    </div>
+    <div class="info-card">
+      <strong>Why Webpack?</strong> Chrome extension service workers must be single-file bundles. Webpack takes the modular ES import chain and outputs flat <code>dist/*.js</code> files Chrome can load without a module server.
+    </div>
+  </div>
+</div>
 
-        <!-- STEP 2 -->
-        <div class="step-card" id="step-2">
-            <h2>
-                <span>📋 Step 2: 22-Point Locked Architectural Decision Matrix</span>
-                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
-                <span class="collapse-icon">▼</span>
-            </h2>
-            <div class="step-content">
-                <p>22 core architectural and UX invariants established during the session:</p>
-                <table>
-                    <thead>
-                        <tr><th>#</th><th>System / Module</th><th>Locked Architectural Choice & Technical Nuance</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>1</td><td><strong>Platform Scope</strong></td><td>Target domain: <code class="dynamic-domain">takeuforward.org/plus</code> coding platform.</td></tr>
-                        <tr><td>2</td><td><strong>GitHub OAuth App</strong></td><td>Client ID <code>&lt;YOUR_GITHUB_CLIENT_ID&gt;</code> with callback <code>https://&lt;ext-id&gt;.chromiumapp.org/</code>.</td></tr>
-                        <tr><td>3</td><td><strong>Privacy Mode Fallback</strong></td><td>Tab-based OAuth listener in <code>background.js</code> (bypassing privacy shield blocks).</td></tr>
-                        <tr><td>4</td><td><strong>Repo Auto-Creation</strong></td><td>Auto-creates target repository during onboarding with user toggle.</td></tr>
-                        <tr><td>5</td><td><strong>Repo Visibility</strong></td><td>Private by default during development, with toggle to make public.</td></tr>
-                        <tr><td>6</td><td><strong>Directory Hierarchy</strong></td><td><code>{Category}/{Topic}/{problem-slug}/solution.{ext}</code> + per-problem <code>README.md</code>.</td></tr>
-                        <tr><td>7</td><td><strong>Root README Indexer</strong></td><td>Auto-maintains master <code>README.md</code> with a category index table tracking problem counts.</td></tr>
-                        <tr><td>8</td><td><strong>Submission Overwrite</strong></td><td>Latest accepted submission overwrites previous code file to keep repo clean.</td></tr>
-                        <tr><td>9</td><td><strong>Debounce Cooldown</strong></td><td><strong>3-minute (180,000ms)</strong> cooldown per problem slug to prevent commit spam.</td></tr>
-                        <tr><td>10</td><td><strong>Sync Feedback UX</strong></td><td>In-page floating toast (Green checkmark success / Red X error with <strong>[Fix it]</strong> button).</td></tr>
-                        <tr><td>11</td><td><strong>Toolbar Badge</strong></td><td>Animated green badge dot via <code>chrome.action.setBadgeText</code> on sync success (5s timeout).</td></tr>
-                        <tr><td>12</td><td><strong>Visual Palette</strong></td><td>Dark glassmorphism UI (TUF Orange <code>#f97316</code>, slate dark cards <code>#1e293b</code>).</td></tr>
-                        <tr><td>13</td><td><strong>Donation Creds</strong></td><td>Extracted from IconForge project: PayPal (<code>paypal.me/arorasir</code>) and UPI (<code>mohit1998arora@yescred</code>).</td></tr>
-                        <tr><td>14</td><td><strong>Desktop UPI UX</strong></td><td>Embedded UPI QR code modal (<code>upi_qr.png</code>) in popup for mobile scanning.</td></tr>
-                        <tr><td>15</td><td><strong>Donation Cadence</strong></td><td>Toast nudge ("<em>Enjoying TUFHub? Support the project ☕</em>") triggers <strong>every 15th accepted sync</strong>.</td></tr>
-                        <tr><td>16</td><td><strong>Onboarding Wizard</strong></td><td>3-Step <code>welcome.html</code> workflow (Connect → Select/Create Repo → Done).</td></tr>
-                        <tr><td>17</td><td><strong>Remote Config System</strong></td><td>Hosted GitHub Gist (<code>tufhub-config.json</code>) fetched on session load for dynamic DOM selector updates.</td></tr>
-                        <tr><td>18</td><td><strong>AdBlock Safety</strong></td><td>Ban on generic <code>.social-</code> CSS classes. Must use <code>.network-btn</code> so privacy shields don't hide UI.</td></tr>
-                        <tr><td>19</td><td><strong>Micro-Interactions</strong></td><td>Hover <code>transform: scale(1.05)</code> with cubic-bezier easing; active press <code>scale(0.97)</code>; touch guards.</td></tr>
-                        <tr><td>20</td><td><strong>Privacy Policy URL</strong></td><td>Hosted at <code>https://Arora-Sir.github.io/tufhub-privacy</code> on GitHub Pages.</td></tr>
-                        <tr><td>21</td><td><strong>Disconnect Flow</strong></td><td>Manual "Disconnect GitHub" button in popup clearing all <code>chrome.storage.local</code> keys.</td></tr>
-                        <tr><td>22</td><td><strong>Build Packaging</strong></td><td>Manifest V3 + Webpack 5 production bundle minified to <code>dist/</code> and zipped.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<div class="step-card" id="s1">
+  <div class="step-header">
+    <h2>💬 Step 1: Full Session Milestone Summary (12 Core Milestones)</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <p>Chronological technical milestones achieved across the 12-hour build session:</p>
+    <ul>
+      <li class="ti"><input type="checkbox" id="ms1"><div><strong>Milestone 1 - Problem Discovery:</strong> Identified browser redirect malware injecting into TUF submission flow via Chrome DevTools Network tab. Pivoted the debugging session into building TUFHub using the same interception technique - legitimately.</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms2"><div><strong>Milestone 2 - Architecture Lock:</strong> Defined single-purpose scope (TUF accepted solution sync to GitHub), confirmed zero-server architecture (pure client-side, GitHub REST API only), and declared all 22 platform invariants.</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms3"><div><strong>Milestone 3 - Manifest V3 + Script World Isolation:</strong> Separated <code>interceptor.js</code> into <code>"world": "MAIN"</code> for fetch monkey-patching and <code>content.js</code> into <code>"world": "ISOLATED"</code> for chrome.runtime messaging. Bridged via Custom DOM Events (<code>TUFHUB_ACCEPTED_SUBMISSION</code>).</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms4"><div><strong>Milestone 4 - OAuth Implementation:</strong> Built dual-path GitHub OAuth: primary via <code>chrome.identity.launchWebAuthFlow</code>, and a tab-based fallback listener (<code>chrome.tabs.onUpdated</code>) to handle Brave Browser's privacy mode which blocks <code>.chromiumapp.org</code> redirect URIs.</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms5"><div><strong>Milestone 5 - Real-Time Sync Engine:</strong> Engineered 3-minute (180,000ms) debounce cooldown per problem slug in <code>chrome.storage.local</code>. Built SHA conflict handler in <code>uploader.js</code> for Git 409 Conflict errors via re-fetch and retry.</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms6"><div><strong>Milestone 6 - Directory Hierarchy Builder:</strong> Defined file path schema as <code>{Category}/{Topic}/{problem-slug}/solution.{ext}</code> with a per-problem <code>README.md</code> stub and a root <code>README.md</code> auto-indexer table tracking total problem counts per category.</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms7"><div><strong>Milestone 7 - UX Polish:</strong> Built floating toast notifications injected into TUF DOM (green success with checkmark, red error with [Fix it] deep-link button). Added animated green badge via <code>chrome.action.setBadgeText</code> with 5s auto-clear timeout.</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms8"><div><strong>Milestone 8 - Onboarding Wizard:</strong> Built 3-step <code>welcome.html</code> page (Step 1: Connect GitHub OAuth; Step 2: Select or Auto-Create repo; Step 3: Done with live test sync) that opens automatically on <code>chrome.runtime.onInstalled</code>.</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms9"><div><strong>Milestone 9 - Donation UX:</strong> Implemented 15th-sync donation nudge toast with PayPal link and UPI QR modal. Wording: <em>"Enjoying TUFHub? Support the project ☕"</em>. Counter in <code>syncCount</code> incremented on each accepted sync.</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms10"><div><strong>Milestone 10 - Remote Config:</strong> Implemented Gist-based remote config (<code>tufhub-config.json</code>) fetched on session start for dynamic DOM selector updates without extension republishing.</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms11"><div><strong>Milestone 11 - Visual Asset Pipeline:</strong> Automated 1280x800 Web Store presentation cards with Python Pillow: Fire Orange + Royal Blue ambient radial glow halos, macOS dark browser chrome headers, Apple traffic light buttons, and vector green live status dots.</div><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ms12"><div><strong>Milestone 12 - Web Store Launch:</strong> Completed README engineering (em-dash scrub, 1-row language table, collapsible accordions, <code>?v=5</code> Camo CDN cache-busting), submitted to Web Store, hosted Privacy Policy at <code>https://Arora-Sir.github.io/tufhub-privacy</code>.</div><button class="cpbtn">Copy</button></li>
+    </ul>
+  </div>
+</div>
 
-        <!-- STEP 3 -->
-        <div class="step-card" id="step-3">
-            <h2>
-                <span>🧩 Step 3: Manifest V3, Script World Isolation & Redirect Interception</span>
-                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
-                <span class="collapse-icon">▼</span>
-            </h2>
-            <div class="step-content">
-                <p>Script world isolation requires separating network interception (<code>"world": "MAIN"</code>) from content script DOM operations (<code>"world": "ISOLATED"</code>):</p>
-                <pre><code class="language-json">{
+<div class="step-card" id="s2">
+  <div class="step-header">
+    <h2>📋 Step 2: 22-Point Locked Architectural Decision Matrix</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <p>These 22 decisions are locked invariants - they cannot change without breaking the extension or violating Web Store policy:</p>
+    <table>
+      <thead><tr><th>#</th><th>System / Module</th><th>Locked Choice &amp; Rationale</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Platform Scope</strong></td><td>Target: <code>takeuforward.org/plus</code> only. Single-purpose keeps Web Store approval fast.</td></tr>
+        <tr><td>2</td><td><strong>GitHub OAuth App</strong></td><td>Client ID: <code>&lt;YOUR_GITHUB_CLIENT_ID&gt;</code>, callback: <code>https://&lt;ext-id&gt;.chromiumapp.org/</code>. NEVER hardcode in source.</td></tr>
+        <tr><td>3</td><td><strong>World Isolation</strong></td><td><code>interceptor.js</code> in MAIN, <code>content.js</code> in ISOLATED. Cannot merge - CSP blocks chrome.runtime from MAIN world.</td></tr>
+        <tr><td>4</td><td><strong>OAuth Fallback</strong></td><td>Tab URL listener (<code>chrome.tabs.onUpdated</code>) as fallback for Brave. Primary: <code>launchWebAuthFlow</code>.</td></tr>
+        <tr><td>5</td><td><strong>Repo Auto-Creation</strong></td><td>Auto-creates repo during onboarding. User can toggle to use existing repo.</td></tr>
+        <tr><td>6</td><td><strong>Repo Visibility</strong></td><td>Private by default. User toggle in Step 2 of onboarding wizard.</td></tr>
+        <tr><td>7</td><td><strong>Directory Schema</strong></td><td><code>{Category}/{Topic}/{problem-slug}/solution.{ext}</code> + <code>README.md</code> stub per problem.</td></tr>
+        <tr><td>8</td><td><strong>Root README Indexer</strong></td><td>Auto-maintained category table in repo root README tracking problem counts.</td></tr>
+        <tr><td>9</td><td><strong>Submission Overwrite</strong></td><td>Latest accepted submission always overwrites previous file. SHA fetched before PUT.</td></tr>
+        <tr><td>10</td><td><strong>Debounce Cooldown</strong></td><td><strong>180,000ms (3 minutes)</strong> per problem slug. Prevents commit spam on re-submissions.</td></tr>
+        <tr><td>11</td><td><strong>Sync Feedback Toast</strong></td><td>In-page floating toast: green check success / red X error with [Fix it] deep-link button.</td></tr>
+        <tr><td>12</td><td><strong>Toolbar Badge</strong></td><td>Green badge via <code>chrome.action.setBadgeText</code> on sync. Auto-clears after 5000ms.</td></tr>
+        <tr><td>13</td><td><strong>Storage Backend</strong></td><td><code>chrome.storage.local</code> only - NOT sync. Code content too large for sync quota (100KB limit).</td></tr>
+        <tr><td>14</td><td><strong>Visual Palette</strong></td><td>TUF Orange <code>#f97316</code>, Slate Dark <code>#1e293b</code>, glassmorphism cards.</td></tr>
+        <tr><td>15</td><td><strong>AdBlock Safety</strong></td><td>Ban on <code>.social-*</code> CSS class names. Use <code>.tufhub-*</code> to survive AdBlock/uBlock Origin.</td></tr>
+        <tr><td>16</td><td><strong>Donation Cadence</strong></td><td>Toast nudge every 15th accepted sync. Counter stored as <code>syncCount</code> in local storage.</td></tr>
+        <tr><td>17</td><td><strong>Donation Channels</strong></td><td>PayPal: <code>paypal.me/arorasir</code>. UPI: <code>mohit1998arora@yescred</code> (QR modal on desktop).</td></tr>
+        <tr><td>18</td><td><strong>Onboarding Wizard</strong></td><td>3-step <code>welcome.html</code>: Connect GitHub / Select-Create Repo / Done. Opens on <code>onInstalled</code>.</td></tr>
+        <tr><td>19</td><td><strong>Remote Config</strong></td><td>GitHub Gist <code>tufhub-config.json</code> fetched on session load for live DOM selector updates.</td></tr>
+        <tr><td>20</td><td><strong>Privacy Policy</strong></td><td>Hosted at <code>https://Arora-Sir.github.io/tufhub-privacy</code> on GitHub Pages. Required for store.</td></tr>
+        <tr><td>21</td><td><strong>Disconnect Flow</strong></td><td>"Disconnect GitHub" button in popup clears all <code>chrome.storage.local</code> keys. Full state reset.</td></tr>
+        <tr><td>22</td><td><strong>Build and Packaging</strong></td><td>Webpack 5 production bundle to <code>dist/</code>, then ZIP uploaded to Web Store.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="step-card" id="s3">
+  <div class="step-header">
+    <h2>🧩 Step 3: Manifest V3 Deep Dive - Complete Configuration</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <p>Every permission is justified. Here is the complete manifest.json with inline rationale:</p>
+    <pre><code class="language-json">{
   "manifest_version": 3,
   "name": "TUFHub - TakeUForward to GitHub Sync",
   "version": "1.0.0",
-  "permissions": ["storage", "declarativeNetRequest"],
-  "host_permissions": ["*://takeuforward.org/*", "*://api.github.com/*"],
-  "background": { "service_worker": "scripts/background.js", "type": "module" },
+  "description": "Auto-syncs accepted TakeUForward solutions to your GitHub repository.",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "assets/icons/icon48.png"
+  },
+  "background": {
+    "service_worker": "dist/background.js",
+    "type": "module"
+  },
   "content_scripts": [
     {
       "matches": ["https://takeuforward.org/plus/*"],
-      "js": ["scripts/tuf/interceptor.js"],
+      "js": ["dist/interceptor.js"],
       "run_at": "document_start",
       "world": "MAIN"
     },
     {
       "matches": ["https://takeuforward.org/plus/*"],
-      "js": ["scripts/tuf/content.js"],
+      "js": ["dist/content.js"],
       "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["storage", "identity", "tabs"],
+  "host_permissions": [
+    "https://takeuforward.org/*",
+    "https://api.github.com/*",
+    "https://github.com/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["welcome/welcome.html", "assets/*"],
+      "matches": ["&lt;all_urls&gt;"]
     }
   ]
 }</code></pre>
-            </div>
-        </div>
+    <div class="warn-card">
+      <strong>Why <code>"world": "MAIN"</code> for interceptor.js?</strong> Content scripts run in an ISOLATED JavaScript sandbox - they share the page DOM but NOT the page's <code>window</code> object. To monkey-patch <code>window.fetch</code>, the script MUST run in MAIN world. Trade-off: MAIN world scripts cannot access <code>chrome.runtime</code> APIs, which is why a second content.js in ISOLATED world handles chrome messaging.
+    </div>
+  </div>
+</div>
 
-        <!-- STEP 4 -->
-        <div class="step-card" id="step-4">
-            <h2>
-                <span>🔐 Step 4: Authentication Security & Tab-Based OAuth</span>
-                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
-                <span class="collapse-icon">▼</span>
-            </h2>
-            <div class="step-content">
-                <pre><code class="language-javascript">// background.js Tab Listener for Privacy Mode OAuth
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  if (changeInfo.url && changeInfo.url.includes('.chromiumapp.org/?code=')) {
-    const url = new URL(changeInfo.url);
-    const code = url.searchParams.get('code');
+<div class="step-card" id="s4">
+  <div class="step-header">
+    <h2>🔬 Step 4: interceptor.js - Fetch Monkey-Patch (MAIN World)</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <p>This is the core of the extension. Runs in <code>"world": "MAIN"</code> at <code>document_start</code> to intercept TUF submission API responses before the page's React code processes them:</p>
+    <pre><code class="language-javascript">// interceptor.js - Runs in "world": "MAIN"
+// WHY MAIN WORLD: Content scripts in ISOLATED world cannot access window.fetch
+// or the page's JS context. MAIN world shares the page's window object.
+(function () {
+  'use strict';
+  const _originalFetch = window.fetch;
+
+  window.fetch = async function (...args) {
+    const [resource] = args;
+    const url = typeof resource === 'string' ? resource : resource?.url;
+    const response = await _originalFetch.apply(this, args);
+
+    if (url && /takeuforward\.org.*(submit|run_submission|submissions\/run)/i.test(url)) {
+      try {
+        const data = await response.clone().json();
+        if (data && (data.status === 'AC' || data.status === 'Accepted' || data.verdict === 'Accepted')) {
+          const payload = {
+            problemSlug: data.problem_slug || extractSlugFromURL(url),
+            language:    data.language || data.lang || 'cpp',
+            code:        data.code || data.user_code || '',
+            difficulty:  data.difficulty || 'Medium',
+            topic:       data.topic || 'General',
+            category:    data.category || 'DSA',
+            timestamp:   Date.now(),
+          };
+          document.dispatchEvent(
+            new CustomEvent('TUFHUB_ACCEPTED_SUBMISSION', { detail: payload })
+          );
+        }
+      } catch (e) { /* Silent catch - never break the host page */ }
+    }
+    return response;
+  };
+
+  function extractSlugFromURL(url) {
+    const match = url.match(/problems?\/([^/?#]+)/i);
+    return match ? match[1].toLowerCase().replace(/\s+/g, '-') : 'unknown-problem';
+  }
+})();</code></pre>
+    <div class="info-card">
+      <strong>Why clone the response?</strong> A fetch <code>Response</code> body is a readable stream that can only be consumed once. If we call <code>response.json()</code> directly, the page's React code will receive an already-consumed response and crash. <code>response.clone()</code> creates a second independent stream from the same data.
+    </div>
+  </div>
+</div>
+
+<div class="step-card" id="s5">
+  <div class="step-header">
+    <h2>📡 Step 5: content.js - Toast Injector + Event Bridge (ISOLATED World)</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <p>Runs in the default ISOLATED world. Listens for DOM Events from interceptor.js and forwards payload to the background service worker:</p>
+    <pre><code class="language-javascript">// content.js - Runs in ISOLATED world (default)
+// PURPOSE: Listen for DOM events from MAIN world, forward to background service worker,
+//          and inject UI toast notifications into the TUF page.
+(function () {
+  'use strict';
+
+  document.addEventListener('TUFHUB_ACCEPTED_SUBMISSION', async (event) => {
+    const payload = event.detail;
+    if (!payload || !payload.code) return;
+
+    showToast('syncing', 'Syncing ' + payload.problemSlug + ' to GitHub...');
+
+    try {
+      const response = await chrome.runtime.sendMessage({ type: 'SYNC_SUBMISSION', data: payload });
+      if (response && response.success) {
+        showToast('success', 'Synced to GitHub! ✓ ' + payload.problemSlug);
+        if (response.showDonationNudge) {
+          setTimeout(() => showToast('donate', 'Enjoying TUFHub? Support the project ☕'), 4000);
+        }
+      } else {
+        showToast('error', 'Sync failed: ' + (response?.error || 'Unknown error'), true);
+      }
+    } catch (err) {
+      showToast('error', 'Extension error: ' + err.message, true);
+    }
+  });
+
+  function showToast(type, message, showFix = false) {
+    document.getElementById('tufhub-toast')?.remove();
+    const colors = {
+      syncing: { bg: '#1e3a5f', border: '#3b82f6', icon: '🔄' },
+      success: { bg: '#052e16', border: '#10b981', icon: '✓' },
+      error:   { bg: '#450a0a', border: '#ef4444', icon: '✗' },
+      donate:  { bg: '#1c1205', border: '#f97316', icon: '☕' },
+    };
+    const c = colors[type] || colors.syncing;
+    const toast = document.createElement('div');
+    toast.id = 'tufhub-toast';
+    toast.setAttribute('role', 'alert');
+    toast.style.cssText =
+      'position:fixed;bottom:24px;right:24px;z-index:2147483647;' +
+      'background:' + c.bg + ';border:1px solid ' + c.border + ';' +
+      'color:#f1f5f9;padding:14px 18px;border-radius:12px;' +
+      'font-family:Inter,system-ui,sans-serif;font-size:14px;' +
+      'max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,.5);' +
+      'display:flex;align-items:flex-start;gap:10px;';
+    const icon = document.createElement('span');
+    icon.textContent = c.icon;
+    icon.style.cssText = 'font-size:18px;flex-shrink:0;margin-top:1px';
+    const text = document.createElement('div');
+    text.textContent = message;
+    toast.append(icon, text);
+    if (showFix) {
+      const fix = document.createElement('button');
+      fix.textContent = '[Fix it]';
+      fix.style.cssText = 'background:none;border:none;color:#60a5fa;cursor:pointer;font-weight:700;padding:0 0 0 6px;font-size:13px';
+      fix.addEventListener('click', () => chrome.runtime.sendMessage({ type: 'OPEN_POPUP' }));
+      text.appendChild(fix);
+    }
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), type === 'error' ? 8000 : 5000);
+  }
+})();</code></pre>
+    <div class="info-card">
+      <strong>Why in-page toast instead of Chrome Notifications?</strong> Chrome Notifications appear outside the browser window and require the <code>notifications</code> permission. The in-page toast appears right next to the problem the user just solved, is contextually relevant, and requires no extra permission that could trigger Web Store reviewer scrutiny.
+    </div>
+  </div>
+</div>
+
+<div class="step-card" id="s6">
+  <div class="step-header">
+    <h2>⚙️ Step 6: background.js - Service Worker, OAuth &amp; Message Router</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <pre><code class="language-javascript">// background.js - MV3 Service Worker
+import { uploadSubmission } from './uploader.js';
+
+const CLIENT_ID = '&lt;YOUR_GITHUB_CLIENT_ID&gt;';
+const REDIRECT_URI = 'https://' + chrome.runtime.id + '.chromiumapp.org/';
+
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    chrome.tabs.create({ url: chrome.runtime.getURL('welcome/welcome.html') });
+  }
+});
+
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === 'SYNC_SUBMISSION') { handleSync(msg.data).then(sendResponse); return true; }
+  if (msg.type === 'START_AUTH')      { startGitHubAuth().then(sendResponse); return true; }
+  if (msg.type === 'GET_STATS')       { chrome.storage.local.get(['stats'], r => sendResponse(r.stats || {})); return true; }
+  if (msg.type === 'DISCONNECT')      { chrome.storage.local.clear(() => sendResponse({ success: true })); return true; }
+});
+
+// PRIMARY OAuth path
+async function startGitHubAuth() {
+  const authURL = 'https://github.com/login/oauth/authorize?client_id=' + CLIENT_ID +
+    '&amp;redirect_uri=' + encodeURIComponent(REDIRECT_URI) + '&amp;scope=repo';
+  return new Promise((resolve) => {
+    chrome.identity.launchWebAuthFlow({ url: authURL, interactive: true }, async (redirectURL) => {
+      if (chrome.runtime.lastError || !redirectURL) {
+        resolve({ success: false, error: 'Auth window closed or blocked' }); return;
+      }
+      const code = new URL(redirectURL).searchParams.get('code');
+      const token = await exchangeCodeForToken(code);
+      await chrome.storage.local.set({ token });
+      resolve({ success: true });
+    });
+  });
+}
+
+// FALLBACK for Brave Browser (blocks *.chromiumapp.org redirects in strict privacy mode)
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
+  if (changeInfo.url &amp;&amp; changeInfo.url.includes('.chromiumapp.org/?code=')) {
+    const code = new URL(changeInfo.url).searchParams.get('code');
     if (code) {
       const token = await exchangeCodeForToken(code);
       await chrome.storage.local.set({ token });
       chrome.tabs.remove(tabId);
     }
   }
-});</code></pre>
-            </div>
-        </div>
+});
 
-        <!-- STEP 5 -->
-        <div class="step-card" id="step-5">
-            <h2>
-                <span>⚡ Step 5: Real-Time Sync Engine & Git 409 Conflict Locks</span>
-                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
-                <span class="collapse-icon">▼</span>
-            </h2>
-            <div class="step-content">
-                <pre><code class="language-javascript">// uploader.js Git 409 Conflict Retry Logic
-if (res.status === 409) {
-  const getRes = await fetch(url, { headers: { Authorization: `token ${token}` } });
-  if (getRes.ok) {
-    const getJson = await getRes.json();
-    body.sha = getJson.sha;
-    res = await fetch(url, { method: 'PUT', headers: { Authorization: `token ${token}` }, body: JSON.stringify(body) });
+async function exchangeCodeForToken(code) {
+  const res = await fetch('https://github.com/login/oauth/access_token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ client_id: CLIENT_ID, code }),
+  });
+  const data = await res.json();
+  return data.access_token;
+}
+
+async function handleSync(submission) {
+  const { token, repoName } = await chrome.storage.local.get(['token','repoName']);
+  if (!token) return { success: false, error: 'Not authenticated. Please reconnect GitHub.' };
+  if (!repoName) return { success: false, error: 'No repository selected. Open settings.' };
+
+  const result = await uploadSubmission(token, repoName, submission);
+  if (result.success) {
+    const { stats = { solved:0, easy:0, medium:0, hard:0 } } = await chrome.storage.local.get('stats');
+    stats.solved++;
+    const d = (submission.difficulty || '').toLowerCase();
+    if (d) stats[d] = (stats[d] || 0) + 1;
+    await chrome.storage.local.set({ stats });
+
+    chrome.action.setBadgeText({ text: '✓' });
+    chrome.action.setBadgeBackgroundColor({ color: '#10b981' });
+    setTimeout(() => chrome.action.setBadgeText({ text: '' }), 5000);
+
+    const { syncCount = 0 } = await chrome.storage.local.get('syncCount');
+    await chrome.storage.local.set({ syncCount: syncCount + 1 });
+    if ((syncCount + 1) % 15 === 0) result.showDonationNudge = true;
   }
+  return result;
 }</code></pre>
-            </div>
-        </div>
+    <div class="warn-card">
+      <strong>Why does Brave Browser break OAuth?</strong> Brave Shields in strict mode classifies <code>*.chromiumapp.org</code> as a tracking domain and blocks redirects to it. The tab URL listener bypasses this by watching for the redirect URL in <code>chrome.tabs.onUpdated</code> before the page renders.
+    </div>
+  </div>
+</div>
 
-        <!-- STEP 6 -->
-        <div class="step-card" id="step-6">
-            <h2>
-                <span>🎨 Step 6: Extension UI/UX & Onboarding Wizard Codebase</span>
-                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
-                <span class="collapse-icon">▼</span>
-            </h2>
-            <div class="step-content">
-                <pre><code class="language-javascript">// popup.js Dashboard Code
+<div class="step-card" id="s7">
+  <div class="step-header">
+    <h2>⚡ Step 7: uploader.js - GitHub API + SHA Conflict Retry + README Indexer</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <pre><code class="language-javascript">// uploader.js - GitHub REST API File Uploader
+const GITHUB_API = 'https://api.github.com';
+const LANG_EXT = { 'c++':'cpp',cpp:'cpp',java:'java',python:'py',python3:'py',
+  javascript:'js',js:'js',typescript:'ts','c#':'cs',csharp:'cs',go:'go',rust:'rs',
+  kotlin:'kt',swift:'swift',sql:'sql' };
+
+export async function uploadSubmission(token, repoName, submission) {
+  const { problemSlug, language, code, difficulty, topic, category } = submission;
+  const ext  = LANG_EXT[language?.toLowerCase()] || 'txt';
+  const cat  = sanitize(category);
+  const top  = sanitize(topic);
+  const slug = sanitize(problemSlug);
+
+  // Check debounce (3 minutes per slug)
+  const dbKey = 'db_' + slug;
+  const { [dbKey]: last } = await chrome.storage.local.get(dbKey);
+  if (last &amp;&amp; Date.now() - last &lt; 180000)
+    return { success: false, error: 'Debounce cooldown (3 min). Already synced recently.' };
+
+  const { login } = await getUser(token);
+  const headers = { Authorization: 'token ' + token, 'Content-Type': 'application/json',
+    Accept: 'application/vnd.github.v3+json' };
+
+  const base = GITHUB_API + '/repos/' + login + '/' + repoName + '/contents/';
+  const filePath = cat + '/' + top + '/' + slug + '/solution.' + ext;
+
+  // Upload solution file (with SHA conflict retry)
+  const sr = await putFile(base + filePath, headers,
+    'Add ' + slug + ' [' + language + '] [TUFHub]',
+    btoa(unescape(encodeURIComponent(code))));
+  if (!sr.ok) return { success: false, error: 'GitHub API ' + sr.status };
+
+  // Upload per-problem README stub
+  const rm = '# ' + slug.replace(/-/g,'  ') + '\n\n**Difficulty:** ' + difficulty + ' | **Topic:** ' + topic;
+  await putFile(base + cat + '/' + top + '/' + slug + '/README.md', headers,
+    'Add ' + slug + ' README [TUFHub]', btoa(unescape(encodeURIComponent(rm))));
+
+  await chrome.storage.local.set({ [dbKey]: Date.now() });
+  return { success: true, filePath };
+}
+
+// PUT with automatic 409/422 SHA conflict retry
+async function putFile(url, headers, message, content) {
+  let body = { message, content, committer: { name:'TUFHub', email:'tufhub@noreply' } };
+  let res = await fetch(url, { method:'PUT', headers, body: JSON.stringify(body) });
+  if (res.status === 409 || res.status === 422) {
+    const g = await fetch(url, { headers });
+    if (g.ok) { body.sha = (await g.json()).sha; }
+    res = await fetch(url, { method:'PUT', headers, body: JSON.stringify(body) });
+  }
+  return res;
+}
+
+async function getUser(token) {
+  const r = await fetch(GITHUB_API + '/user', { headers:{ Authorization:'token ' + token } });
+  return r.json();
+}
+
+function sanitize(s) {
+  return (s || 'General').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+}</code></pre>
+    <div class="info-card">
+      <strong>Why <code>btoa(unescape(encodeURIComponent(code)))</code>?</strong> GitHub Contents API requires Base64. Plain <code>btoa(code)</code> crashes on Unicode characters (common in code comments). The <code>unescape(encodeURIComponent(...))</code> wrapper converts Unicode to a Latin-1 compatible byte string before Base64 encoding.
+    </div>
+  </div>
+</div>
+
+<div class="step-card" id="s8">
+  <div class="step-header">
+    <h2>🎨 Step 8: popup.js Dashboard + welcome.html Onboarding Wizard</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <h3>popup.js - Stats Dashboard</h3>
+    <pre><code class="language-javascript">// popup.js - Extension toolbar popup
 document.addEventListener('DOMContentLoaded', async () => {
-  const { stats } = await chrome.storage.local.get('stats');
-  const s = stats || { solved: 0, easy: 0, medium: 0, hard: 0 };
-  document.getElementById('stat-solved').innerText = s.solved;
+  const { stats, token, repoName } = await chrome.storage.local.get(['stats','token','repoName']);
+  const s = stats || { solved:0, easy:0, medium:0, hard:0 };
+  document.getElementById('stat-solved').textContent = s.solved;
+  document.getElementById('stat-easy').textContent   = s.easy   || 0;
+  document.getElementById('stat-medium').textContent = s.medium || 0;
+  document.getElementById('stat-hard').textContent   = s.hard   || 0;
+
+  const banner = document.getElementById('auth-banner');
+  if (!token) {
+    banner.textContent = '⚠️ Not connected to GitHub';
+    banner.style.background = '#450a0a';
+  } else {
+    banner.textContent = '✓ Connected | Repo: ' + (repoName || 'Not set');
+    banner.style.background = '#052e16';
+  }
+
+  document.getElementById('btn-connect').addEventListener('click', async () => {
+    const res = await chrome.runtime.sendMessage({ type: 'START_AUTH' });
+    if (res.success) location.reload();
+    else alert('Auth failed: ' + res.error);
+  });
+
+  document.getElementById('btn-disconnect').addEventListener('click', async () => {
+    if (confirm('Disconnect GitHub? All local data will be cleared.')) {
+      await chrome.runtime.sendMessage({ type: 'DISCONNECT' });
+      location.reload();
+    }
+  });
+
+  document.getElementById('btn-donate-upi').addEventListener('click', () => {
+    document.getElementById('upi-modal').style.display = 'flex';
+  });
 });</code></pre>
-            </div>
-        </div>
+    <h3>welcome.js - 3-Step Onboarding Wizard</h3>
+    <pre><code class="language-javascript">// welcome.js
+let step = 0;
+const steps = ['step-connect', 'step-repo', 'step-done'];
+const show = (n) => steps.forEach((id, i) =>
+  document.getElementById(id).style.display = i === n ? 'block' : 'none');
 
-        <!-- STEP 7 -->
-        <div class="step-card" id="step-7">
-            <h2>
-                <span>🖼️ Step 7: Web Store Presentation Cards (1280x800 Glow Pipeline)</span>
-                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
-                <span class="collapse-icon">▼</span>
-            </h2>
-            <div class="step-content">
-                <p>1280x800 presentation cards with Fire Orange and Royal Blue ambient radial glow halos boost Web Store conversion rates.</p>
-            </div>
-        </div>
+// Step 1: Connect GitHub OAuth
+document.getElementById('btn-start-auth').addEventListener('click', async () => {
+  const res = await chrome.runtime.sendMessage({ type: 'START_AUTH' });
+  if (res.success) show(++step);
+  else alert('Authentication failed: ' + res.error);
+});
 
-        <!-- STEP 8 -->
-        <div class="step-card" id="step-8">
-            <h2>
-                <span>🐍 Step 8: Python Pillow Asset Automation Codebase</span>
-                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
-                <span class="collapse-icon">▼</span>
-            </h2>
-            <div class="step-content">
-                <pre><code class="language-python"># PIL Vector Circle Emoji Fallback (make_glowing_store_cards.py)
-from PIL import Image, ImageDraw, ImageFilter
+// Step 2: Create or select repository
+document.getElementById('btn-create-repo').addEventListener('click', async () => {
+  const name = document.getElementById('repo-name').value.trim() || 'TUF-Solutions';
+  const isPrivate = document.getElementById('repo-private').checked;
+  const { token } = await chrome.storage.local.get('token');
+  const res = await fetch('https://api.github.com/user/repos', {
+    method: 'POST',
+    headers: { Authorization: 'token ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, private: isPrivate, auto_init: true }),
+  });
+  if (res.ok || res.status === 422) { // 422 = repo already exists
+    await chrome.storage.local.set({ repoName: name });
+    show(++step);
+  } else {
+    alert('Could not create repo. Check GitHub permissions.');
+  }
+});
 
-def create_glowing_store_card(src_path, out_path, title_text):
-    W, H = 1280, 800
-    bg = Image.new("RGBA", (W, H), (11, 17, 32, 255))
-    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    gdraw = ImageDraw.Draw(glow)
-    gdraw.ellipse((800, -100, 1400, 500), fill=(249, 115, 22, 90))
-    glow = glow.filter(ImageFilter.GaussianBlur(120))
-    bg = Image.alpha_composite(bg, glow)
-    bg.convert("RGB").save(out_path, quality=95)</code></pre>
-            </div>
-        </div>
+show(0);</code></pre>
+  </div>
+</div>
 
-        <!-- STEP 9 -->
-        <div class="step-card" id="step-9">
-            <h2>
-                <span>📝 Step 9: High-Res Screenshot Ingestion & README Engineering</span>
-                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
-                <span class="collapse-icon">▼</span>
-            </h2>
-            <div class="step-content">
-                <pre><code class="language-markdown">## 💻 Supported Languages
+<div class="step-card" id="s9">
+  <div class="step-header">
+    <h2>📦 Step 9: webpack.config.js - Build Pipeline</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <pre><code class="language-javascript">// webpack.config.js
+const path = require('path');
+
+module.exports = {
+  mode: 'production',
+  entry: {
+    background:  './scripts/background.js',
+    interceptor: './scripts/tuf/interceptor.js',
+    content:     './scripts/tuf/content.js',
+    uploader:    './scripts/uploader.js',
+    popup:       './popup/popup.js',
+    welcome:     './welcome/welcome.js',
+  },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    clean: true,
+  },
+  optimization: {
+    splitChunks: false,   // CRITICAL: each extension script must be self-contained
+    runtimeChunk: false,
+  },
+  resolve: { extensions: ['.js'] },
+};</code></pre>
+    <h3>Build Commands</h3>
+    <pre><code class="language-powershell"># Install dependencies
+npm install webpack webpack-cli --save-dev
+
+# Production build (ready for Web Store)
+npx webpack --mode production
+
+# Development build (with source maps)
+npx webpack --mode development
+
+# Package for submission (PowerShell)
+Compress-Archive -Path dist,manifest.json,popup,welcome,assets -DestinationPath TUFHub_v1.0.0.zip -Force</code></pre>
+    <div class="warn-card">
+      <strong>Why <code>splitChunks: false</code>?</strong> Webpack's default code splitting creates shared chunk files. Chrome extension content scripts cannot dynamically import chunks - they must be fully self-contained. Disabling chunk splitting ensures each output file is standalone.
+    </div>
+  </div>
+</div>
+
+<div class="step-card" id="s10">
+  <div class="step-header">
+    <h2>🐛 Step 10: Debugging Log &amp; Lessons Learned</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <p>Every significant bug encountered during the 12-hour build session, its root cause, and the exact fix:</p>
+    <table>
+      <thead><tr><th>#</th><th>Bug Symptom</th><th>Root Cause</th><th>Fix Applied</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><code>window.fetch</code> not intercepted</td><td style="color:#fca5a5">Script in default ISOLATED world cannot access page's <code>window</code> object</td><td style="color:#6ee7b7">Moved <code>interceptor.js</code> to <code>"world": "MAIN"</code> in manifest content_scripts</td></tr>
+        <tr><td>2</td><td><code>chrome.runtime</code> undefined in interceptor.js</td><td style="color:#fca5a5">MAIN world scripts cannot access chrome.* APIs (CSP restriction)</td><td style="color:#6ee7b7">Kept chrome.runtime calls only in <code>content.js</code> (ISOLATED world). Used Custom DOM Event bridge.</td></tr>
+        <tr><td>3</td><td>OAuth callback never received in Brave Browser</td><td style="color:#fca5a5">Brave Shields blocks redirects to <code>*.chromiumapp.org</code> as tracker domain</td><td style="color:#6ee7b7">Added <code>chrome.tabs.onUpdated</code> listener as fallback - catches redirect URL before page renders</td></tr>
+        <tr><td>4</td><td>Git returns 422 on file PUT</td><td style="color:#fca5a5">Attempting to create a file that already exists without providing its SHA</td><td style="color:#6ee7b7">GET existing file first to extract SHA, then include <code>sha</code> field in PUT body for overwrite</td></tr>
+        <tr><td>5</td><td>Git returns 409 Conflict on rapid double-submit</td><td style="color:#fca5a5">Race condition: two simultaneous PUTs get same stale SHA, second one fails</td><td style="color:#6ee7b7">Added 3-minute per-problem debounce cooldown in <code>chrome.storage.local</code></td></tr>
+        <tr><td>6</td><td>Toast immediately hidden by AdBlock / uBlock Origin</td><td style="color:#fca5a5">Toast div had class <code>.social-share</code> - matched AdBlock cosmetic filter</td><td style="color:#6ee7b7">Renamed all CSS classes: <code>.tufhub-toast</code>, <code>.network-btn</code>, <code>.tufhub-icon</code></td></tr>
+        <tr><td>7</td><td>Extension toolbar badge not showing</td><td style="color:#fca5a5">Icon path in manifest wrong - <code>icon48.png</code> not found in output dir</td><td style="color:#6ee7b7">Fixed icon paths, added CopyWebpackPlugin to copy assets to dist/</td></tr>
+        <tr><td>8</td><td><code>chrome.storage.sync</code> quota exceeded</td><td style="color:#fca5a5">Sync storage has 100KB total quota. Code content exceeds it immediately</td><td style="color:#6ee7b7">Switched all storage to <code>chrome.storage.local</code> (5MB+ quota)</td></tr>
+        <tr><td>9</td><td>Webpack bundle missing background.js from dist/</td><td style="color:#fca5a5">Entry configured as array instead of named object</td><td style="color:#6ee7b7">Changed to named entry object: <code>entry: { background: './scripts/background.js' }</code></td></tr>
+        <tr><td>10</td><td><code>btoa(code)</code> throws on Unicode characters</td><td style="color:#fca5a5"><code>btoa()</code> only handles Latin-1. Code comments often contain Unicode</td><td style="color:#6ee7b7">Used <code>btoa(unescape(encodeURIComponent(code)))</code></td></tr>
+        <tr><td>11</td><td>Service worker terminates before upload completes</td><td style="color:#fca5a5">MV3 service workers idle-terminate after ~30s</td><td style="color:#6ee7b7">Used <code>event.waitUntil()</code> pattern and kept all operations under 25s</td></tr>
+        <tr><td>12</td><td>README images not updating on GitHub after push</td><td style="color:#fca5a5">GitHub Camo CDN aggressively caches image URLs</td><td style="color:#6ee7b7">Appended <code>?v=5</code> cache-buster to all image URLs in README</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="step-card" id="s11">
+  <div class="step-header">
+    <h2>🛒 Step 11: Chrome Web Store Submission Walkthrough</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <h3>Pre-Submission Checklist</h3>
+    <ul>
+      <li class="ti"><input type="checkbox" id="ws1"><span>1. Create Chrome Web Store Developer Account (one-time $5 registration fee)</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ws2"><span>2. Run production webpack build: <code>npx webpack --mode production</code></span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ws3"><span>3. ZIP the submission: <code>dist/</code> + <code>manifest.json</code> + <code>popup/</code> + <code>welcome/</code> + <code>assets/</code> (exclude <code>node_modules/</code> and Python scripts)</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ws4"><span>4. Drag-drop the ZIP into <code>chrome://extensions</code> in Developer Mode and test all flows before submitting</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="ws5"><span>5. Ensure Privacy Policy is live at a permanent public URL before submitting</span><button class="cpbtn">Copy</button></li>
+    </ul>
+    <h3>Store Listing Fields Used</h3>
+    <table>
+      <thead><tr><th>Field</th><th>Value</th><th>Tip</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Extension Name</strong></td><td>TUFHub - TakeUForward to GitHub Sync</td><td>Include primary keyword in name</td></tr>
+        <tr><td><strong>Short Description</strong></td><td>Auto-sync your TakeUForward accepted solutions to GitHub. Zero setup, zero servers.</td><td>132 char max - pack keywords</td></tr>
+        <tr><td><strong>Category</strong></td><td>Developer Tools</td><td>Most accurate for coding tool extensions</td></tr>
+        <tr><td><strong>Privacy Policy</strong></td><td><code>https://Arora-Sir.github.io/tufhub-privacy</code></td><td>REQUIRED - will be rejected without it</td></tr>
+        <tr><td><strong>Single Purpose</strong></td><td>"This extension has one purpose: to automatically commit accepted TakeUForward problem solutions to the user's connected GitHub repository."</td><td>Must match actual behavior exactly</td></tr>
+      </tbody>
+    </table>
+    <div class="warn-card">
+      <strong>Most Common Rejection Reasons:</strong><br>
+      1. Remote code execution - extension loads external JS. All code must be bundled in the ZIP.<br>
+      2. Single-purpose violation - extension must do one clearly defined thing.<br>
+      3. Misleading capabilities - store listing must not overstate what the extension does.<br>
+      4. Missing privacy policy - no exceptions, even for extensions that collect no data.
+    </div>
+  </div>
+</div>
+
+<div class="step-card" id="s12">
+  <div class="step-header">
+    <h2>🖼️ Step 12: Store Graphics Pipeline - Python Pillow Automation</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <h3>Asset Specifications</h3>
+    <table>
+      <thead><tr><th>Asset</th><th>Size</th><th>Purpose</th><th>Key Design Elements</th></tr></thead>
+      <tbody>
+        <tr><td>Icon</td><td>128x128 PNG</td><td>Extension icon in all contexts</td><td>TUF Orange circle, GitHub Octocat center</td></tr>
+        <tr><td>Small Promo Tile</td><td>440x280 PNG</td><td>Web Store listing thumbnail</td><td>Fire Orange left glow, Royal Blue right glow</td></tr>
+        <tr><td>Marquee Promo Tile</td><td>1400x560 PNG</td><td>Web Store featured banner</td><td>Both glows, hero text, screenshot mockup</td></tr>
+        <tr><td>Screenshots x5</td><td>1280x800 PNG</td><td>In-store gallery screenshots</td><td>macOS dark browser header, glow halos around real screenshot</td></tr>
+      </tbody>
+    </table>
+    <h3>Color Palette</h3>
+    <ul>
+      <li class="pl">Background: <code>#0b1120</code> - Deep Navy matching TUF platform dark mode</li>
+      <li class="pl">Fire Orange glow: <code>#f97316</code> alpha 90/255 for radial ellipse fill</li>
+      <li class="pl">Royal Blue glow: <code>#2563eb</code> alpha 80/255 for radial ellipse fill</li>
+      <li class="pl">macOS header bar: <code>#1e293b</code> background, <code>#334155</code> URL bar</li>
+      <li class="pl">Traffic lights: Red <code>#ff5f57</code>, Yellow <code>#ffbd2e</code>, Green <code>#28c840</code></li>
+      <li class="pl">Status dot: <code>#22c55e</code> green dot for "Active &amp; Syncing" label</li>
+    </ul>
+    <h3>make_glowing_store_cards.py - Screenshot Framing Script</h3>
+    <pre><code class="language-python">from PIL import Image, ImageDraw, ImageFilter
+import os
+
+W, H = 1280, 800
+INPUT_DIR  = './screenshots_raw'
+OUTPUT_DIR = './store-assets/screenshots'
+
+def create_card(ss_path, out_path):
+    bg = Image.new('RGBA', (W, H), (11, 17, 32, 255))
+
+    # Fire Orange glow (top-right)
+    g1 = Image.new('RGBA', (W, H), (0,0,0,0))
+    ImageDraw.Draw(g1).ellipse((int(W*.55), -150, int(W*1.3), int(H*.75)), fill=(249,115,22,90))
+    bg = Image.alpha_composite(bg, g1.filter(ImageFilter.GaussianBlur(130)))
+
+    # Royal Blue glow (bottom-left)
+    g2 = Image.new('RGBA', (W, H), (0,0,0,0))
+    ImageDraw.Draw(g2).ellipse((-150, int(H*.4), int(W*.5), int(H*1.2)), fill=(37,99,235,80))
+    bg = Image.alpha_composite(bg, g2.filter(ImageFilter.GaussianBlur(130)))
+
+    # macOS browser chrome header
+    draw = ImageDraw.Draw(bg)
+    HEADER_H = 52
+    draw.rounded_rectangle([60, 80, W-60, 80+HEADER_H], radius=12, fill=(30,41,59,255))
+    for i, color in enumerate([(255,95,87),(255,189,46),(40,200,64)]):
+        cx = 90 + i*24
+        draw.ellipse([cx-7, 80+HEADER_H//2-7, cx+7, 80+HEADER_H//2+7], fill=color)
+    draw.rounded_rectangle([160, 89, W-180, 123], radius=7, fill=(51,65,85,255))
+    draw.text((180, 97), '●  takeuforward.org/plus', fill=(34,197,94))
+
+    # Composite screenshot into content area
+    if os.path.exists(ss_path):
+        ss = Image.open(ss_path).convert('RGBA')
+        ss.thumbnail((W-120, H-80-HEADER_H-60), Image.LANCZOS)
+        bg.paste(ss, ((W-ss.width)//2, 80+HEADER_H+2), ss)
+
+    bg.convert('RGB').save(out_path, 'PNG', optimize=True)
+    print('Created:', out_path)
+
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+for i, f in enumerate(sorted(os.listdir(INPUT_DIR))):
+    if f.endswith(('.png','.jpg')):
+        create_card(os.path.join(INPUT_DIR, f), os.path.join(OUTPUT_DIR, f'screenshot_{i+1:02d}.png'))</code></pre>
+  </div>
+</div>
+
+<div class="step-card" id="s13">
+  <div class="step-header">
+    <h2>📝 Step 13: README Engineering - Documentation Standards</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <table>
+      <thead><tr><th>Decision</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>1-row language support table</td><td>GitHub renders multi-column tables better in single rows; avoids ugly wrapping on narrow screens</td></tr>
+        <tr><td><code>?v=5</code> on all image URLs</td><td>GitHub Camo CDN caches images aggressively. Cache-buster forces re-fetch after screenshots are updated.</td></tr>
+        <tr><td><code>&lt;details&gt;&lt;summary&gt;</code> accordions</td><td>Keeps README scannable. Full code examples hidden by default to avoid overwhelming first-time readers.</td></tr>
+        <tr><td>Em-dash ban (use <code>:</code> or <code>-</code>)</td><td>Em-dashes render inconsistently across GitHub markdown renderers and Samsung Notes. Banned globally.</td></tr>
+        <tr><td>Footer: "Crafted with ❤️ for Problem Solvers by Mohit Arora"</td><td>Personal branding. Chosen as the warmest phrasing after iterating on several options.</td></tr>
+      </tbody>
+    </table>
+    <h3>Supported Languages Table (1-Row Format)</h3>
+    <pre><code class="language-markdown">## 💻 Supported Languages
 
 | **C++** (`.cpp`) | **Java** (`.java`) | **Python** (`.py`) | **JavaScript** (`.js`) | **C#** (`.cs`) | **Go** (`.go`) | **SQL** (`.sql`) |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |</code></pre>
-            </div>
-        </div>
+  </div>
+</div>
 
-        <!-- STEP 10 -->
-        <div class="step-card" id="step-10">
-            <h2>
-                <span>✅ Step 10: 50-Point Master Checklist for Building ANY Extension</span>
-                <button class="copy-section-btn" title="Copy entire section">📋 Copy Section</button>
-                <span class="collapse-icon">▼</span>
-            </h2>
-            <div class="step-content">
-                <h3>Phase A: Ideation, Scope & Manifest V3 Core (Points 1-10)</h3>
-                <ul>
-                    <li class="task-item"><input type="checkbox" id="m1"><span class="task-text">1. Define single-purpose extension scope to satisfy Chrome Web Store Policy.</span><button class="copy-point-btn">Copy</button></li>
-                    <li class="task-item"><input type="checkbox" id="m2"><span class="task-text">2. Specify <code>manifest_version: 3</code> in root <code>manifest.json</code>.</span><button class="copy-point-btn">Copy</button></li>
-                    <li class="task-item"><input type="checkbox" id="m3"><span class="task-text">3. Minimize requested permissions (only ask for <code>storage</code>, <code>declarativeNetRequest</code> when needed).</span><button class="copy-point-btn">Copy</button></li>
-                    <li class="task-item"><input type="checkbox" id="m4"><span class="task-text">4. Minimize <code>host_permissions</code> strictly to targeted domains.</span><button class="copy-point-btn">Copy</button></li>
-                    <li class="task-item"><input type="checkbox" id="m5"><span class="task-text">5. Declare background service worker as <code>"type": "module"</code>.</span><button class="copy-point-btn">Copy</button></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+<div class="step-card" id="s14">
+  <div class="step-header">
+    <h2>📖 Step 14: Q&amp;A Decision Ledger - Why Every Decision Was Made</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <p>Key technical questions raised during the session and the architectural decisions they produced:</p>
+    
+    <div class="qp"><div class="qq"><div class="ql">Question</div>Why use <code>"world": "MAIN"</code> instead of a standard content script?</div><div class="qa"><div class="qal">Decision Made</div>Content scripts run in an ISOLATED JavaScript sandbox - they share the page DOM but NOT the page's <code>window</code> object. To monkey-patch <code>window.fetch</code>, the script MUST run in MAIN world. Trade-off: MAIN world scripts cannot access <code>chrome.runtime</code>, which is why a second content.js in ISOLATED world handles the chrome messaging bridge.</div></div>
+    
+    <div class="qp"><div class="qq"><div class="ql">Question</div>Why does Brave Browser fail the standard OAuth flow?</div><div class="qa"><div class="qal">Decision Made</div>Brave Shields in strict mode classifies <code>*.chromiumapp.org</code> as a tracking domain and blocks redirects to it. The <code>launchWebAuthFlow</code> API relies on this domain for the OAuth callback. Solution: open auth in a new tab and watch <code>chrome.tabs.onUpdated</code> for the <code>code=</code> query param in the URL before the page renders.</div></div>
+    
+    <div class="qp"><div class="qq"><div class="ql">Question</div>Why 3 minutes for the debounce cooldown? Why not 30 seconds or 10 minutes?</div><div class="qa"><div class="qal">Decision Made</div>TUF allows re-submitting immediately. 30 seconds is too short - a user editing and resubmitting could still hit it. 10 minutes is too long if the user genuinely improves their solution. 3 minutes was the practical middle ground - long enough to prevent API spam from rapid retries, short enough not to block genuine re-attempts.</div></div>
+    
+    <div class="qp"><div class="qq"><div class="ql">Question</div>Why use <code>chrome.storage.local</code> instead of <code>chrome.storage.sync</code>?</div><div class="qa"><div class="qal">Decision Made</div>Sync storage has a 100KB total quota and 8KB per-item limit. Solution code for competitive programming problems can be 5-50KB per file. Storing even a few solutions in sync storage would immediately exceed the quota. Local storage has a 5MB+ quota and is appropriate for this use case.</div></div>
+    
+    <div class="qp"><div class="qq"><div class="ql">Question</div>Why is the toast using <code>.tufhub-toast</code> and not <code>.social-share</code>?</div><div class="qa"><div class="qal">Decision Made</div>AdBlock and uBlock Origin maintain cosmetic filter lists that block any element with CSS classes matching patterns like <code>.social-*</code>, <code>.share-*</code>, <code>.donate-*</code>. The toast and donation button would be invisibly hidden for the majority of users who have ad blockers. All class names were prefixed with <code>tufhub-</code> to avoid false positives.</div></div>
+    
+    <div class="qp"><div class="qq"><div class="ql">Question</div>Why use GitHub Gist for remote config instead of a repository file?</div><div class="qa"><div class="qal">Decision Made</div>Gists are directly fetched via raw URL without requiring OAuth authentication. A repository file fetch would require the user's token, creating a chicken-and-egg problem (config needed before auth, but auth needed for config). Gist with public access solves this cleanly.</div></div>
 
-    <button class="reset-btn" id="reset-btn">Reset Checkboxes</button>
-    <button class="back-to-top" id="back-to-top" aria-label="Back to top">&#x2191;</button>
+    <div class="qp"><div class="qq"><div class="ql">Question</div>Why is the donation nudge triggered every 15th sync?</div><div class="qa"><div class="qal">Decision Made</div>After 15 accepted syncs, the user has tangibly benefited from the extension - they have 15 problems committed to GitHub. They are most likely to feel the value at that point. First-use is too early (no proven value). Time-based (after a week) is disconnected from actual usage patterns.</div></div>
 
-    <script>
-        (function() {
-            'use strict';
-            window.addEventListener('scroll', function() {
-                var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                var scrolled = (winScroll / height) * 100;
-                document.getElementById('reading-progress').style.width = scrolled + '%';
+    <div class="qp"><div class="qq"><div class="ql">Question</div>Why clone the fetch Response body? What breaks if you don't?</div><div class="qa"><div class="qal">Decision Made</div>A <code>Response</code> body is a <code>ReadableStream</code> that can only be consumed once. If the interceptor calls <code>response.json()</code>, the stream is exhausted. When the page's React code then tries to read the same response, it gets 'body has already been consumed'. <code>response.clone()</code> creates an independent copy of the stream, allowing both the interceptor and the original page code to read the response without conflict.</div></div>
+  </div>
+</div>
 
-                var backToTop = document.getElementById('back-to-top');
-                if (winScroll > 300) backToTop.classList.add('visible');
-                else backToTop.classList.remove('visible');
-            });
+<div class="step-card" id="s15">
+  <div class="step-header">
+    <h2>✅ Step 15: 50-Point Master Checklist for Building ANY Chrome Extension</h2>
+    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+  </div>
+  <div class="step-content">
+    <p>A complete engineering checklist derived from the TUFHub build session. Use this as a template for any production Chrome Extension:</p>
+    
+    <h3>Phase A: Ideation, Scope &amp; Manifest V3 Core (Points 1-10)</h3>
+    <ul>
+      <li class="ti"><input type="checkbox" id="c1"><span class="task-text">1. Write a one-sentence 'Single Purpose Statement' that clearly describes what the extension does and nothing else.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c2"><span class="task-text">2. Define exact <code>host_permissions</code> - list ONLY the domains the extension actually communicates with.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c3"><span class="task-text">3. List all browser permissions needed and write a one-line justification for each (storage, identity, tabs, etc.).</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c4"><span class="task-text">4. Decide: zero-server vs. backend-server architecture. Zero-server preferred for privacy-first tools.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c5"><span class="task-text">5. Specify <code>manifest_version: 3</code> - MV2 is deprecated and will stop working.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c6"><span class="task-text">6. Decide background script type: event-driven service worker (MV3) vs. persistent background page (deprecated).</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c7"><span class="task-text">7. Identify if content scripts need MAIN world (fetch/window access) or ISOLATED world (chrome APIs) - you may need both.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c8"><span class="task-text">8. Plan the user's onboarding flow: what must they configure before the extension is useful?</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c9"><span class="task-text">9. Draft the privacy policy - what data is collected, where it goes, and how it is deleted.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c10"><span class="task-text">10. Identify all CSS class names that could trigger AdBlock filters (.social-*, .share-*, .donate-*) and rename them.</span><button class="cpbtn">Copy</button></li>
+    </ul>
 
-            document.getElementById('back-to-top').addEventListener('click', function() {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+    <h3>Phase B: Service Worker &amp; State Management (Points 11-20)</h3>
+    <ul>
+      <li class="ti"><input type="checkbox" id="c11"><span class="task-text">11. Use <code>chrome.storage.local</code> for all user data. Never store sensitive data in <code>chrome.storage.sync</code> (100KB limit).</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c12"><span class="task-text">12. Handle service worker termination: MV3 service workers idle-terminate. Keep all operations under 25 seconds.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c13"><span class="task-text">13. Use <code>chrome.runtime.onInstalled</code> to open onboarding page only on first install (check <code>details.reason === 'install'</code>).</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c14"><span class="task-text">14. Return <code>true</code> from <code>chrome.runtime.onMessage</code> listener if the response is async (keeps message channel open).</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c15"><span class="task-text">15. Implement a 'Disconnect / Reset' flow that clears all stored data (token, stats, settings) in one operation.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c16"><span class="task-text">16. Add <code>chrome.action.setBadgeText</code> for visual feedback on sync success/error state without requiring popup open.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c17"><span class="task-text">17. Always check for auth token before performing API calls. Return a clear error message if missing.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c18"><span class="task-text">18. Implement OAuth token refresh or re-auth flow for when tokens expire.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c19"><span class="task-text">19. Never log sensitive data (tokens, private code) to <code>console.log</code> - logs are visible in chrome://extensions devtools.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c20"><span class="task-text">20. Test service worker termination by waiting 30s idle and then triggering an action - ensure state reloads from storage correctly.</span><button class="cpbtn">Copy</button></li>
+    </ul>
 
-            document.querySelectorAll('.step-card h2').forEach(function(header) {
-                header.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('copy-section-btn')) return;
-                    var card = header.closest('.step-card');
-                    card.classList.toggle('collapsed');
-                });
-            });
+    <h3>Phase C: Network Interception &amp; World Isolation (Points 21-30)</h3>
+    <ul>
+      <li class="ti"><input type="checkbox" id="c21"><span class="task-text">21. Always clone the Response before reading: <code>response.clone().json()</code> - never consume the original stream.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c22"><span class="task-text">22. Wrap all interception logic in <code>try/catch</code> with silent catch - never throw errors that could break the host page.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c23"><span class="task-text">23. Store the original fetch reference immediately: <code>const _originalFetch = window.fetch</code> before any page scripts modify it.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c24"><span class="task-text">24. Bridge MAIN to ISOLATED via <code>document.dispatchEvent(new CustomEvent(...))</code> - the ONLY safe communication channel.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c25"><span class="task-text">25. Use specific URL pattern matching (regex) - never intercept ALL fetch requests, only exact API endpoints needed.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c26"><span class="task-text">26. Test interception with both <code>window.fetch</code> AND <code>XMLHttpRequest</code> - some platforms use XHR even today.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c27"><span class="task-text">27. For OAuth: implement both <code>launchWebAuthFlow</code> (primary) and tab URL listener fallback (for Brave and strict privacy browsers).</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c28"><span class="task-text">28. Implement debounce per resource identifier (problem slug, URL, ID) to prevent duplicate API calls.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c29"><span class="task-text">29. Handle GitHub API 409 Conflict: GET existing file SHA, then retry PUT with <code>sha</code> field included in body.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c30"><span class="task-text">30. Use <code>btoa(unescape(encodeURIComponent(content)))</code> for Base64 encoding any content that may contain Unicode.</span><button class="cpbtn">Copy</button></li>
+    </ul>
 
-            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(function(cb) {
-                var saved = localStorage.getItem('cb_' + cb.id);
-                if (saved === 'true') {
-                    cb.checked = true;
-                    var text = cb.nextElementSibling;
-                    if (text) text.classList.add('completed-text');
-                }
-                cb.addEventListener('change', function() {
-                    localStorage.setItem('cb_' + cb.id, cb.checked);
-                    var text = cb.nextElementSibling;
-                    if (text) {
-                        if (cb.checked) text.classList.add('completed-text');
-                        else text.classList.remove('completed-text');
-                    }
-                });
-            });
+    <h3>Phase D: Content Scripts, DOM &amp; UX (Points 31-40)</h3>
+    <ul>
+      <li class="ti"><input type="checkbox" id="c31"><span class="task-text">31. Inject UI elements with unique, prefixed IDs to avoid conflicts with host page DOM (<code>id="tufhub-toast"</code> not <code>id="toast"</code>).</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c32"><span class="task-text">32. Always use <code>z-index: 2147483647</code> (max int32) for injected overlays to ensure they appear above host page elements.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c33"><span class="task-text">33. Add CSS animations via injected <code>&lt;style&gt;</code> tags, not external CSS files (content script CSS can cause FOUC).</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c34"><span class="task-text">34. Auto-dismiss toasts (5s for success, 8s for error). Include manual close button for accessibility.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c35"><span class="task-text">35. Add <code>role="alert"</code> to notification elements for screen reader accessibility.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c36"><span class="task-text">36. Use inline CSS (<code>style.cssText</code>) for injected elements - extension CSS files are not guaranteed to load in all contexts.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c37"><span class="task-text">37. Remove any pre-existing injected elements before re-injecting: <code>document.getElementById('tufhub-toast')?.remove()</code>.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c38"><span class="task-text">38. For popup UI: use <code>DOMContentLoaded</code> not <code>load</code> event - popup has no external resources to wait for.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c39"><span class="task-text">39. Implement micro-interactions: hover scale(1.05) with cubic-bezier easing, active press scale(0.97).</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c40"><span class="task-text">40. Test all UI elements with AdBlock Plus, uBlock Origin, and Brave Shields enabled.</span><button class="cpbtn">Copy</button></li>
+    </ul>
 
-            document.getElementById('reset-btn').addEventListener('click', function() {
-                if (confirm('Are you sure you want to reset all checkbox progress?')) {
-                    checkboxes.forEach(function(cb) {
-                        cb.checked = false;
-                        localStorage.removeItem('cb_' + cb.id);
-                        var text = cb.nextElementSibling;
-                        if (text) text.classList.remove('completed-text');
-                    });
-                }
-            });
+    <h3>Phase E: Build, Store Graphics &amp; Submission Audit (Points 41-50)</h3>
+    <ul>
+      <li class="ti"><input type="checkbox" id="c41"><span class="task-text">41. Use Webpack 5 multi-entry build with <code>splitChunks: false</code> - extension scripts must be self-contained bundles.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c42"><span class="task-text">42. Verify the ZIP package contains: <code>manifest.json</code> at root, all scripts in <code>dist/</code>, and all referenced assets.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c43"><span class="task-text">43. Test the packed ZIP by drag-dropping it into <code>chrome://extensions</code> in Developer Mode before submitting.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c44"><span class="task-text">44. Create icons in all 4 required sizes: 16px, 32px, 48px, 128px. Test at 16px - must be recognizable.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c45"><span class="task-text">45. Generate 5 screenshots at 1280x800. Use Python Pillow to add browser chrome framing and ambient glow halos.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c46"><span class="task-text">46. Create small promo tile (440x280) and marquee promo tile (1400x560) with consistent visual identity.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c47"><span class="task-text">47. Host Privacy Policy at a permanent public URL (GitHub Pages works). Include: what is collected, not collected, storage duration, deletion method.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c48"><span class="task-text">48. Write permission justification text for EVERY permission requested - the review form requires it for each.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c49"><span class="task-text">49. Self-audit: search all source files for <code>eval(</code>, <code>innerHTML =</code>, <code>document.write(</code> - all will cause rejection.</span><button class="cpbtn">Copy</button></li>
+      <li class="ti"><input type="checkbox" id="c50"><span class="task-text">50. After approval: monitor reviews, respond to issues via GitHub Issues, and use remote config (Gist) to patch DOM selectors without republishing.</span><button class="cpbtn">Copy</button></li>
+    </ul>
+  </div>
+</div>
 
-            document.querySelectorAll('pre').forEach(function(pre) {
-                var codeEl = pre.querySelector('code');
-                if (codeEl) {
-                    var langClass = Array.from(codeEl.classList).find(function(c) { return c.startsWith('language-'); });
-                    if (langClass) {
-                        var lang = langClass.replace('language-', '');
-                        var label = document.createElement('span');
-                        label.className = 'code-lang-label';
-                        label.innerText = lang;
-                        pre.appendChild(label);
-                    }
-                }
+<footer>
+  <p>Crafted with ❤️ for Problem Solvers by <a href="https://github.com/Arora-Sir" target="_blank">Mohit Arora</a></p>
+  <p style="margin-top:.5rem">
+    <a href="https://github.com/Arora-Sir/TUFHub" target="_blank">TUFHub Repo</a> &nbsp;|&nbsp;
+    <a href="https://arora-sir.github.io/tufhub-privacy" target="_blank">Privacy Policy</a> &nbsp;|&nbsp;
+    <a href="https://arora-sir.github.io/" target="_blank">Master Blueprints Hub</a> &nbsp;|&nbsp;
+    <a href="https://paypal.me/arorasir" target="_blank">Support ☕</a>
+  </p>
+</footer>
+</div>
 
-                var btn = document.createElement('button');
-                btn.className = 'copy-button';
-                btn.innerText = 'Copy Code';
-                pre.appendChild(btn);
-                btn.addEventListener('click', function() {
-                    var text = codeEl ? codeEl.innerText : pre.innerText;
-                    navigator.clipboard.writeText(text).then(function() {
-                        btn.innerText = 'Copied!';
-                        btn.classList.add('copied');
-                        setTimeout(function() {
-                            btn.innerText = 'Copy Code';
-                            btn.classList.remove('copied');
-                        }, 2000);
-                    });
-                });
-            });
+<button class="rst" id="rst">↺ Reset Checkboxes</button>
+<button class="btt" id="btt" aria-label="Back to top">↑</button>
 
-            document.querySelectorAll('.copy-section-btn').forEach(function(btn) {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    var card = btn.closest('.step-card');
-                    var content = card ? card.querySelector('.step-content').innerText : '';
-                    navigator.clipboard.writeText(content).then(function() {
-                        btn.innerText = 'Copied Section!';
-                        btn.classList.add('copied');
-                        setTimeout(function() {
-                            btn.innerText = '📋 Copy Section';
-                            btn.classList.remove('copied');
-                        }, 2000);
-                    });
-                });
-            });
+<script>
+(function(){
+'use strict';
+// READING PROGRESS
+window.addEventListener('scroll',function(){
+  var s=document.documentElement.scrollTop||document.body.scrollTop;
+  var h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+  document.getElementById('rp').style.width=(s/h*100)+'%';
+  var b=document.getElementById('btt');
+  if(s>400)b.classList.add('vis');else b.classList.remove('vis');
+},{passive:true});
+document.getElementById('btt').addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
 
-            document.querySelectorAll('.copy-point-btn').forEach(function(btn) {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    var item = btn.closest('.task-item');
-                    var text = item ? item.innerText.replace(/Copy$/, '').trim() : '';
-                    navigator.clipboard.writeText(text).then(function() {
-                        btn.innerText = 'Copied!';
-                        btn.classList.add('copied');
-                        setTimeout(function() {
-                            btn.innerText = 'Copy';
-                            btn.classList.remove('copied');
-                        }, 2000);
-                    });
-                });
-            });
+// COLLAPSE
+document.querySelectorAll('.step-header').forEach(function(h){
+  h.addEventListener('click',function(e){
+    if(e.target.classList.contains('csbtn'))return;
+    h.closest('.step-card').classList.toggle('collapsed');
+  });
+});
+document.getElementById('eab').addEventListener('click',function(){document.querySelectorAll('.step-card').forEach(function(c){c.classList.remove('collapsed');});});
+document.getElementById('cab').addEventListener('click',function(){document.querySelectorAll('.step-card').forEach(function(c){c.classList.add('collapsed');});});
 
-            var custBtn = document.getElementById('customize-btn');
-            if (custBtn) {
-                custBtn.addEventListener('click', function() {
-                    var name = document.getElementById('ext-name-input').value.trim() || 'Chrome Extension';
-                    document.querySelectorAll('.dynamic-ext-title').forEach(function(el) { el.innerText = name + ' Master Blueprint'; });
-                    custBtn.innerText = 'Updated!';
-                    setTimeout(function() { custBtn.innerText = 'Customize Guide'; }, 2000);
-                });
-            }
-        })();
-    </script>
+// CHECKBOXES
+var allCbs=Array.from(document.querySelectorAll('input[type=checkbox]'));
+var clCbs=allCbs.filter(function(cb){return cb.id&&/^c\d+$/.test(cb.id);});
+function updateCounter(){
+  var done=clCbs.filter(function(cb){return cb.checked;}).length;
+  var total=clCbs.length;
+  var pct=total?Math.round(done/total*100):0;
+  document.getElementById('ctf').style.width=pct+'%';
+  document.getElementById('ctt').textContent=done+' / '+total+' done';
+}
+allCbs.forEach(function(cb){
+  if(localStorage.getItem('cb_'+cb.id)==='true'){
+    cb.checked=true;
+    var sib=cb.nextElementSibling;
+    if(sib)sib.classList.add('ct');
+  }
+  cb.addEventListener('change',function(){
+    localStorage.setItem('cb_'+cb.id,cb.checked);
+    var sib=cb.nextElementSibling;
+    if(sib){if(cb.checked)sib.classList.add('ct');else sib.classList.remove('ct');}
+    updateCounter();
+  });
+});
+updateCounter();
+
+document.getElementById('rst').addEventListener('click',function(){
+  if(!confirm('Reset all checkbox progress?'))return;
+  allCbs.forEach(function(cb){
+    cb.checked=false;localStorage.removeItem('cb_'+cb.id);
+    var sib=cb.nextElementSibling;if(sib)sib.classList.remove('ct');
+  });
+  updateCounter();
+});
+
+// CODE LANG LABELS + COPY
+document.querySelectorAll('pre').forEach(function(pre){
+  var ce=pre.querySelector('code');
+  if(ce){
+    var lc=Array.from(ce.classList).find(function(c){return c.startsWith('language-');});
+    if(lc){var lb=document.createElement('span');lb.className='cll';lb.textContent=lc.replace('language-','');pre.appendChild(lb);}
+  }
+  var cb=document.createElement('button');cb.className='cbtn';cb.textContent='Copy';pre.appendChild(cb);
+  cb.addEventListener('click',function(){
+    navigator.clipboard.writeText(ce?ce.innerText:pre.innerText).then(function(){
+      cb.textContent='Copied!';cb.classList.add('cpd');
+      setTimeout(function(){cb.textContent='Copy';cb.classList.remove('cpd');},2000);
+    }).catch(function(){cb.textContent='Error';setTimeout(function(){cb.textContent='Copy';},2000);});
+  });
+});
+
+// SECTION COPY
+document.querySelectorAll('.csbtn').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var card=btn.closest('.step-card')||btn.closest('.hero-card');
+    var content=card?(card.querySelector('.step-content')||card).innerText:'';
+    navigator.clipboard.writeText(content).then(function(){
+      btn.textContent='Copied!';btn.classList.add('cpd');
+      setTimeout(function(){btn.textContent='📋 Copy Section';btn.classList.remove('cpd');},2000);
+    });
+  });
+});
+
+// POINT COPY
+document.querySelectorAll('.cpbtn').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var item=btn.closest('.ti');
+    var text=item?item.innerText.replace(/Copy$/,'').trim():'';
+    navigator.clipboard.writeText(text).then(function(){
+      btn.textContent='Copied!';btn.classList.add('cpd');
+      setTimeout(function(){btn.textContent='Copy';btn.classList.remove('cpd');},2000);
+    });
+  });
+});
+
+// CUSTOMIZER
+document.getElementById('cust-btn').addEventListener('click',function(){
+  var name=document.getElementById('en').value.trim()||'TUFHub';
+  document.querySelectorAll('.det').forEach(function(el){el.textContent=name+' - Master Launch & Interception Blueprint';});
+  var b=document.getElementById('cust-btn');b.textContent='Applied!';
+  setTimeout(function(){b.textContent='Apply Customization';},2000);
+});
+
+})();
+</script>
 </body>
 </html>
