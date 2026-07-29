@@ -8,13 +8,13 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#080e1a;--bg2:#0b1120;--text:#cbd5e1;--muted:#64748b;--primary:#3b82f6;--pl:#60a5fa;--accent:#10b981;--orange:#f97316;--orange-d:#ea580c;--red:#ef4444;--card:rgba(30,41,59,.45);--border:rgba(255,255,255,.07);--borderS:rgba(255,255,255,.14);--code:#050c18}
+:root{--bg:#080e1a;--bg2:#0b1120;--text:#cbd5e1;--muted:#64748b;--primary:#3b82f6;--pl:#60a5fa;--accent:#10b981;--orange:#f97316;--orange-d:#ea580c;--red:#ef4444;--card:rgba(30,41,59,.45);--border:rgba(255,255,255,.08);--borderS:rgba(255,255,255,.16);--code:#050c18}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{overflow-x:hidden;scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--bg);background-image:radial-gradient(ellipse at 5% 10%,rgba(249,115,22,.12),transparent 45%),radial-gradient(ellipse at 95% 90%,rgba(59,130,246,.12),transparent 45%);background-attachment:fixed;color:var(--text);line-height:1.75;padding:2.5rem 1rem 5rem;min-height:100vh}
 .container{max-width:1280px;margin:0 auto}
 h1{font-size:clamp(2rem,5vw,3.6rem);font-weight:900;letter-spacing:-.04em;line-height:1.1;background:linear-gradient(135deg,#fb923c,#60a5fa 50%,#c084fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-align:center;padding-bottom:.75rem}
-h2{font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h2{font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0}
 h3{font-size:1.15rem;font-weight:700;color:#93c5fd;margin:2rem 0 1rem}
 h4{font-size:1rem;font-weight:700;color:#c4b5fd;margin:1.5rem 0 .6rem}
 p{margin-bottom:1.2rem;font-size:1.03rem}
@@ -22,54 +22,94 @@ strong{color:#f1f5f9;font-weight:700}
 a{color:var(--pl);text-decoration:none;font-weight:600;transition:.25s}
 a:hover{color:#93c5fd}
 .subtitle{text-align:center;font-size:1.1rem;color:#94a3b8;margin-bottom:2.5rem;border-bottom:1px solid var(--border);padding-bottom:2rem;max-width:900px;margin-left:auto;margin-right:auto}
-/* CARDS */
-.step-card{border:1px solid var(--border);border-radius:16px;margin-bottom:1.75rem;background:rgba(255,255,255,.02);overflow:hidden;transition:border-color .3s}
-.step-card:hover{border-color:var(--borderS)}
-.step-header{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.75rem;cursor:pointer;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);gap:10px;user-select:none}
-.step-header:hover{background:rgba(255,255,255,.04)}
-.step-header h2{margin:0;flex:1}
-.step-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.ci{font-size:.9rem;opacity:.4;transition:transform .3s}
+
+/* STEP CARDS */
+.step-card{border:1px solid var(--border);border-radius:16px;margin-bottom:1.75rem;background:rgba(255,255,255,.02);overflow:hidden;position:relative;transition:border-color .3s,box-shadow .3s}
+.step-card:hover{border-color:var(--borderS);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.step-header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.75rem;cursor:pointer;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);gap:10px;user-select:none;transition:background .2s}
+.step-header:hover{background:rgba(255,255,255,.05)}
+.step-header h2{flex:1}
+.step-controls{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.ci{font-size:1rem;opacity:.5;transition:transform .3s;margin-left:auto}
 .step-card.collapsed .ci{transform:rotate(-90deg)}
-.step-content{padding:1.75rem;max-height:500000px;opacity:1;transition:max-height .45s,opacity .3s;overflow:hidden}
+.step-content{padding:1.75rem;max-height:500000px;opacity:1;transition:max-height .45s ease,opacity .3s ease;overflow:hidden}
 .step-card.collapsed .step-content{max-height:0;padding-top:0;padding-bottom:0;opacity:0}
-/* HERO */
+
+/* STEP HOVER COPY BUTTON (EXACT FROM WEBSITE BLUEPRINT) */
+.step-copy-btn{
+  position:absolute;
+  right:3.5rem;
+  top:1.15rem;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:0.4rem 0.8rem;
+  border-radius:8px;
+  background:rgba(30, 41, 59, 0.75);
+  border:1px solid var(--border);
+  color:var(--text);
+  cursor:pointer;
+  font-size:0.8rem;
+  font-family:'Inter',sans-serif;
+  font-weight:600;
+  opacity:0;
+  transform:translateY(-4px);
+  transition:opacity 0.2s ease, transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  z-index:15;
+  line-height:1;
+  user-select:none;
+}
+.step-card:hover .step-copy-btn{opacity:1;transform:translateY(0)}
+.step-copy-btn:hover{background:rgba(255,255,255,0.15);color:#fff;border-color:var(--primary)}
+.step-copy-btn:active{transform:scale(0.95)}
+.step-copy-btn.copied{background:rgba(16, 185, 129, 0.25);color:var(--accent);border-color:var(--accent)}
+.step-copy-btn svg{flex-shrink:0}
+
+/* HERO CARD */
 .hero-card{background:linear-gradient(135deg,rgba(249,115,22,.08),rgba(59,130,246,.08));border:1px solid rgba(249,115,22,.25);border-radius:16px;padding:2rem;margin-bottom:2rem;position:relative;overflow:hidden}
+
 /* INFO BOXES */
 .info-card{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.5rem}
 .warn-card{background:rgba(234,179,8,.07);border:1px solid rgba(234,179,8,.2);border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.5rem}
 .success-card{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.5rem}
+
 /* CODE */
 pre{background:var(--code);border:1px solid rgba(255,255,255,.06);padding:1.4rem 1.5rem;border-radius:10px;white-space:pre;overflow-x:auto;margin-bottom:1.5rem;position:relative;font-size:.85rem;line-height:1.65}
 pre code{font-family:'Fira Code',monospace;color:#e2e8f0;background:transparent;padding:0;font-size:inherit}
 code{font-family:'Fira Code',monospace;background:rgba(255,255,255,.08);padding:.15rem .4rem;border-radius:4px;font-size:.87em;color:#e879f9}
 .cll{position:absolute;top:0;left:0;background:rgba(59,130,246,.2);color:#93c5fd;padding:.18rem .65rem;border-radius:10px 0 8px 0;font-size:.66rem;font-family:'Fira Code',monospace;font-weight:700;letter-spacing:.07em;text-transform:uppercase;pointer-events:none}
-/* COPY BUTTONS */
-.cbtn,.csbtn,.cpbtn{background:rgba(255,255,255,.08);border:1px solid var(--borderS);color:var(--text);border-radius:6px;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;font-weight:600}
+
+/* COPY BUTTONS FOR CODE BLOCKS & POINTS */
+.cbtn,.cpbtn{background:rgba(255,255,255,.08);border:1px solid var(--borderS);color:var(--text);border-radius:6px;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;font-weight:600}
 .cbtn{position:absolute;top:.55rem;right:.55rem;padding:.28rem .6rem;font-size:.72rem;opacity:0}
 pre:hover .cbtn{opacity:1}
-.csbtn{padding:.28rem .65rem;font-size:.78rem}
 .cpbtn{padding:.18rem .45rem;font-size:.7rem;opacity:0;flex-shrink:0}
 li.ti:hover .cpbtn{opacity:1}
-.cbtn:hover,.csbtn:hover,.cpbtn:hover{background:rgba(255,255,255,.18);color:#fff}
+.cbtn:hover,.cpbtn:hover{background:rgba(255,255,255,.18);color:#fff}
 .cpd{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important}
+
 /* CHECKBOXES */
 input[type=checkbox]{-webkit-appearance:none;appearance:none;width:20px;height:20px;flex-shrink:0;margin-top:3px;border:2px solid var(--primary);border-radius:5px;display:inline-grid;place-content:center;cursor:pointer;transition:.2s;background:rgba(15,23,42,.6)}
 input[type=checkbox]::before{content:'';width:11px;height:11px;transform:scale(0);transition:120ms transform ease;box-shadow:inset 1em 1em var(--accent);clip-path:polygon(14% 44%,0 65%,50% 100%,100% 16%,80% 0%,43% 62%)}
 input[type=checkbox]:checked{border-color:var(--accent);background:rgba(16,185,129,.12)}
 input[type=checkbox]:checked::before{transform:scale(1)}
 .ct{text-decoration:line-through;opacity:.45}
+
 /* LISTS */
 ul,ol{padding-left:0;margin-bottom:1.2rem}
 li{list-style:none;margin-bottom:.6rem;display:flex;align-items:flex-start;gap:10px;font-size:1rem}
 li.ti{position:relative}
 li.pl{display:block;padding-left:1.4rem;position:relative}
 li.pl::before{content:'►';position:absolute;left:0;color:var(--orange);font-size:.8rem;top:.15rem}
+
 /* TABLE */
 table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.95rem}
 th,td{padding:.8rem .95rem;border:1px solid rgba(255,255,255,.05);text-align:left;vertical-align:top}
 th{background:rgba(59,130,246,.12);color:#fff;font-weight:700}
 tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+
 /* TOC */
 .toc-card{background:rgba(30,41,59,.6);border:1px solid var(--border);border-radius:14px;padding:1.6rem 1.9rem;margin-bottom:2rem}
 .toc-title{font-weight:800;font-size:1.05rem;color:#fff;margin-bottom:.9rem;display:flex;align-items:center;gap:8px}
@@ -77,6 +117,7 @@ tr:nth-child(even) td{background:rgba(255,255,255,.015)}
 .toc-item{color:var(--text);padding:.42rem .7rem;border-radius:7px;font-size:.86rem;display:flex;align-items:center;gap:7px;text-decoration:none;transition:.2s}
 .toc-item:hover{background:rgba(255,255,255,.07);color:#fff}
 .tn{width:21px;height:21px;border-radius:50%;flex-shrink:0;background:rgba(59,130,246,.2);color:var(--pl);font-size:.7rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+
 /* CUSTOMIZER */
 .cust-card{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);padding:1.4rem;border-radius:13px;margin:2rem 0}
 .cust-card label{font-weight:700;color:var(--orange);font-size:.97rem}
@@ -86,38 +127,51 @@ tr:nth-child(even) td{background:rgba(255,255,255,.015)}
 .cust-card input::placeholder{color:var(--muted)}
 .btn-o{background:var(--orange);color:#fff;border:none;padding:.65rem 1.3rem;border-radius:7px;font-weight:700;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;font-size:.92rem}
 .btn-o:hover{background:var(--orange-d)}
-/* PROGRESS */
+
+/* PROGRESS & COUNTER */
 #rp{position:fixed;top:0;left:0;width:0%;height:3px;background:linear-gradient(90deg,var(--orange),var(--primary));z-index:9999;transition:width .1s}
-/* COUNTER */
 #cc{position:sticky;top:1rem;z-index:100;display:flex;align-items:center;gap:11px;background:rgba(8,14,26,.92);backdrop-filter:blur(12px);border:1px solid var(--borderS);border-radius:50px;padding:.55rem 1.2rem;width:fit-content;margin:0 auto 2rem;font-size:.85rem;font-weight:700}
 .ct-track{width:150px;height:7px;background:rgba(255,255,255,.1);border-radius:50px;overflow:hidden}
 .ct-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--accent));border-radius:50px;transition:.4s}
+
 /* FIXED BTNS */
 .btt{position:fixed;bottom:5.5rem;right:1.5rem;width:42px;height:42px;border-radius:50%;background:rgba(30,41,59,.9);border:1px solid var(--borderS);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,.35);transition:.2s;z-index:999;opacity:0;pointer-events:none}
 .btt.vis{opacity:1;pointer-events:auto}
 .btt:hover{background:var(--primary);color:#fff}
 .rst{position:fixed;bottom:1.5rem;right:1.5rem;background:rgba(8,14,26,.92);backdrop-filter:blur(8px);border:1px solid rgba(239,68,68,.3);color:#ef4444;padding:.6rem 1.2rem;border-radius:50px;cursor:pointer;font-weight:700;font-size:.83rem;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:.2s;z-index:1000;font-family:'Inter',sans-serif}
 .rst:hover{background:#ef4444;color:#fff;border-color:#ef4444}
+
 /* TOOLBAR */
 .toolbar{display:flex;gap:9px;justify-content:flex-end;margin-bottom:1.5rem;flex-wrap:wrap}
 .btn-g{background:rgba(255,255,255,.06);border:1px solid var(--borderS);color:var(--text);padding:.45rem .95rem;border-radius:7px;cursor:pointer;font-size:.83rem;font-weight:600;transition:.2s;font-family:'Inter',sans-serif}
 .btn-g:hover{background:rgba(255,255,255,.12);color:#fff}
+
 /* QNA */
 .qp{margin-bottom:1.2rem}
 .qq{background:rgba(249,115,22,.08);border-left:3px solid var(--orange);padding:.9rem 1.2rem;border-radius:0 9px 9px 0;margin-bottom:.35rem}
 .ql{font-size:.72rem;font-weight:800;color:var(--orange);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem}
 .qa{background:rgba(59,130,246,.06);border-left:3px solid var(--primary);padding:.9rem 1.2rem;border-radius:0 9px 9px 0}
 .qal{font-size:.72rem;font-weight:800;color:var(--pl);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem}
+
 /* FILE TREE */
 .ft{font-family:'Fira Code',monospace;font-size:.88rem;line-height:1.85;background:var(--code);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:1.4rem 1.6rem;margin-bottom:1.5rem;overflow-x:auto}
 .ftd{color:#60a5fa;font-weight:600}
 .ftf{color:#a5f3fc}
 .ftc{color:#475569;font-style:italic}
+
 /* FOOTER */
 footer{text-align:center;border-top:1px solid var(--border);padding-top:2.5rem;margin-top:3rem;color:var(--muted);font-size:.9rem}
 footer a{color:#94a3b8;font-weight:700}
 footer a:hover{color:#fff}
-@media(max-width:768px){.step-content,.step-header{padding:1.1rem}pre{font-size:.78rem}h1{font-size:1.85rem}.toc-grid{grid-template-columns:1fr}}
+
+@media(max-width:768px){
+  .step-content,.step-header{padding:1.1rem}
+  pre{font-size:.78rem}
+  h1{font-size:1.85rem}
+  .toc-grid{grid-template-columns:1fr}
+  .step-copy-btn{right:3rem;top:0.9rem;padding:0.4rem}
+  .step-copy-btn .btn-text{display:none}
+}
 </style>
 </head>
 <body>
@@ -189,7 +243,7 @@ footer a:hover{color:#fff}
 <div class="step-card" id="sa">
   <div class="step-header">
     <h2>🗂️ Section A: Full Project File Tree &amp; Architecture Map</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <div class="ft">
@@ -239,7 +293,7 @@ footer a:hover{color:#fff}
 <div class="step-card" id="s1">
   <div class="step-header">
     <h2>💬 Step 1: Full Session Milestone Summary (12 Core Milestones)</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <p>Chronological technical milestones achieved across the 12-hour build session:</p>
@@ -263,7 +317,7 @@ footer a:hover{color:#fff}
 <div class="step-card" id="s2">
   <div class="step-header">
     <h2>📋 Step 2: 22-Point Locked Architectural Decision Matrix</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <p>These 22 decisions are locked invariants - they cannot change without breaking the extension or violating Web Store policy:</p>
@@ -300,7 +354,7 @@ footer a:hover{color:#fff}
 <div class="step-card" id="s3">
   <div class="step-header">
     <h2>🧩 Step 3: Manifest V3 Deep Dive - Complete Configuration</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <p>Every permission is justified. Here is the complete manifest.json with inline rationale:</p>
@@ -358,7 +412,7 @@ footer a:hover{color:#fff}
 <div class="step-card" id="s4">
   <div class="step-header">
     <h2>🔬 Step 4: interceptor.js - Fetch Monkey-Patch (MAIN World)</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <p>This is the core of the extension. Runs in <code>"world": "MAIN"</code> at <code>document_start</code> to intercept TUF submission API responses before the page's React code processes them:</p>
@@ -410,7 +464,7 @@ footer a:hover{color:#fff}
 <div class="step-card" id="s5">
   <div class="step-header">
     <h2>📡 Step 5: content.js - Toast Injector + Event Bridge (ISOLATED World)</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <p>Runs in the default ISOLATED world. Listens for DOM Events from interceptor.js and forwards payload to the background service worker:</p>
@@ -486,7 +540,7 @@ footer a:hover{color:#fff}
 <div class="step-card" id="s6">
   <div class="step-header">
     <h2>⚙️ Step 6: background.js - Service Worker, OAuth &amp; Message Router</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <pre><code class="language-javascript">// background.js - MV3 Service Worker
@@ -579,7 +633,7 @@ async function handleSync(submission) {
 <div class="step-card" id="s7">
   <div class="step-header">
     <h2>⚡ Step 7: uploader.js - GitHub API + SHA Conflict Retry + README Indexer</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <pre><code class="language-javascript">// uploader.js - GitHub REST API File Uploader
@@ -652,7 +706,7 @@ function sanitize(s) {
 <div class="step-card" id="s8">
   <div class="step-header">
     <h2>🎨 Step 8: popup.js Dashboard + welcome.html Onboarding Wizard</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <h3>popup.js - Stats Dashboard</h3>
@@ -730,7 +784,7 @@ show(0);</code></pre>
 <div class="step-card" id="s9">
   <div class="step-header">
     <h2>📦 Step 9: webpack.config.js - Build Pipeline</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <pre><code class="language-javascript">// webpack.config.js
@@ -778,7 +832,7 @@ Compress-Archive -Path dist,manifest.json,popup,welcome,assets -DestinationPath 
 <div class="step-card" id="s10">
   <div class="step-header">
     <h2>🐛 Step 10: Debugging Log &amp; Lessons Learned</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <p>Every significant bug encountered during the 12-hour build session, its root cause, and the exact fix:</p>
@@ -805,7 +859,7 @@ Compress-Archive -Path dist,manifest.json,popup,welcome,assets -DestinationPath 
 <div class="step-card" id="s11">
   <div class="step-header">
     <h2>🛒 Step 11: Chrome Web Store Submission Walkthrough</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <h3>Pre-Submission Checklist</h3>
@@ -840,7 +894,7 @@ Compress-Archive -Path dist,manifest.json,popup,welcome,assets -DestinationPath 
 <div class="step-card" id="s12">
   <div class="step-header">
     <h2>🖼️ Step 12: Store Graphics Pipeline - Python Pillow Automation</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <h3>Asset Specifications</h3>
@@ -912,7 +966,7 @@ for i, f in enumerate(sorted(os.listdir(INPUT_DIR))):
 <div class="step-card" id="s13">
   <div class="step-header">
     <h2>📝 Step 13: README Engineering - Documentation Standards</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <table>
@@ -936,7 +990,7 @@ for i, f in enumerate(sorted(os.listdir(INPUT_DIR))):
 <div class="step-card" id="s14">
   <div class="step-header">
     <h2>📖 Step 14: Q&amp;A Decision Ledger - Why Every Decision Was Made</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <p>Key technical questions raised during the session and the architectural decisions they produced:</p>
@@ -962,7 +1016,7 @@ for i, f in enumerate(sorted(os.listdir(INPUT_DIR))):
 <div class="step-card" id="s15">
   <div class="step-header">
     <h2>✅ Step 15: 50-Point Master Checklist for Building ANY Chrome Extension</h2>
-    <div class="step-controls"><button class="csbtn">📋 Copy Section</button><span class="ci">▼</span></div>
+    <span class="ci">▼</span>
   </div>
   <div class="step-content">
     <p>A complete engineering checklist derived from the TUFHub build session. Use this as a template for any production Chrome Extension:</p>
@@ -1056,6 +1110,160 @@ for i, f in enumerate(sorted(os.listdir(INPUT_DIR))):
 <script>
 (function(){
 'use strict';
+
+// --- MARKDOWN STEP CONVERTER ENGINE (EXACT MATCH FROM WEBSITE BLUEPRINT) ---
+function getStepContentAsText(card) {
+  const h2 = card.querySelector('h2');
+  const contentDiv = card.querySelector('.step-content');
+  if (!h2 || !contentDiv) return '';
+
+  const h2Clone = h2.cloneNode(true);
+  h2Clone.querySelectorAll('.step-badge, .section-progress, .collapse-icon, input[type="checkbox"], .step-copy-btn').forEach(el => el.remove());
+  const headingText = h2Clone.textContent.trim();
+
+  let output = `# ${headingText}\n\n`;
+
+  function parseNode(node, depth = 0) {
+    let text = '';
+    if (node.nodeType === Node.TEXT_NODE) {
+      return node.textContent;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      return '';
+    }
+
+    const style = window.getComputedStyle(node);
+    if (style.display === 'none' || 
+        node.classList.contains('cbtn') || 
+        node.classList.contains('cpbtn') || 
+        node.classList.contains('cll') || 
+        node.classList.contains('ci') || 
+        node.classList.contains('step-copy-btn')) {
+      return '';
+    }
+
+    const tagName = node.tagName.toUpperCase();
+
+    if (tagName === 'P') {
+      text += Array.from(node.childNodes).map(child => parseNode(child, depth)).join('').trim() + '\n\n';
+    } else if (tagName === 'H3') {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll('input[type="checkbox"]').forEach(el => el.remove());
+      text += `## ${clone.textContent.trim()}\n\n`;
+    } else if (tagName === 'H4') {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll('input[type="checkbox"]').forEach(el => el.remove());
+      text += `### ${clone.textContent.trim()}\n\n`;
+    } else if (tagName === 'PRE') {
+      const codeEl = node.querySelector('code');
+      const codeText = codeEl ? codeEl.textContent : node.textContent;
+      const langClass = codeEl ? Array.from(codeEl.classList).find(c => c.startsWith('language-')) : '';
+      const lang = langClass ? langClass.replace('language-', '') : '';
+      text += `\`\`\`${lang}\n${codeText.trim()}\n\`\`\`\n\n`;
+    } else if (tagName === 'UL' || tagName === 'OL') {
+      const isOrdered = tagName === 'OL';
+      let index = 1;
+      Array.from(node.children).forEach(li => {
+        if (li.tagName.toUpperCase() === 'LI') {
+          const indent = '  '.repeat(depth);
+          const prefix = isOrdered ? `${index}. ` : '- ';
+          
+          const checkbox = li.querySelector(':scope > input[type="checkbox"]');
+          let checkPrefix = '';
+          if (checkbox) {
+            checkPrefix = checkbox.checked ? '[x] ' : '[ ] ';
+          }
+
+          const liClone = li.cloneNode(true);
+          const nestedLists = liClone.querySelectorAll(':scope > ul, :scope > ol');
+          nestedLists.forEach(nl => nl.remove());
+          liClone.querySelectorAll(':scope > input[type="checkbox"], :scope > button').forEach(el => el.remove());
+
+          const liText = Array.from(liClone.childNodes)
+            .map(child => parseNode(child, depth + 1))
+            .join('')
+            .trim();
+
+          text += `${indent}${prefix}${checkPrefix}${liText}\n`;
+
+          nestedLists.forEach(nl => {
+            text += parseNode(nl, depth + 1);
+          });
+
+          index++;
+        }
+      });
+      if (depth === 0) {
+        text += '\n';
+      }
+    } else if (node.classList.contains('info-card') || node.classList.contains('warn-card') || node.classList.contains('success-card')) {
+      let calloutType = 'NOTE';
+      if (node.classList.contains('info-card')) calloutType = 'NOTE';
+      if (node.classList.contains('warn-card')) calloutType = 'WARNING';
+      if (node.classList.contains('success-card')) calloutType = 'TIP';
+      
+      const calloutText = Array.from(node.childNodes)
+        .map(child => parseNode(child, depth))
+        .join('')
+        .trim()
+        .split('\n')
+        .map(line => `> ${line}`)
+        .join('\n');
+      text += `> [!${calloutType}]\n${calloutText}\n\n`;
+    } else {
+      text += Array.from(node.childNodes).map(child => parseNode(child, depth)).join('');
+    }
+
+    return text;
+  }
+
+  Array.from(contentDiv.childNodes).forEach(child => {
+    output += parseNode(child);
+  });
+
+  return output.trim();
+}
+
+// ATTACH STEP COPY BUTTONS TO EVERY STEP CARD
+document.querySelectorAll('.step-card').forEach(card => {
+  const h2 = card.querySelector('h2');
+  if (!h2) return;
+
+  const text = h2.textContent.trim();
+
+  // Create Step Copy Button
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'step-copy-btn';
+  copyBtn.setAttribute('aria-label', 'Copy step content to clipboard');
+  copyBtn.setAttribute('title', 'Copy complete step as Markdown');
+  copyBtn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+    <span class="btn-text">Copy Content</span>
+  `;
+  card.appendChild(copyBtn);
+
+  copyBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const stepText = getStepContentAsText(card);
+    navigator.clipboard.writeText(stepText).then(function() {
+      copyBtn.classList.add('copied');
+      copyBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span class="btn-text">Copied!</span>
+      `;
+      setTimeout(function() {
+        copyBtn.classList.remove('copied');
+        copyBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span class="btn-text">Copy Content</span>
+        `;
+      }, 2000);
+    }).catch(function(err) {
+      console.error('Failed to copy step content:', err);
+    });
+  });
+});
+
 // READING PROGRESS
 window.addEventListener('scroll',function(){
   var s=document.documentElement.scrollTop||document.body.scrollTop;
@@ -1066,10 +1274,10 @@ window.addEventListener('scroll',function(){
 },{passive:true});
 document.getElementById('btt').addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
 
-// COLLAPSE
+// COLLAPSE HANDLER
 document.querySelectorAll('.step-header').forEach(function(h){
   h.addEventListener('click',function(e){
-    if(e.target.classList.contains('csbtn'))return;
+    if(e.target.closest('.step-copy-btn')) return;
     h.closest('.step-card').classList.toggle('collapsed');
   });
 });
@@ -1110,7 +1318,7 @@ document.getElementById('rst').addEventListener('click',function(){
   updateCounter();
 });
 
-// CODE LANG LABELS + COPY
+// CODE BLOCK LANG LABELS + COPY
 document.querySelectorAll('pre').forEach(function(pre){
   var ce=pre.querySelector('code');
   if(ce){
@@ -1123,19 +1331,6 @@ document.querySelectorAll('pre').forEach(function(pre){
       cb.textContent='Copied!';cb.classList.add('cpd');
       setTimeout(function(){cb.textContent='Copy';cb.classList.remove('cpd');},2000);
     }).catch(function(){cb.textContent='Error';setTimeout(function(){cb.textContent='Copy';},2000);});
-  });
-});
-
-// SECTION COPY
-document.querySelectorAll('.csbtn').forEach(function(btn){
-  btn.addEventListener('click',function(e){
-    e.stopPropagation();
-    var card=btn.closest('.step-card')||btn.closest('.hero-card');
-    var content=card?(card.querySelector('.step-content')||card).innerText:'';
-    navigator.clipboard.writeText(content).then(function(){
-      btn.textContent='Copied!';btn.classList.add('cpd');
-      setTimeout(function(){btn.textContent='📋 Copy Section';btn.classList.remove('cpd');},2000);
-    });
   });
 });
 
