@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrome Extension Launch & Development Blueprint - From Zero to Web Store Approval</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --text-color: #cbd5e1;
+            --primary-color: #3b82f6;
+            --secondary-color: #8b5cf6;
+            --accent-color: #10b981;
+            --fire-orange: #f97316;
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --code-bg: rgba(15, 23, 42, 0.8);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.7;
+            padding: 3rem 1rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 4rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h1, h2, h3, h4 {
+            color: #ffffff;
+            margin-top: 2.5rem;
+            margin-bottom: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #fb923c, #60a5fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            margin-top: 0;
+            padding-bottom: 1rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.25rem;
+            color: #94a3b8;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #93c5fd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        a {
+            color: #60a5fa;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        a:hover {
+            color: #93c5fd;
+            border-bottom-color: #93c5fd;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.4);
+        }
+
+        ul, ol {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+        }
+
+        /* Checkbox styling */
+        input[type="checkbox"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--primary-color);
+            border-radius: 6px;
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background: rgba(15, 23, 42, 0.5);
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        input[type="checkbox"]::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em var(--accent-color);
+            transform-origin: center;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+
+        input[type="checkbox"]:checked {
+            border-color: var(--accent-color);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+
+        .completed-text {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .reset-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border-color);
+            color: #ef4444;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+
+        .reset-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #e879f9;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        /* Callout Boxes */
+        .callout {
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+        .callout p { margin: 0; font-size: 1rem; }
+        .callout p + p { margin-top: 0.75rem; }
+        .callout-tip { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); color: #6ee7b7; }
+        .callout-warning { background: rgba(234, 179, 8, 0.12); border: 1px solid rgba(234, 179, 8, 0.4); color: #fde68a; }
+        .callout-danger { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
+        .callout-info { background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        th, td { padding: 0.9rem 1rem; border: 1px solid rgba(255, 255, 255, 0.06); text-align: left; vertical-align: top; }
+        th { background: rgba(59, 130, 246, 0.15); color: #fff; font-weight: 700; }
+        tr:nth-child(even) td { background: rgba(255, 255, 255, 0.02); }
+
+        /* Step Card Layout */
+        .step-card {
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+        .step-card:hover { border-color: rgba(255, 255, 255, 0.15); }
+        .step-card h2 {
+            margin: 0;
+            padding: 1.25rem 1.75rem;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.6rem;
+        }
+        .step-card .step-content {
+            padding: 1.75rem;
+            transition: max-height 0.5s ease, opacity 0.35s ease;
+            max-height: 10000px;
+            opacity: 1;
+        }
+        .step-card.collapsed .step-content { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; }
+        .step-card .collapse-icon { float: right; transition: transform 0.3s ease; font-size: 1.2rem; opacity: 0.5; }
+        .step-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+
+        /* TOC Container */
+        .toc-container {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+        .toc-item {
+            color: var(--text-color);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: background 0.2s ease;
+        }
+        .toc-item:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+        .toc-step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Reading Progress Bar */
+        #reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--fire-orange), var(--primary-color));
+            z-index: 9999;
+            transition: width 0.1s linear;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 5rem;
+            right: 2rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .back-to-top.visible { opacity: 1; pointer-events: auto; }
+        .back-to-top:hover { background: var(--primary-color); color: #fff; }
+
+        /* Dynamic Customization Card */
+        .domain-input-card {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid var(--fire-orange);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        .domain-input-wrapper { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        .domain-input-card input {
+            flex: 1;
+            min-width: 180px;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.8);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+        .domain-input-card button {
+            background: var(--fire-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .domain-input-card button:hover { background: #ea580c; }
+    </style>
+</head>
+<body>
+    <div id="reading-progress"></div>
+
+    <div class="container">
+        <h1>Chrome Extension Launch Blueprint</h1>
+        <p class="subtitle">An exhaustive 12-hour architectural ledger, visual asset design pipeline, README optimization strategy, and Web Store compliance manual.</p>
+
+        <!-- Dynamic Customization Input Card -->
+        <div class="domain-input-card">
+            <label for="ext-name-input"><strong>⚡ Customize Blueprint Target:</strong></label>
+            <div class="domain-input-wrapper">
+                <input type="text" id="ext-name-input" placeholder="Extension Name (e.g., TUFHub)" value="TUFHub">
+                <input type="text" id="ext-owner-input" placeholder="GitHub Owner (e.g., Arora-Sir)" value="Arora-Sir">
+                <input type="text" id="ext-ver-input" placeholder="Version (e.g., 1.0.0)" value="1.0.0">
+                <button id="customize-btn">Customize Guide</button>
+            </div>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc-container">
+            <div class="toc-title">📍 Master Navigation Index</div>
+            <div class="toc-grid">
+                <a href="#step-1" class="toc-item"><span class="toc-step-num">1</span> Manifest V3 Architecture & Sync Engine</a>
+                <a href="#step-2" class="toc-item"><span class="toc-step-num">2</span> Web Store Presentation Cards & Asset Pipeline</a>
+                <a href="#step-3" class="toc-item"><span class="toc-step-num">3</span> README & Documentation Engineering</a>
+                <a href="#step-4" class="toc-item"><span class="toc-step-num">4</span> Exhaustive Bug Log & Technical Fixes</a>
+                <a href="#step-5" class="toc-item"><span class="toc-step-num">5</span> Web Store Submission & Review Audit</a>
+            </div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="step-card" id="step-1">
+            <h2><span class="collapse-icon">▼</span> 🧩 Step 1: Manifest V3 Architecture & Sync Engine</h2>
+            <div class="step-content">
+                <p>Building modern Chrome Extensions requires strict compliance with Google's Manifest V3 specifications. Below are the foundational architectural decisions established during our build:</p>
+                
+                <div class="callout callout-info">
+                    <p><strong>Key Insight:</strong> Manifest V3 completely removes persistent background pages in favor of event-driven, ephemeral Service Workers that automatically shut down after inactivity to preserve system RAM.</p>
+                </div>
+
+                <h3>1.1 Core Manifest V3 Architectural Pillars</h3>
+                <ul>
+                    <li class="task-item"><input type="checkbox" id="c1"><span class="task-text"><strong>Service Worker Lifecycle:</strong> Background logic runs in <code>background.js</code>. Never rely on global window/DOM variables inside service workers. Store persistent state in <code>chrome.storage.local</code>.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c2"><span class="task-text"><strong>Content Scripts vs Network Interceptors:</strong> Use content scripts for DOM inspection and floating overlays. Use webRequest/declarativeNetRequest interceptors to catch API payloads clean without DOM parsing latency.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c3"><span class="task-text"><strong>100% Test Case Enforcement:</strong> Only sync code when the target submission passes 100% test cases. Ignore partial or failing attempts to avoid polluting user repositories.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c4"><span class="task-text"><strong>Conflict-Safe Commit Queue:</strong> Execute GitHub API commits sequentially with a lock queue. Parallel async pushes to the same branch cause Git 409 conflict errors.</span></li>
+                </ul>
+
+                <h3>1.2 Permission Minimization Strategy</h3>
+                <p>Excessive host permissions (like <code>&lt;all_urls&gt;</code> or <code>http://*/*</code>) trigger mandatory manual Google Web Store security audits, extending review times from 2 hours to 2+ weeks.</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Permission</th>
+                            <th>Purpose</th>
+                            <th>Review Risk</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>storage</code></td>
+                            <td>Save PAT tokens, user settings, and problem counts locally</td>
+                            <td>🟢 Low Risk (Instant Auto-Approve)</td>
+                        </tr>
+                        <tr>
+                            <td><code>declarativeNetRequest</code></td>
+                            <td>Intercept problem submission payloads in real-time</td>
+                            <td>🟡 Medium Risk (Standard Review)</td>
+                        </tr>
+                        <tr>
+                            <td><code>host_permissions</code></td>
+                            <td>Restricted strictly to target domain (e.g. <code>*://takeuforward.org/*</code>)</td>
+                            <td>🟢 Low Risk (Targeted domain scope)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-card" id="step-2">
+            <h2><span class="collapse-icon">▼</span> 🎨 Step 2: Web Store Presentation Cards & Asset Pipeline</h2>
+            <div class="step-content">
+                <p>Chrome Web Store conversion rates heavily depend on crisp, presentation-grade graphics. Generic raw screenshots look unpolished and reduce install rates by up to 60%.</p>
+
+                <div class="callout callout-tip">
+                    <p><strong>Design Rule:</strong> Web Store screenshots must be rendered at exactly <strong>1280x800px</strong> inside a presentation card containing ambient radial glow halos, floating browser mockups, and macOS traffic light window headers.</p>
+                </div>
+
+                <h3>2.1 Visual Asset Specifications</h3>
+                <ul>
+                    <li class="task-item"><input type="checkbox" id="c5"><span class="task-text"><strong>1280x800 Presentation Cards:</strong> Built on a dark `#0b1120` canvas with multi-layered Fire Orange (`#f97316`) and Royal Blue (`#2563eb`) radial glow spheres.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c6"><span class="task-text"><strong>macOS Dark Window Frames:</strong> Wrap screenshots in a dark `#1e1e26` header bar with vector Apple traffic light dots (🔴 `#ff5f56`, 🟡 `#ffbd2e`, 🟢 `#27c93f`).</span></li>
+                    <li class="task-item"><input type="checkbox" id="c7"><span class="task-text"><strong>Address Bar & Vector Status Dots:</strong> Draw clean address bars containing green status dots (`●`) and dynamic URL truncation (`...`) to eliminate text clipping.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c8"><span class="task-text"><strong>Small Promo Tile (440x280px):</strong> Compact promotional card featuring high-contrast typography, extension logo, and `MANIFEST V3 READY` badge.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c9"><span class="task-text"><strong>Marquee Promo Tile (1400x560px):</strong> Wide banner for store search features with Fire Orange glassmorphism background glow.</span></li>
+                </ul>
+
+                <h3>2.2 Canvas Layout Architecture</h3>
+                <pre><code>+-----------------------------------------------------------------------+
+| 1280x800 Canvas (#0b1120)                                            |
+|   [Radial Glow: Fire Orange #f97316 & Royal Blue #2563eb]             |
+|                                                                       |
+|   +---------------------------------------------------------------+   |
+|   | Floating Browser Mockup Window (#1e1e26)                      |   |
+|   | [🔴 🟡 🟢]  🔒 https://takeuforward.org/plus/...  [● Status] |   |
+|   +---------------------------------------------------------------+   |
+|   |                                                               |   |
+|   |               [ High-Res Screenshot Payload ]                |   |
+|   |                                                               |   |
+|   +---------------------------------------------------------------+   |
+|                                                                       |
+|   Badge: [ MANIFEST V3 READY ]         Badge: [ ⚡ AUTO-SYNC ]        |
++-----------------------------------------------------------------------+</code></pre>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step-card" id="step-3">
+            <h2><span class="collapse-icon">▼</span> 📄 Step 3: README & Documentation Engineering</h2>
+            <div class="step-content">
+                <p>A concise, well-structured GitHub README turns casual visitors into stars and active users. Follow these strict documentation invariants:</p>
+
+                <div class="callout callout-warning">
+                    <p><strong>Em-Dash Ban Mandate:</strong> Do NOT use em-dashes (<code>—</code>) in documentation or README markdown. Replace all em-dashes with colons (<code>:</code>) or simple hyphens (<code>-</code>).</p>
+                </div>
+
+                <h3>3.1 README Best Practices</h3>
+                <ul>
+                    <li class="task-item"><input type="checkbox" id="c10"><span class="task-text"><strong>High-Res Image Cache-Busting:</strong> Append <code>?v=5</code> query parameters to all image paths in `README.md` to force GitHub's Camo CDN proxy to invalidate stale cached images instantly.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c11"><span class="task-text"><strong>1-Row Horizontal Supported Languages Table:</strong> Instead of vertical bullet lists or empty top headers, format supported languages in a clean 1-row table header directly containing the items.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c12"><span class="task-text"><strong>Collapsible Accordions:</strong> Wrap Developer Setup, Advanced OAuth, and FAQs inside <code>&lt;details&gt;&lt;summary&gt;</code> dropdowns to keep the main flow concise.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c13"><span class="task-text"><strong>Single License Badge:</strong> Avoid duplicating a bottom `## License` section if an interactive MIT License button already exists in the header badges.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c14"><span class="task-text"><strong>Empowering Footer:</strong> Use professional, human-crafted wording like `Crafted with ❤️ for Problem Solvers by Mohit Arora`.</span></li>
+                </ul>
+
+                <h3>3.2 Standardized 1-Row Table Header Syntax</h3>
+                <pre><code class="language-markdown">| **C++** (`.cpp`) | **Java** (`.java`) | **Python** (`.py`) | **JavaScript** (`.js`) | **C#** (`.cs`) | **Go** (`.go`) | **SQL** (`.sql`) |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |</code></pre>
+            </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step-card" id="step-4">
+            <h2><span class="collapse-icon">▼</span> 🐞 Step 4: Exhaustive Bug Log & Technical Fixes</h2>
+            <div class="step-content">
+                <p>Every complex build encounters unexpected runtime & rendering glitches. Here is our master resolution ledger:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Issue / Bug Observed</th>
+                            <th>Root Cause</th>
+                            <th>Production Resolution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Emoji Square Box Outline (<code>🗖</code>)</strong></td>
+                            <td>PIL Pillow fallback font failed to render Unicode emoji symbols like <code>⚡</code> in image scripts.</td>
+                            <td>Replaced font emojis with vector filled circles (<code>●</code> green/orange) drawn directly onto the image canvas via <code>ImageDraw.ellipse</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address Bar Text Overflow</strong></td>
+                            <td>Long URLs overflowed outside the browser header mockup bounds on store presentation cards.</td>
+                            <td>Created a custom dynamic string truncation helper appending trailing <code>...</code> based on pixel width.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GitHub Table Blank Top Header</strong></td>
+                            <td>Empty table headers (<code>| | | | |</code>) caused GitHub markdown to render an ugly blank line above table contents.</td>
+                            <td>Embedded data items directly into the first markdown <code>| ... |</code> header line.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stale GitHub Image Cache</strong></td>
+                            <td>GitHub's Camo CDN proxy served old cached versions of updated screenshots.</td>
+                            <td>Appended versioned cache-buster query parameters (<code>?v=5</code>) to all markdown image URLs.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="step-card" id="step-5">
+            <h2><span class="collapse-icon">▼</span> 🚀 Step 5: Web Store Submission & Review Audit</h2>
+            <div class="step-content">
+                <p>Follow this checklist before pushing your ZIP package to the Chrome Developer Dashboard:</p>
+
+                <ul>
+                    <li class="task-item"><input type="checkbox" id="c15"><span class="task-text"><strong>Production Bundle Verification:</strong> Execute <code>npm run build</code> and verify all files in <code>dist/</code> compile without warnings.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c16"><span class="task-text"><strong>Clean Package Archiving:</strong> Zip contents of <code>dist/</code> into <code>TUFHub-v1.0.0.zip</code> without including source code, node_modules, or scratch scripts.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c17"><span class="task-text"><strong>Single Purpose Justification:</strong> Write a concise single-purpose justification in the developer dashboard explaining why your extension requires permission to access host domains.</span></li>
+                    <li class="task-item"><input type="checkbox" id="c18"><span class="task-text"><strong>Upload Visual Assets:</strong> Attach 1280x800 Store Presentation Cards, 440x280 Small Promo Tile, and 1400x560 Marquee Tile.</span></li>
+                </ul>
+
+                <div class="callout callout-tip">
+                    <p><strong>Success Criteria:</strong> When all steps above are checked, your extension will pass automated Chrome Web Store reviews in under 2 hours!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Reset Button -->
+    <button class="reset-btn" id="reset-btn">Reset Checkboxes</button>
+    <button class="back-to-top" id="back-to-top" aria-label="Back to top">&#x2191;</button>
+
+    <!-- JavaScript Interactivity -->
+    <script>
+        (function() {
+            'use strict';
+
+            // Reading Progress Bar
+            window.addEventListener('scroll', function() {
+                var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                var scrolled = (winScroll / height) * 100;
+                document.getElementById('reading-progress').style.width = scrolled + '%';
+
+                var backToTop = document.getElementById('back-to-top');
+                if (winScroll > 300) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+
+            document.getElementById('back-to-top').addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Collapsible Step Cards
+            document.querySelectorAll('.step-card h2').forEach(function(header) {
+                header.addEventListener('click', function() {
+                    var card = header.closest('.step-card');
+                    card.classList.toggle('collapsed');
+                });
+            });
+
+            // Checkbox LocalStorage Persistence
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function(cb) {
+                var saved = localStorage.getItem('cb_' + cb.id);
+                if (saved === 'true') {
+                    cb.checked = true;
+                    var text = cb.nextElementSibling;
+                    if (text) text.classList.add('completed-text');
+                }
+
+                cb.addEventListener('change', function() {
+                    localStorage.setItem('cb_' + cb.id, cb.checked);
+                    var text = cb.nextElementSibling;
+                    if (text) {
+                        if (cb.checked) {
+                            text.classList.add('completed-text');
+                        } else {
+                            text.classList.remove('completed-text');
+                        }
+                    }
+                });
+            });
+
+            // Reset Button
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to reset all checkbox progress?')) {
+                    checkboxes.forEach(function(cb) {
+                        cb.checked = false;
+                        localStorage.removeItem('cb_' + cb.id);
+                        var text = cb.nextElementSibling;
+                        if (text) text.classList.remove('completed-text');
+                    });
+                }
+            });
+
+            // Dynamic Customization Card Logic
+            var custBtn = document.getElementById('customize-btn');
+            if (custBtn) {
+                custBtn.addEventListener('click', function() {
+                    var name = document.getElementById('ext-name-input').value.trim() || 'TUFHub';
+                    var owner = document.getElementById('ext-owner-input').value.trim() || 'Arora-Sir';
+                    var ver = document.getElementById('ext-ver-input').value.trim() || '1.0.0';
+
+                    document.querySelector('h1').innerText = name + ' Extension Launch Blueprint';
+                    custBtn.innerText = 'Updated!';
+                    setTimeout(function() { custBtn.innerText = 'Customize Guide'; }, 2000);
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
