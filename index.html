@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohit Arora - Master Blueprints & Engineering Hub</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --text-color: #cbd5e1;
+            --primary-color: #3b82f6;
+            --secondary-color: #8b5cf6;
+            --accent-color: #10b981;
+            --fire-orange: #f97316;
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.7;
+            padding: 3rem 1rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 4rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fb923c, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .blueprint-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .blueprint-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary-color);
+            box-shadow: 0 12px 24px -10px rgba(59, 130, 246, 0.3);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-desc {
+            font-size: 1rem;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-link {
+            font-weight: 600;
+            color: #60a5fa;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        footer {
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        footer a { color: #94a3b8; text-decoration: none; font-weight: 600; }
+        footer a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mohit Arora's Master Hub</h1>
+        <p class="subtitle">Central Portal for Interactive Technical Blueprints, Launch Manuals, and Engineering Ledgers</p>
+
+        <div class="grid">
+            <a href="Chrome_Extension_Blueprint.html" class="blueprint-card">
+                <div>
+                    <div class="card-icon">🧩</div>
+                    <div class="card-title">Chrome Extension Launch Blueprint</div>
+                    <div class="card-desc">Exhaustive 12-hour session ledger covering Manifest V3 architecture, script world isolation, network interception, Pillow visual asset automation, and Chrome Web Store approval strategies.</div>
+                </div>
+                <div class="card-link">Explore Master Blueprint &rarr;</div>
+            </a>
+
+            <a href="Website_Buisness_Blueprint.html" class="blueprint-card">
+                <div>
+                    <div class="card-icon">🚀</div>
+                    <div class="card-title">Website Business Launch Blueprint</div>
+                    <div class="card-desc">Complete zero-to-launch guide covering domain setup, Cloudflare Pages hosting, SEO optimization, and Google AdSense approval strategies.</div>
+                </div>
+                <div class="card-link">Explore Master Blueprint &rarr;</div>
+            </a>
+        </div>
+
+        <footer>
+            Crafted with ❤️ for Problem Solvers by <a href="https://github.com/Arora-Sir">Mohit Arora</a>
+        </footer>
+    </div>
+</body>
+</html>
