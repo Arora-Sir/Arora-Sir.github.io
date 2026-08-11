@@ -1,12 +1,43 @@
-# OS
+# Operating System Files
 Thumbs.db
+Desktop.ini
 .DS_Store
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 
-# Project skills (local to each dev)
-.opencode/skills/*
-
-# IDE
+# IDE & Editor Configurations
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-workspace
+*.sublime-project
+
+# Node & Build Artifacts (if build tools are added in future)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dist/
+build/
+.cache/
+
+# Environment Variables & Local Configs
+.env
+.env.local
+.env.*.local
+*.local
+
+# AI & Developer Tooling Local Caches
+.opencode/skills/*
+.agent/
+.claude/
+graphify-out/
+
+# Research notes & analysis
+RESEARCH_ANALYSIS/
+
+# AI tooling config (internal, not for public repos)
+CLAUDE.md
