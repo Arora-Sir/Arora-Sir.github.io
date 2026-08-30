@@ -30,7 +30,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            /* flex-start, not center: centering was fine for the original 2-card page, but clips
+               content once the page is taller than the viewport (which it now is). */
+            justify-content: flex-start;
             align-items: center;
             padding: 4rem 2rem;
             position: relative;
@@ -70,6 +72,48 @@
             margin: 0 auto;
         }
 
+        /* Profile links */
+        .profile-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+            margin-bottom: 2.25rem;
+        }
+
+        .profile-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1.05rem;
+            border-radius: 999px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            backdrop-filter: blur(12px);
+            transition: all 0.25s ease;
+        }
+
+        .profile-pill:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-pill.primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .profile-pill.primary:hover {
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+        }
+
         h1 {
             font-size: clamp(2.1rem, 6vw, 3.2rem);
             font-weight: 800;
@@ -87,6 +131,28 @@
             font-size: 1.1rem;
             margin-bottom: 3.5rem;
             font-weight: 400;
+        }
+
+        /* Section headings for the grids below the hero */
+        .section-heading {
+            font-size: clamp(1.25rem, 3.2vw, 1.55rem);
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 3.25rem 0 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .section-heading:first-of-type {
+            margin-top: 0;
+        }
+
+        .section-subtext {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 640px;
+            margin-bottom: 1.5rem;
         }
 
         .grid {
@@ -184,6 +250,51 @@
             color: #fb923c;
         }
 
+        /* Archive card - deliberately not a link (nothing to click through to), so no hover-lift */
+        .archive-wrap {
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        .archive-card {
+            cursor: default;
+        }
+
+        .archive-card:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: var(--card-border);
+        }
+
+        .archive-card:hover::before {
+            opacity: 0;
+        }
+
+        .archive-era {
+            display: inline-flex;
+            align-self: flex-start;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 999px;
+            padding: 0.3rem 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .archive-sibling-note {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            font-style: italic;
+            line-height: 1.6;
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--card-border);
+        }
+
         footer {
             margin-top: 4rem;
             text-align: center;
@@ -199,14 +310,24 @@
         @media (max-width: 768px) {
             body { padding: 2rem 1.25rem; }
             .blueprint-card { padding: 1.5rem; }
+            .section-heading { margin-top: 2.5rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Mohit Arora's Master Hub</h1>
-        <p class="subtitle">Central Portal for Interactive Technical Blueprints, Launch Manuals, and Extension Downloads</p>
+        <div class="profile-links">
+            <a href="https://github.com/Arora-Sir" class="profile-pill primary" target="_blank" rel="noopener">💻 GitHub</a>
+            <a href="https://www.linkedin.com/in/arora-sir/" class="profile-pill" target="_blank" rel="noopener">💼 LinkedIn</a>
+            <a href="https://leetcode.com/arora_sir/" class="profile-pill" target="_blank" rel="noopener">🧠 LeetCode</a>
+            <a href="https://auth.geeksforgeeks.org/user/arorasir/profile" class="profile-pill" target="_blank" rel="noopener">📗 GeeksforGeeks</a>
+            <a href="https://takeuforward.org/profile/arorasir" class="profile-pill" target="_blank" rel="noopener">🎯 TakeUForward</a>
+        </div>
 
+        <h1>Mohit Arora's Master Hub</h1>
+        <p class="subtitle">Central hub for technical blueprints, real side projects, and the apps I've actually shipped</p>
+
+        <h2 class="section-heading">📚 Blueprints &amp; Guides</h2>
         <div class="grid">
             <a href="Chrome_Extension_Blueprint.html" class="blueprint-card">
                 <div>
@@ -228,6 +349,81 @@
                 </div>
                 <div class="card-link">Explore Master Blueprint &rarr;</div>
             </a>
+        </div>
+
+        <h2 class="section-heading">🛠️ Apps &amp; Side Projects</h2>
+        <p class="section-subtext">Real, active tools sourced straight from my GitHub - not placeholders.</p>
+        <div class="grid">
+            <a href="https://tufhub.mohitarora.me" class="blueprint-card" target="_blank" rel="noopener">
+                <div>
+                    <div class="card-icon">🔄</div>
+                    <div class="card-title">TUFHub</div>
+                    <div class="card-desc">Chrome extension that auto-syncs accepted TakeUForward (TUF+) solutions straight to GitHub in real time - solve, submit, and it's committed with a structured README index.</div>
+                </div>
+                <div class="card-link">
+                    <span>Visit tufhub.mohitarora.me &rarr;</span>
+                    <span onclick="event.stopPropagation(); window.open('https://chromewebstore.google.com/detail/tufhub/fbbjinonammckffpfmhicgdcfgodfnge', '_blank');" class="store-btn">🛒 Chrome Store</span>
+                </div>
+            </a>
+
+            <a href="https://github.com/Arora-Sir/DarQ-Reborn" class="blueprint-card" target="_blank" rel="noopener">
+                <div>
+                    <div class="card-icon">🌓</div>
+                    <div class="card-title">DarQ Reborn</div>
+                    <div class="card-desc">Selectable per-app Force Dark theming for Android 10+ via Shizuku or root, with an Xposed/LSPosed module and automated sunrise-to-sunset scheduling. Actively maintained, 83+ stars.</div>
+                </div>
+                <div class="card-link">View on GitHub &rarr;</div>
+            </a>
+
+            <a href="https://github.com/Arora-Sir/Gravity-Bridge" class="blueprint-card" target="_blank" rel="noopener">
+                <div>
+                    <div class="card-icon">🌉</div>
+                    <div class="card-title">Gravity Bridge</div>
+                    <div class="card-desc">A secure local proxy that puts a desktop AI coding agent (Antigravity 2.0) in your phone's browser, with wireless file transfer between phone and laptop. 13+ stars.</div>
+                </div>
+                <div class="card-link">View on GitHub &rarr;</div>
+            </a>
+
+            <a href="https://github.com/Arora-Sir/CopyClip" class="blueprint-card" target="_blank" rel="noopener">
+                <div>
+                    <div class="card-icon">📋</div>
+                    <div class="card-title">CopyClip</div>
+                    <div class="card-desc">Real-time clipboard sync across a laptop and phones over Tailscale/ADB. No cloud, no account - just a documented, benchmarked local pipeline. My most actively developed project right now.</div>
+                </div>
+                <div class="card-link">View on GitHub &rarr;</div>
+            </a>
+
+            <a href="https://arora-sir.github.io/chatalytics-pro" class="blueprint-card" target="_blank" rel="noopener">
+                <div>
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Chatalytics Pro</div>
+                    <div class="card-desc">Privacy-first WhatsApp chat analyzer - everything runs client-side. Sentiment analysis, activity heatmaps, and a few forensic-style stats for fun.</div>
+                </div>
+                <div class="card-link">Try it live &rarr;</div>
+            </a>
+
+            <a href="https://github.com/Arora-Sir/Movie-Alert" class="blueprint-card" target="_blank" rel="noopener">
+                <div>
+                    <div class="card-icon">🎬</div>
+                    <div class="card-title">Movie Alert</div>
+                    <div class="card-desc">A Telegram bot that watches BookMyShow and pings you the instant a specific movie opens for booking. Runs serverless on GitHub Actions.</div>
+                </div>
+                <div class="card-link">View on GitHub &rarr;</div>
+            </a>
+        </div>
+
+        <h2 class="section-heading">🕰️ Archive</h2>
+        <p class="section-subtext">Where the mobile-dev path actually started.</p>
+        <div class="archive-wrap">
+            <div class="blueprint-card archive-card">
+                <div>
+                    <div class="card-icon">🎵</div>
+                    <span class="archive-era">ThinkNext Internship &middot; 2021</span>
+                    <div class="card-title">iSangeet</div>
+                    <div class="card-desc">A complete Android music player, built during my ThinkNext internship - back when I was still learning what a build.gradle file even was. Full launcher icon set included.</div>
+                    <div class="archive-sibling-note">Four more small apps came out of that same stretch: a timer, an egg counter, and a couple of others. Every one of them still exists, unpublished, exactly as I left them.</div>
+                </div>
+            </div>
         </div>
 
         <footer>
