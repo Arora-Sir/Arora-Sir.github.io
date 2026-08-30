@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://arora-sir.github.io/sitemap.xml
