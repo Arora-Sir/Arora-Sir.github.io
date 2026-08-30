@@ -1,0 +1,498 @@
+/* ============================================================
+   Arora-Sir.github.io - shared stylesheet
+   Used by index.html and every /*-app subpage. Each subpage adds
+   ONE body.theme-X class (see bottom of this file) to swap its
+   accent color; everything else - layout, cards, type - stays
+   identical across every page for a consistent system.
+   ============================================================ */
+
+:root {
+    --bg: #090d16;
+    --card-bg: rgba(18, 24, 38, 0.7);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --primary: #f97316;
+    --primary-glow: rgba(249, 115, 22, 0.15);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent-blue: #3b82f6;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* flex-start, not center: centering clips/misplaces content once a page is taller than
+       the viewport, which every page here now is. */
+    justify-content: flex-start;
+    align-items: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Ambient glow background */
+body::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0, 0, 0, 0) 70%);
+    border-radius: 50%;
+    z-index: -1;
+    pointer-events: none;
+    transition: background 0.4s ease;
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    bottom: -10%;
+    right: 20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+    border-radius: 50%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.container {
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Profile links */
+.profile-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 2.25rem;
+}
+
+.profile-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.05rem;
+    border-radius: 999px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    backdrop-filter: blur(12px);
+    transition: all 0.25s ease;
+}
+
+.profile-pill:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.5);
+}
+
+.profile-pill.primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border-color: transparent;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.profile-pill.primary:hover {
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+}
+
+/* Avatar */
+.avatar {
+    width: 92px;
+    height: 92px;
+    border-radius: 22px;
+    object-fit: cover;
+    border: 2px solid var(--card-border);
+    box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.6), 0 0 0 4px rgba(255, 255, 255, 0.02);
+    display: block;
+    margin: 0 auto 1.25rem;
+}
+
+h1 {
+    font-size: clamp(2.1rem, 6vw, 3.2rem);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+}
+
+p.subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 3.5rem;
+    font-weight: 400;
+}
+
+/* Section headings for the grids below the hero */
+.section-heading {
+    font-size: clamp(1.25rem, 3.2vw, 1.55rem);
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 3.25rem 0 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.section-heading:first-of-type {
+    margin-top: 0;
+}
+
+.section-subtext {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    max-width: 640px;
+    margin-bottom: 1.5rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.blueprint-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 2.2rem;
+    backdrop-filter: blur(12px);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.blueprint-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent-blue));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.blueprint-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 30px var(--primary-glow);
+}
+
+.blueprint-card:hover::before {
+    opacity: 1;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.2rem;
+}
+
+/* Real per-app icon image, replacing the emoji .card-icon on app cards */
+.card-icon-img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.9rem;
+    object-fit: cover;
+    background: rgba(255, 255, 255, 0.04);
+    margin-bottom: 1.2rem;
+    display: block;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    color: #ffffff;
+}
+
+.card-desc {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.card-link {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.store-btn {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff !important;
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transition: all 0.2s ease;
+}
+
+.store-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+}
+
+.blueprint-card:hover .card-link {
+    color: var(--primary);
+    filter: brightness(1.25);
+}
+
+/* Private-repo badge: shown on a homepage card face (in place of nothing) and on a subpage's
+   CTA row (in place of a GitHub pill) - never a link, since there's nowhere public to send anyone. */
+.private-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: help;
+}
+
+/* ============================================================
+   Subpage-only components (nav, project hero, feature grid, CTA row)
+   ============================================================ */
+
+.subpage-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    font-size: 0.85rem;
+}
+
+.subpage-nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    transition: all 0.2s ease;
+}
+
+.subpage-nav a:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.subpage-nav a.current {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.project-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.project-hero-icon {
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 1.4rem;
+    object-fit: cover;
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 16px 40px -12px var(--primary-glow);
+    margin-bottom: 1.5rem;
+}
+
+/* Used instead of an <img> for the two private repos, which have no repo-hosted icon asset */
+.project-hero-icon.is-emoji {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.75rem;
+    border: 1px solid var(--card-border);
+}
+
+.project-tagline {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 34rem;
+    margin: 0.75rem auto 0;
+}
+
+.why-section {
+    max-width: 42rem;
+    margin: 0 auto 3rem;
+    color: var(--text-muted);
+    font-size: 1.02rem;
+    line-height: 1.75;
+    text-align: center;
+}
+
+.why-section strong {
+    color: var(--text-main);
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+}
+
+.feature-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    backdrop-filter: blur(12px);
+}
+
+.feature-card .feature-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.6rem;
+}
+
+.feature-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.4rem;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+.cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.cta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.3rem;
+    border-radius: 999px;
+    background: var(--primary);
+    color: #05060a !important;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    box-shadow: 0 8px 20px -6px var(--primary-glow);
+    transition: all 0.2s ease;
+}
+
+.cta-pill:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+.cta-pill.secondary {
+    background: var(--card-bg);
+    color: var(--text-main) !important;
+    border: 1px solid var(--card-border);
+    box-shadow: none;
+}
+
+.cta-pill.secondary:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+footer {
+    margin-top: 4rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+footer a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    body { padding: 2rem 1.25rem; }
+    .blueprint-card { padding: 1.5rem; }
+    .section-heading { margin-top: 2.5rem; }
+    .project-hero-icon { width: 4.5rem; height: 4.5rem; }
+}
+
+/* ============================================================
+   Per-app accent themes. Same base palette, one swapped hue each -
+   real feedback on scroll position/hover already comes from --primary
+   everywhere else in this file, so this block alone re-themes a page.
+   ============================================================ */
+
+body.theme-darq-reborn {
+    --primary: #8b5cf6;
+    --primary-glow: rgba(139, 92, 246, 0.15);
+}
+
+body.theme-tufhub {
+    /* Matches tufhub.mohitarora.me's actual live --primary, confirmed by inspecting the site. */
+    --primary: #38bdf8;
+    --primary-glow: rgba(56, 189, 248, 0.15);
+}
+
+body.theme-gravity-bridge {
+    --primary: #06b6d4;
+    --primary-glow: rgba(6, 182, 212, 0.15);
+}
+
+body.theme-copyclip {
+    --primary: #22c55e;
+    --primary-glow: rgba(34, 197, 94, 0.15);
+}
+
+body.theme-chatalytics-pro {
+    --primary: #ec4899;
+    --primary-glow: rgba(236, 72, 153, 0.15);
+}
+
+body.theme-movie-alert {
+    --primary: #f59e0b;
+    --primary-glow: rgba(245, 158, 11, 0.15);
+}
