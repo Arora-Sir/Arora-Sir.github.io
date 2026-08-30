@@ -4,35 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DarQ Reborn | Mohit Arora</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=optional" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Arora-Sir/DarQ-Reborn/master/fastlane/metadata/android/en-US/images/icon.png">
     <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/site.js" defer></script>
 </head>
 <body class="theme-darq-reborn">
-    <div class="container">
-        <nav class="subpage-nav">
-            <a href="../">&larr; Hub</a>
-            <a href="../tufhub/">TUFHub</a>
-            <a href="../darq-reborn/" class="current">DarQ Reborn</a>
-            <a href="../gravity-bridge/">Gravity Bridge</a>
-            <a href="../copyclip/">CopyClip</a>
-            <a href="../chat-analyzer/">Chatalytics Pro</a>
-            <a href="../movie-alert/">Movie Alert</a>
+    <main class="site-shell">
+        <nav class="page-nav desktop-site-nav" aria-label="Site pages">
+            <a class="pill" href="../">Home</a>
+            <a class="pill" href="../tufhub/">TUFHub</a>
+            <a class="pill primary" href="../darq-reborn/" aria-current="page">DarQ Reborn</a>
+            <a class="pill" href="../gravity-bridge/">Gravity Bridge</a>
+            <a class="pill" href="../copyclip/">CopyClip</a>
+            <a class="pill" href="../chat-analyzer/">Chatalytics Pro</a>
+            <a class="pill" href="../movie-alert/">Movie Alert</a>
         </nav>
+        <details class="mobile-site-menu">
+            <summary aria-label="Open menu"><span class="menu-icon"><span></span><span></span><span></span></span></summary>
+            <div class="mobile-menu-panel">
+                <nav class="mobile-menu-links" aria-label="Site pages">
+                    <a href="../">Home</a>
+                    <a href="../tufhub/">TUFHub</a>
+                    <a href="../darq-reborn/" class="current" aria-current="page">DarQ Reborn</a>
+                    <a href="../gravity-bridge/">Gravity Bridge</a>
+                    <a href="../copyclip/">CopyClip</a>
+                    <a href="../chat-analyzer/">Chatalytics Pro</a>
+                    <a href="../movie-alert/">Movie Alert</a>
+                </nav>
+            </div>
+        </details>
 
-        <div class="project-hero">
-            <img class="project-hero-icon" src="https://raw.githubusercontent.com/Arora-Sir/DarQ-Reborn/master/fastlane/metadata/android/en-US/images/icon.png" alt="DarQ Reborn icon">
-            <h1>DarQ Reborn</h1>
-            <p class="project-tagline">Force Dark, per app, without asking your whole phone to go dark.</p>
-        </div>
-
-        <p class="why-section">
-            DarQ provides a per-app selectable Force Dark option for Android 10 and above, using a
-            root or Shizuku service to apply the theme seamlessly - no accessibility service required.
-            This is a modded fork of KieronQuinn's original DarQ (now archived) that I maintain
-            actively under my own package name, including a recent Auto Dark mode that mirrors your
-            phone's live Dark Theme setting instead of running its own schedule.
-        </p>
+        <section class="hero project-hero">
+            <div class="hero-media">
+                <img class="app-logo" src="https://raw.githubusercontent.com/Arora-Sir/DarQ-Reborn/master/fastlane/metadata/android/en-US/images/icon.png" alt="DarQ Reborn icon">
+            </div>
+            <div class="hero-copy">
+                <h1>DarQ Reborn</h1>
+                <p class="tagline">Force Dark, per app, without asking your whole phone to go dark.</p>
+                <div class="chip-row" aria-label="Stack">
+                    <span class="meta-chip">Android</span>
+                    <span class="meta-chip">Kotlin</span>
+                    <span class="meta-chip">83+ stars</span>
+                </div>
+                <section class="content-card">
+                    <h2>Why It Exists</h2>
+                    <p>
+                        DarQ provides a per-app selectable Force Dark option for Android 10 and above, using a
+                        root or Shizuku service to apply the theme seamlessly - no accessibility service required.
+                        This is a modded fork of KieronQuinn's original DarQ (now archived) that I maintain
+                        actively under my own package name, including a recent Auto Dark mode that mirrors your
+                        phone's live Dark Theme setting.
+                    </p>
+                </section>
+            </div>
+        </section>
 
         <div class="feature-grid">
             <div class="feature-card">
@@ -58,13 +86,13 @@
         </div>
 
         <div class="cta-row">
-            <a href="https://github.com/Arora-Sir/DarQ-Reborn" class="cta-pill" target="_blank" rel="noopener">💻 View on GitHub</a>
-            <a href="https://github.com/Arora-Sir/DarQ-Reborn/releases/latest" class="cta-pill secondary" target="_blank" rel="noopener">⬇️ Latest Release</a>
+            <a href="https://github.com/Arora-Sir/DarQ-Reborn" class="pill primary" target="_blank" rel="noopener">💻 View on GitHub</a>
+            <a href="https://github.com/Arora-Sir/DarQ-Reborn/releases/latest" class="pill" target="_blank" rel="noopener">⬇️ Latest Release</a>
         </div>
 
-        <footer>
+        <footer class="site-footer">
             Crafted with ❤️ for Problem Solvers by <a href="https://github.com/Arora-Sir">Mohit Arora</a>
         </footer>
-    </div>
+    </main>
 </body>
 </html>

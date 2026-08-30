@@ -4,33 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Alert | Mohit Arora</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=optional" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://avatars.githubusercontent.com/u/29508236?v=4">
     <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/site.js" defer></script>
 </head>
 <body class="theme-movie-alert">
-    <div class="container">
-        <nav class="subpage-nav">
-            <a href="../">&larr; Hub</a>
-            <a href="../tufhub/">TUFHub</a>
-            <a href="../darq-reborn/">DarQ Reborn</a>
-            <a href="../gravity-bridge/">Gravity Bridge</a>
-            <a href="../copyclip/">CopyClip</a>
-            <a href="../chat-analyzer/">Chatalytics Pro</a>
-            <a href="../movie-alert/" class="current">Movie Alert</a>
+    <main class="site-shell">
+        <nav class="page-nav desktop-site-nav" aria-label="Site pages">
+            <a class="pill" href="../">Home</a>
+            <a class="pill" href="../tufhub/">TUFHub</a>
+            <a class="pill" href="../darq-reborn/">DarQ Reborn</a>
+            <a class="pill" href="../gravity-bridge/">Gravity Bridge</a>
+            <a class="pill" href="../copyclip/">CopyClip</a>
+            <a class="pill" href="../chat-analyzer/">Chatalytics Pro</a>
+            <a class="pill primary" href="../movie-alert/" aria-current="page">Movie Alert</a>
         </nav>
+        <details class="mobile-site-menu">
+            <summary aria-label="Open menu"><span class="menu-icon"><span></span><span></span><span></span></span></summary>
+            <div class="mobile-menu-panel">
+                <nav class="mobile-menu-links" aria-label="Site pages">
+                    <a href="../">Home</a>
+                    <a href="../tufhub/">TUFHub</a>
+                    <a href="../darq-reborn/">DarQ Reborn</a>
+                    <a href="../gravity-bridge/">Gravity Bridge</a>
+                    <a href="../copyclip/">CopyClip</a>
+                    <a href="../chat-analyzer/">Chatalytics Pro</a>
+                    <a href="../movie-alert/" class="current" aria-current="page">Movie Alert</a>
+                </nav>
+            </div>
+        </details>
 
-        <div class="project-hero">
-            <div class="project-hero-icon is-emoji">🎬</div>
-            <h1>Movie Alert</h1>
-            <p class="project-tagline">The second tickets open, you'll know.</p>
-        </div>
-
-        <p class="why-section">
-            A Telegram bot that watches BookMyShow for a specific movie, theatre, and date - and pings
-            you the instant booking opens. No server to maintain: it runs entirely serverless on GitHub
-            Actions, polling on a schedule and firing a Telegram alert the moment your combination goes live.
-        </p>
+        <section class="hero project-hero">
+            <div class="hero-media">
+                <div class="app-logo is-emoji">🎬</div>
+            </div>
+            <div class="hero-copy">
+                <h1>Movie Alert</h1>
+                <p class="tagline">The second tickets open, you'll know.</p>
+                <div class="chip-row" aria-label="Stack">
+                    <span class="meta-chip">GitHub Actions</span>
+                    <span class="meta-chip">Telegram Bot API</span>
+                    <span class="private-chip" title="Personal automation script, kept private">🔒 Private repo</span>
+                </div>
+                <section class="content-card">
+                    <h2>Why It Exists</h2>
+                    <p>
+                        A Telegram bot that watches BookMyShow for a specific movie, theatre, and date - and pings
+                        you the instant booking opens. No server to maintain: it runs entirely serverless on
+                        GitHub Actions, polling on a schedule and firing a Telegram alert the moment your
+                        combination goes live.
+                    </p>
+                </section>
+            </div>
+        </section>
 
         <div class="feature-grid">
             <div class="feature-card">
@@ -51,12 +80,12 @@
         </div>
 
         <div class="cta-row">
-            <span class="private-badge" title="Personal automation script, kept private">🔒 Private repository</span>
+            <span class="private-chip" title="Personal automation script, kept private">🔒 Private repository</span>
         </div>
 
-        <footer>
+        <footer class="site-footer">
             Crafted with ❤️ for Problem Solvers by <a href="https://github.com/Arora-Sir">Mohit Arora</a>
         </footer>
-    </div>
+    </main>
 </body>
 </html>

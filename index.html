@@ -4,116 +4,140 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mohit Arora | Technical Blueprints & Engineering Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="description" content="Mohit Arora - technical blueprints and real shipped side projects, each with its own page.">
+    <meta name="color-scheme" content="light dark">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=optional" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://avatars.githubusercontent.com/u/29508236?v=4">
     <link rel="stylesheet" href="assets/style.css">
+    <script src="assets/site.js" defer></script>
 </head>
 <body>
-    <div class="container">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/29508236?v=4" alt="Mohit Arora">
+    <main class="site-shell">
+        <section class="hero profile-hero">
+            <div class="hero-media">
+                <img class="avatar" src="https://avatars.githubusercontent.com/u/29508236?v=4" alt="Mohit Arora">
+                <nav class="nav" aria-label="Profile links">
+                    <a class="pill primary" href="https://github.com/Arora-Sir" target="_blank" rel="noopener"><img class="pill-icon" src="assets/fav_github.ico" alt="" aria-hidden="true">GitHub profile</a>
+                    <a class="pill" href="https://www.linkedin.com/in/arora-sir/" target="_blank" rel="noopener"><img class="pill-icon" src="assets/fav_linkedin.ico" alt="" aria-hidden="true">LinkedIn</a>
+                    <a class="pill" href="https://leetcode.com/arora_sir/" target="_blank" rel="noopener"><img class="pill-icon" src="assets/fav_leetcode.png" alt="" aria-hidden="true">LeetCode</a>
+                    <a class="pill" href="https://auth.geeksforgeeks.org/user/arorasir/profile" target="_blank" rel="noopener"><img class="pill-icon" src="assets/fav_geeksforgeeks.ico" alt="" aria-hidden="true">GeeksforGeeks</a>
+                    <a class="pill" href="https://takeuforward.org/profile/arorasir" target="_blank" rel="noopener"><img class="pill-icon" src="assets/fav_takeuforward.ico" alt="" aria-hidden="true">TakeUForward</a>
+                </nav>
+            </div>
+            <div class="hero-copy">
+                <h1>Mohit Arora</h1>
+                <p class="tagline">Technical blueprints and real shipped side projects, each with its own page.</p>
+                <section class="content-card">
+                    <h2>How I Build</h2>
+                    <p>
+                        I build things that are useful to me first - dev tools, automation scripts, the
+                        occasional Chrome extension - and see if they're useful to anyone else after.
+                        Backend systems and agentic AI by day, side projects by night.
+                    </p>
+                </section>
+            </div>
+        </section>
 
-        <div class="profile-links">
-            <a href="https://github.com/Arora-Sir" class="profile-pill primary" target="_blank" rel="noopener">💻 GitHub</a>
-            <a href="https://www.linkedin.com/in/arora-sir/" class="profile-pill" target="_blank" rel="noopener">💼 LinkedIn</a>
-            <a href="https://leetcode.com/arora_sir/" class="profile-pill" target="_blank" rel="noopener">🧠 LeetCode</a>
-            <a href="https://auth.geeksforgeeks.org/user/arorasir/profile" class="profile-pill" target="_blank" rel="noopener">📗 GeeksforGeeks</a>
-            <a href="https://takeuforward.org/profile/arorasir" class="profile-pill" target="_blank" rel="noopener">🎯 TakeUForward</a>
-        </div>
+        <section class="projects-section" aria-labelledby="blueprints-title">
+            <h2 id="blueprints-title">📚 Blueprints &amp; Guides</h2>
+            <div class="grid">
+                <a href="Chrome_Extension_Blueprint.html" class="card">
+                    <div class="card-header">
+                        <div class="card-logo is-emoji" aria-hidden="true">🧩</div>
+                        <div class="card-title-group">
+                            <h3>Chrome Extension Launch Blueprint</h3>
+                        </div>
+                    </div>
+                    <p>Exhaustive 12-hour session ledger covering Manifest V3 architecture, script world isolation, network interception, Pillow visual asset automation, and Chrome Web Store approval strategies.</p>
+                </a>
 
-        <h1>Mohit Arora's Master Hub</h1>
-        <p class="subtitle">Central hub for technical blueprints, real side projects, and the apps I've actually shipped</p>
+                <a href="Website_Buisness_Blueprint.html" class="card">
+                    <div class="card-header">
+                        <div class="card-logo is-emoji" aria-hidden="true">🚀</div>
+                        <div class="card-title-group">
+                            <h3>Website Business Launch Blueprint</h3>
+                        </div>
+                    </div>
+                    <p>Complete zero-to-launch guide covering domain setup, Cloudflare Pages hosting, SEO optimization, and Google AdSense approval strategies.</p>
+                </a>
+            </div>
+        </section>
 
-        <h2 class="section-heading">📚 Blueprints &amp; Guides</h2>
-        <div class="grid">
-            <a href="Chrome_Extension_Blueprint.html" class="blueprint-card">
-                <div>
-                    <div class="card-icon">🧩</div>
-                    <div class="card-title">Chrome Extension Launch Blueprint</div>
-                    <div class="card-desc">Exhaustive 12-hour session ledger covering Manifest V3 architecture, script world isolation, network interception, Pillow visual asset automation, and Chrome Web Store approval strategies.</div>
-                </div>
-                <div class="card-link">
-                    <span>Explore Master Blueprint &rarr;</span>
-                    <span onclick="event.stopPropagation(); window.open('https://chromewebstore.google.com/detail/tufhub/fbbjinonammckffpfmhicgdcfgodfnge', '_blank');" class="store-btn">🛒 Install on Store</span>
-                </div>
-            </a>
+        <section class="projects-section" aria-labelledby="projects-title">
+            <h2 id="projects-title">🛠️ Apps &amp; Side Projects</h2>
+            <p class="lede">Real, active tools sourced straight from my GitHub - not placeholders. Each one has its own page.</p>
+            <div class="grid">
+                <a href="tufhub/" class="card">
+                    <div class="card-header">
+                        <img class="card-logo" src="https://raw.githubusercontent.com/Arora-Sir/TUFHub/main/docs/assets/logo.png" alt="" aria-hidden="true">
+                        <div class="card-title-group">
+                            <h3>TUFHub</h3>
+                        </div>
+                    </div>
+                    <p>Chrome extension that auto-syncs accepted TakeUForward (TUF+) solutions straight to GitHub in real time - solve, submit, and it's committed with a structured README index.</p>
+                </a>
 
-            <a href="Website_Buisness_Blueprint.html" class="blueprint-card">
-                <div>
-                    <div class="card-icon">🚀</div>
-                    <div class="card-title">Website Business Launch Blueprint</div>
-                    <div class="card-desc">Complete zero-to-launch guide covering domain setup, Cloudflare Pages hosting, SEO optimization, and Google AdSense approval strategies.</div>
-                </div>
-                <div class="card-link">Explore Master Blueprint &rarr;</div>
-            </a>
-        </div>
+                <a href="darq-reborn/" class="card">
+                    <div class="card-header">
+                        <img class="card-logo" src="https://raw.githubusercontent.com/Arora-Sir/DarQ-Reborn/master/fastlane/metadata/android/en-US/images/icon.png" alt="" aria-hidden="true">
+                        <div class="card-title-group">
+                            <h3>DarQ Reborn</h3>
+                            <span class="card-badge">83+ stars</span>
+                        </div>
+                    </div>
+                    <p>Selectable per-app Force Dark theming for Android 10+ via Shizuku or root, with an Xposed/LSPosed module and automated sunrise-to-sunset scheduling.</p>
+                </a>
 
-        <h2 class="section-heading">🛠️ Apps &amp; Side Projects</h2>
-        <p class="section-subtext">Real, active tools sourced straight from my GitHub - not placeholders. Each one has its own page.</p>
-        <div class="grid">
-            <a href="tufhub/" class="blueprint-card">
-                <div>
-                    <img class="card-icon-img" src="https://raw.githubusercontent.com/Arora-Sir/TUFHub/main/docs/assets/logo.png" alt="">
-                    <div class="card-title">TUFHub</div>
-                    <div class="card-desc">Chrome extension that auto-syncs accepted TakeUForward (TUF+) solutions straight to GitHub in real time - solve, submit, and it's committed with a structured README index.</div>
-                </div>
-                <div class="card-link">View project &rarr;</div>
-            </a>
+                <a href="gravity-bridge/" class="card">
+                    <div class="card-header">
+                        <img class="card-logo" src="https://raw.githubusercontent.com/Arora-Sir/Gravity-Bridge/master/favicon.svg" alt="" aria-hidden="true">
+                        <div class="card-title-group">
+                            <h3>Gravity Bridge</h3>
+                            <span class="card-badge">13+ stars</span>
+                        </div>
+                    </div>
+                    <p>A secure local proxy that puts a desktop AI coding agent (Antigravity 2.0) in your phone's browser, with wireless file transfer between phone and laptop.</p>
+                </a>
 
-            <a href="darq-reborn/" class="blueprint-card">
-                <div>
-                    <img class="card-icon-img" src="https://raw.githubusercontent.com/Arora-Sir/DarQ-Reborn/master/fastlane/metadata/android/en-US/images/icon.png" alt="">
-                    <div class="card-title">DarQ Reborn</div>
-                    <div class="card-desc">Selectable per-app Force Dark theming for Android 10+ via Shizuku or root, with an Xposed/LSPosed module and automated sunrise-to-sunset scheduling. Actively maintained, 83+ stars.</div>
-                </div>
-                <div class="card-link">View project &rarr;</div>
-            </a>
+                <a href="copyclip/" class="card">
+                    <div class="card-header">
+                        <div class="card-logo is-emoji" aria-hidden="true">📋</div>
+                        <div class="card-title-group">
+                            <h3>CopyClip</h3>
+                            <span class="card-badge">🔒 Private repo</span>
+                        </div>
+                    </div>
+                    <p>Real-time clipboard sync across a laptop and phones over Tailscale/ADB. No cloud, no account. My most actively developed project right now.</p>
+                </a>
 
-            <a href="gravity-bridge/" class="blueprint-card">
-                <div>
-                    <img class="card-icon-img" src="https://raw.githubusercontent.com/Arora-Sir/Gravity-Bridge/master/favicon.svg" alt="">
-                    <div class="card-title">Gravity Bridge</div>
-                    <div class="card-desc">A secure local proxy that puts a desktop AI coding agent (Antigravity 2.0) in your phone's browser, with wireless file transfer between phone and laptop. 13+ stars.</div>
-                </div>
-                <div class="card-link">View project &rarr;</div>
-            </a>
+                <a href="chat-analyzer/" class="card">
+                    <div class="card-header">
+                        <img class="card-logo" src="https://raw.githubusercontent.com/Arora-Sir/chatalytics-pro/main/public/logo512.png" alt="" aria-hidden="true">
+                        <div class="card-title-group">
+                            <h3>Chatalytics Pro</h3>
+                        </div>
+                    </div>
+                    <p>Privacy-first WhatsApp chat analyzer - everything runs client-side. Sentiment analysis, activity heatmaps, and a few forensic-style stats for fun.</p>
+                </a>
 
-            <a href="copyclip/" class="blueprint-card">
-                <div>
-                    <div class="card-icon">📋</div>
-                    <div class="card-title">CopyClip</div>
-                    <div class="card-desc">Real-time clipboard sync across a laptop and phones over Tailscale/ADB. No cloud, no account - just a documented, benchmarked local pipeline. My most actively developed project right now.</div>
-                </div>
-                <div class="card-link">
-                    <span>View project &rarr;</span>
-                    <span class="private-badge" title="Source not public - the project page still covers how it works">🔒 Private repo</span>
-                </div>
-            </a>
+                <a href="movie-alert/" class="card">
+                    <div class="card-header">
+                        <div class="card-logo is-emoji" aria-hidden="true">🎬</div>
+                        <div class="card-title-group">
+                            <h3>Movie Alert</h3>
+                            <span class="card-badge">🔒 Private repo</span>
+                        </div>
+                    </div>
+                    <p>A Telegram bot that watches BookMyShow and pings you the instant a specific movie opens for booking. Runs serverless on GitHub Actions.</p>
+                </a>
+            </div>
+        </section>
 
-            <a href="chat-analyzer/" class="blueprint-card">
-                <div>
-                    <img class="card-icon-img" src="https://raw.githubusercontent.com/Arora-Sir/chatalytics-pro/main/public/logo512.png" alt="">
-                    <div class="card-title">Chatalytics Pro</div>
-                    <div class="card-desc">Privacy-first WhatsApp chat analyzer - everything runs client-side. Sentiment analysis, activity heatmaps, and a few forensic-style stats for fun.</div>
-                </div>
-                <div class="card-link">View project &rarr;</div>
-            </a>
-
-            <a href="movie-alert/" class="blueprint-card">
-                <div>
-                    <div class="card-icon">🎬</div>
-                    <div class="card-title">Movie Alert</div>
-                    <div class="card-desc">A Telegram bot that watches BookMyShow and pings you the instant a specific movie opens for booking. Runs serverless on GitHub Actions.</div>
-                </div>
-                <div class="card-link">
-                    <span>View project &rarr;</span>
-                    <span class="private-badge" title="Source not public - the project page still covers how it works">🔒 Private repo</span>
-                </div>
-            </a>
-        </div>
-
-        <footer>
+        <footer class="site-footer">
             Crafted with ❤️ for Problem Solvers by <a href="https://github.com/Arora-Sir">Mohit Arora</a>
         </footer>
-    </div>
+    </main>
 </body>
 </html>

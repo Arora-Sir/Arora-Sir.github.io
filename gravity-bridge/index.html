@@ -4,35 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gravity Bridge | Mohit Arora</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=optional" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/Arora-Sir/Gravity-Bridge/master/favicon.svg">
     <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/site.js" defer></script>
 </head>
 <body class="theme-gravity-bridge">
-    <div class="container">
-        <nav class="subpage-nav">
-            <a href="../">&larr; Hub</a>
-            <a href="../tufhub/">TUFHub</a>
-            <a href="../darq-reborn/">DarQ Reborn</a>
-            <a href="../gravity-bridge/" class="current">Gravity Bridge</a>
-            <a href="../copyclip/">CopyClip</a>
-            <a href="../chat-analyzer/">Chatalytics Pro</a>
-            <a href="../movie-alert/">Movie Alert</a>
+    <main class="site-shell">
+        <nav class="page-nav desktop-site-nav" aria-label="Site pages">
+            <a class="pill" href="../">Home</a>
+            <a class="pill" href="../tufhub/">TUFHub</a>
+            <a class="pill" href="../darq-reborn/">DarQ Reborn</a>
+            <a class="pill primary" href="../gravity-bridge/" aria-current="page">Gravity Bridge</a>
+            <a class="pill" href="../copyclip/">CopyClip</a>
+            <a class="pill" href="../chat-analyzer/">Chatalytics Pro</a>
+            <a class="pill" href="../movie-alert/">Movie Alert</a>
         </nav>
+        <details class="mobile-site-menu">
+            <summary aria-label="Open menu"><span class="menu-icon"><span></span><span></span><span></span></span></summary>
+            <div class="mobile-menu-panel">
+                <nav class="mobile-menu-links" aria-label="Site pages">
+                    <a href="../">Home</a>
+                    <a href="../tufhub/">TUFHub</a>
+                    <a href="../darq-reborn/">DarQ Reborn</a>
+                    <a href="../gravity-bridge/" class="current" aria-current="page">Gravity Bridge</a>
+                    <a href="../copyclip/">CopyClip</a>
+                    <a href="../chat-analyzer/">Chatalytics Pro</a>
+                    <a href="../movie-alert/">Movie Alert</a>
+                </nav>
+            </div>
+        </details>
 
-        <div class="project-hero">
-            <img class="project-hero-icon" src="https://raw.githubusercontent.com/Arora-Sir/Gravity-Bridge/master/favicon.svg" alt="Gravity Bridge icon">
-            <h1>Gravity Bridge</h1>
-            <p class="project-tagline">Your AI coding agent, now in your pocket.</p>
-        </div>
-
-        <p class="why-section">
-            Google's Antigravity 2.0 is a local AI coding assistant that runs on your laptop and reads
-            your files, edits code, and runs commands - but it only opens at localhost, unreachable from
-            your phone. GravityBridge is a secure local proxy that puts the AI chat and a phone file
-            explorer on one page in your phone's browser, so you can write code, check git status, and
-            move files between devices without touching a cable.
-        </p>
+        <section class="hero project-hero">
+            <div class="hero-media">
+                <img class="app-logo" src="https://raw.githubusercontent.com/Arora-Sir/Gravity-Bridge/master/favicon.svg" alt="Gravity Bridge icon">
+            </div>
+            <div class="hero-copy">
+                <h1>Gravity Bridge</h1>
+                <p class="tagline">Your AI coding agent, now in your pocket.</p>
+                <div class="chip-row" aria-label="Stack">
+                    <span class="meta-chip">Python</span>
+                    <span class="meta-chip">Local-First</span>
+                    <span class="meta-chip">13+ stars</span>
+                </div>
+                <section class="content-card">
+                    <h2>Why It Exists</h2>
+                    <p>
+                        Google's Antigravity 2.0 is a local AI coding assistant that runs on your laptop and reads
+                        your files, edits code, and runs commands - but it only opens at localhost, unreachable from
+                        your phone. GravityBridge is a secure local proxy that puts the AI chat and a phone file
+                        explorer on one page in your phone's browser, so you can write code, check git status, and
+                        move files between devices without touching a cable.
+                    </p>
+                </section>
+            </div>
+        </section>
 
         <div class="feature-grid">
             <div class="feature-card">
@@ -58,12 +86,12 @@
         </div>
 
         <div class="cta-row">
-            <a href="https://github.com/Arora-Sir/Gravity-Bridge" class="cta-pill" target="_blank" rel="noopener">💻 View on GitHub</a>
+            <a href="https://github.com/Arora-Sir/Gravity-Bridge" class="pill primary" target="_blank" rel="noopener">💻 View on GitHub</a>
         </div>
 
-        <footer>
+        <footer class="site-footer">
             Crafted with ❤️ for Problem Solvers by <a href="https://github.com/Arora-Sir">Mohit Arora</a>
         </footer>
-    </div>
+    </main>
 </body>
 </html>

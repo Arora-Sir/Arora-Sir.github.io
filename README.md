@@ -1,6 +1,6 @@
 # Arora-Sir.github.io : Engineering Hub & Blueprints
 
-Welcome to the central hub for **Mohit Arora** - technical blueprints and real shipped side projects, each with its own page.
+Welcome to the central hub for **Mohit Arora** - technical blueprints and real shipped side projects, each with its own page and its own light/dark color theme.
 
 **Profile:** [GitHub](https://github.com/Arora-Sir) · [LinkedIn](https://www.linkedin.com/in/arora-sir/) · [LeetCode](https://leetcode.com/arora_sir/) · [GeeksforGeeks](https://auth.geeksforgeeks.org/user/arorasir/profile) · [TakeUForward](https://takeuforward.org/profile/arorasir)
 

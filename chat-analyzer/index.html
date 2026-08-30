@@ -4,35 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatalytics Pro | Mohit Arora</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=optional" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Arora-Sir/chatalytics-pro/main/public/logo192.png">
     <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/site.js" defer></script>
 </head>
 <body class="theme-chatalytics-pro">
-    <div class="container">
-        <nav class="subpage-nav">
-            <a href="../">&larr; Hub</a>
-            <a href="../tufhub/">TUFHub</a>
-            <a href="../darq-reborn/">DarQ Reborn</a>
-            <a href="../gravity-bridge/">Gravity Bridge</a>
-            <a href="../copyclip/">CopyClip</a>
-            <a href="../chat-analyzer/" class="current">Chatalytics Pro</a>
-            <a href="../movie-alert/">Movie Alert</a>
+    <main class="site-shell">
+        <nav class="page-nav desktop-site-nav" aria-label="Site pages">
+            <a class="pill" href="../">Home</a>
+            <a class="pill" href="../tufhub/">TUFHub</a>
+            <a class="pill" href="../darq-reborn/">DarQ Reborn</a>
+            <a class="pill" href="../gravity-bridge/">Gravity Bridge</a>
+            <a class="pill" href="../copyclip/">CopyClip</a>
+            <a class="pill primary" href="../chat-analyzer/" aria-current="page">Chatalytics Pro</a>
+            <a class="pill" href="../movie-alert/">Movie Alert</a>
         </nav>
+        <details class="mobile-site-menu">
+            <summary aria-label="Open menu"><span class="menu-icon"><span></span><span></span><span></span></span></summary>
+            <div class="mobile-menu-panel">
+                <nav class="mobile-menu-links" aria-label="Site pages">
+                    <a href="../">Home</a>
+                    <a href="../tufhub/">TUFHub</a>
+                    <a href="../darq-reborn/">DarQ Reborn</a>
+                    <a href="../gravity-bridge/">Gravity Bridge</a>
+                    <a href="../copyclip/">CopyClip</a>
+                    <a href="../chat-analyzer/" class="current" aria-current="page">Chatalytics Pro</a>
+                    <a href="../movie-alert/">Movie Alert</a>
+                </nav>
+            </div>
+        </details>
 
-        <div class="project-hero">
-            <img class="project-hero-icon" src="https://raw.githubusercontent.com/Arora-Sir/chatalytics-pro/main/public/logo512.png" alt="Chatalytics Pro logo">
-            <h1>Chatalytics Pro</h1>
-            <p class="project-tagline">Forensic-depth WhatsApp analysis. Zero data leaves your device.</p>
-        </div>
-
-        <p class="why-section">
-            The ultimate privacy-focused WhatsApp chat analyzer: decode your chat history with
-            interactive visualizations and zero data collection. Every byte of processing happens
-            client-side in your browser - your exported chat log never touches a server. Underneath
-            the real sentiment and activity analysis, it's also just fun: who leaves who on read, who
-            starts every conversation, and how many novels you could've written with your total word count.
-        </p>
+        <section class="hero project-hero">
+            <div class="hero-media">
+                <img class="app-logo" src="https://raw.githubusercontent.com/Arora-Sir/chatalytics-pro/main/public/logo512.png" alt="Chatalytics Pro logo">
+            </div>
+            <div class="hero-copy">
+                <h1>Chatalytics Pro</h1>
+                <p class="tagline">Forensic-depth WhatsApp analysis. Zero data leaves your device.</p>
+                <div class="chip-row" aria-label="Stack">
+                    <span class="meta-chip">React</span>
+                    <span class="meta-chip">Tailwind CSS</span>
+                    <span class="meta-chip">Recharts</span>
+                </div>
+                <section class="content-card">
+                    <h2>Why It Exists</h2>
+                    <p>
+                        The ultimate privacy-focused WhatsApp chat analyzer: decode your chat history with
+                        interactive visualizations and zero data collection. Every byte of processing happens
+                        client-side in your browser. Underneath the real sentiment and activity analysis, it's
+                        also just fun: who leaves who on read, who starts every conversation, and how many
+                        novels you could've written with your total word count.
+                    </p>
+                </section>
+            </div>
+        </section>
 
         <div class="feature-grid">
             <div class="feature-card">
@@ -58,13 +86,13 @@
         </div>
 
         <div class="cta-row">
-            <a href="https://arora-sir.github.io/chatalytics-pro" class="cta-pill" target="_blank" rel="noopener">🚀 Try the Live Demo</a>
-            <a href="https://github.com/Arora-Sir/chatalytics-pro" class="cta-pill secondary" target="_blank" rel="noopener">💻 View on GitHub</a>
+            <a href="https://arora-sir.github.io/chatalytics-pro" class="pill primary" target="_blank" rel="noopener">🚀 Try the Live Demo</a>
+            <a href="https://github.com/Arora-Sir/chatalytics-pro" class="pill" target="_blank" rel="noopener">💻 View on GitHub</a>
         </div>
 
-        <footer>
+        <footer class="site-footer">
             Crafted with ❤️ for Problem Solvers by <a href="https://github.com/Arora-Sir">Mohit Arora</a>
         </footer>
-    </div>
+    </main>
 </body>
 </html>
