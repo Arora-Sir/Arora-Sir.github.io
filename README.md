@@ -19,6 +19,7 @@ Welcome to the central hub for **Mohit Arora** - technical blueprints and real s
 Real, active tools sourced straight from my GitHub - not placeholders. Each one now has its own page with a project-specific color theme:
 
 - **[TUFHub](https://arora-sir.github.io/tufhub/)** - Chrome extension that auto-syncs accepted TakeUForward (TUF+) solutions to GitHub in real time. Also on the [Chrome Web Store](https://chromewebstore.google.com/detail/tufhub/fbbjinonammckffpfmhicgdcfgodfnge) and its own site, [tufhub.mohitarora.me](https://tufhub.mohitarora.me).
+- **[DualClone](https://arora-sir.github.io/dualclone/)** - Clone any Android app into Samsung Dual Messenger or a Work Profile with Shizuku. Free, open source, GPL-3.0.
 - **[DarQ Reborn](https://arora-sir.github.io/darq-reborn/)** - Per-app Force Dark theming for Android 10+ via Shizuku or root, with an Xposed/LSPosed module. Actively maintained, 83+ stars.
 - **[Gravity Bridge](https://arora-sir.github.io/gravity-bridge/)** - Control a local AI coding agent (Antigravity 2.0) from your phone's browser, with wireless file transfer. 13+ stars.
 - **[CopyClip](https://arora-sir.github.io/copyclip/)** - Real-time clipboard sync across a laptop and phones over Tailscale/ADB. No cloud, no account. My most actively developed project right now. *(Private repository - not open-sourced yet.)*
