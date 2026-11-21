@@ -26,6 +26,10 @@ Real, active tools sourced straight from my GitHub - not placeholders. Each one 
 - **[Chatalytics Pro](https://arora-sir.github.io/chat-analyzer/)** - Privacy-first WhatsApp chat analyzer, everything client-side. [Live demo](https://arora-sir.github.io/chatalytics-pro).
 - **[Movie Alert](https://arora-sir.github.io/movie-alert/)** - Telegram bot that pings you the instant a movie opens for booking on BookMyShow. Runs serverless on GitHub Actions. *(Private repository.)*
 
+## Contact
+
+contact@mohitarora.me
+
 ---
 
 <p align="center">
